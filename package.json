@@ -15,6 +15,9 @@
     "file",
     "server"
   ],
+  "standard": {
+    "env": [ "mocha" ]
+  },
   "dependencies": {
     "debug": "^4.3.4",
     "depd": "2.0.0",
