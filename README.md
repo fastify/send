@@ -1,18 +1,10 @@
 # send
 
-[![NPM Version][npm-version-image]][npm-url]
-[![NPM Downloads][npm-downloads-image]][npm-url]
-[![Linux Build][github-actions-ci-image]][github-actions-ci-url]
-[![Windows Build][appveyor-image]][appveyor-url]
-[![Test Coverage][coveralls-image]][coveralls-url]
-
 Send is a library for streaming files from the file system as a http response
 supporting partial responses (Ranges), conditional-GET negotiation (If-Match,
 If-Unmodified-Since, If-None-Match, If-Modified-Since), high test coverage,
 and granular events which may be leveraged to take appropriate actions in your
 application or framework.
-
-Looking to serve up entire folders mapped to URLs? Try [serve-static](https://www.npmjs.org/package/serve-static).
 
 ## Installation
 
@@ -21,13 +13,13 @@ This is a [Node.js](https://nodejs.org/en/) module available through the
 [`npm install` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
 
 ```bash
-$ npm install send
+$ npm install @fastify/send
 ```
 
 ## API
 
 ```js
-var send = require('send')
+var send = require('@fastify/send')
 ```
 
 ### send(req, path, [options])
@@ -197,7 +189,7 @@ given directory as the top-level. For example, a request
 ```js
 var http = require('http')
 var parseUrl = require('parseurl')
-var send = require('send')
+var send = require('@fastify/send')
 
 var server = http.createServer(function onRequest (req, res) {
   send(req, parseUrl(req).pathname, { root: '/www/public' })
@@ -212,7 +204,7 @@ server.listen(3000)
 ```js
 var http = require('http')
 var parseUrl = require('parseurl')
-var send = require('send')
+var send = require('@fastify/send')
 
 // Default unknown types to text/plain
 send.mime.default_type = 'text/plain'
@@ -239,7 +231,7 @@ custom function to render a listing of a directory.
 var http = require('http')
 var fs = require('fs')
 var parseUrl = require('parseurl')
-var send = require('send')
+var send = require('@fastify/send')
 
 // Transfer arbitrary files from within /www/example.com/public/*
 // with a custom handler for directory listing
@@ -276,7 +268,7 @@ function directory (res, path) {
 ```js
 var http = require('http')
 var parseUrl = require('parseurl')
-var send = require('send')
+var send = require('@fastify/send')
 
 var server = http.createServer(function onRequest (req, res) {
   // your custom error-handling logic:
@@ -313,15 +305,3 @@ server.listen(3000)
 ## License
 
 [MIT](LICENSE)
-
-[appveyor-image]: https://badgen.net/appveyor/ci/dougwilson/send/master?label=windows
-[appveyor-url]: https://ci.appveyor.com/project/dougwilson/send
-[coveralls-image]: https://badgen.net/coveralls/c/github/pillarjs/send/master
-[coveralls-url]: https://coveralls.io/r/pillarjs/send?branch=master
-[github-actions-ci-image]: https://badgen.net/github/checks/pillarjs/send/master?label=linux
-[github-actions-ci-url]: https://github.com/pillarjs/send/actions/workflows/ci.yml
-[node-image]: https://badgen.net/npm/node/send
-[node-url]: https://nodejs.org/en/download/
-[npm-downloads-image]: https://badgen.net/npm/dm/send
-[npm-url]: https://npmjs.org/package/send
-[npm-version-image]: https://badgen.net/npm/v/send
