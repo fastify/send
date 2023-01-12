@@ -1,0 +1,52 @@
+'use strict'
+
+process.env.NO_DEPRECATION = 'send'
+
+const { test } = require('tap')
+var path = require('path')
+var request = require('supertest')
+var send = require('..')
+const { shouldNotHaveHeader, createServer } = require('./utils')
+
+var fixtures = path.join(__dirname, 'fixtures')
+
+test('send.mime', function (t) {
+  t.plan(2)
+
+  t.test('should be exposed', function (t) {
+    t.plan(1)
+    t.ok(send.mime)
+  })
+
+  t.test('.default_type', function (t) {
+    t.plan(2)
+
+    t.before(function () {
+      this.default_type = send.mime.default_type
+    })
+
+    t.afterEach(function () {
+      send.mime.default_type = this.default_type
+    })
+
+    t.test('should change the default type', function (t) {
+      t.plan(1)
+      send.mime.default_type = 'text/plain'
+
+      request(createServer({ root: fixtures }))
+        .get('/no_ext')
+        .expect('Content-Type', 'text/plain; charset=UTF-8')
+        .expect(200, () => t.pass())
+    })
+
+    t.test('should not add Content-Type for undefined default', function (t) {
+      t.plan(2)
+      send.mime.default_type = undefined
+
+      request(createServer({ root: fixtures }))
+        .get('/no_ext')
+        .expect(shouldNotHaveHeader('Content-Type', t))
+        .expect(200, () => t.pass())
+    })
+  })
+})
