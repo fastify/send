@@ -15,6 +15,9 @@
     "file",
     "server"
   ],
+  "standard": {
+    "env": [ "mocha" ]
+  },
   "dependencies": {
     "debug": "^4.3.4",
     "depd": "2.0.0",
@@ -32,15 +35,10 @@
   },
   "devDependencies": {
     "after": "0.8.2",
-    "eslint": "7.32.0",
-    "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.25.4",
-    "eslint-plugin-markdown": "2.2.1",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "5.2.0",
-    "eslint-plugin-standard": "4.1.0",
     "mocha": "9.2.2",
     "nyc": "15.1.0",
+    "snazzy": "^9.0.0",
+    "standard": "^17.0.0",
     "supertest": "6.2.2"
   },
   "files": [
@@ -50,13 +48,9 @@
     "SECURITY.md",
     "index.js"
   ],
-  "engines": {
-    "node": ">= 0.8.0"
-  },
   "scripts": {
-    "lint": "eslint .",
-    "test": "mocha --check-leaks --reporter spec --bail",
-    "test-ci": "nyc --reporter=lcov --reporter=text npm test",
-    "test-cov": "nyc --reporter=html --reporter=text npm test"
+    "lint": "standard | snazzy",
+    "lint:fix": "standard --fix | snazzy",
+    "test": "mocha --check-leaks --reporter spec --bail"
   }
 }
