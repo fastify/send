@@ -39,7 +39,7 @@
     "nyc": "15.1.0",
     "snazzy": "^9.0.0",
     "standard": "^17.0.0",
-    "supertest": "6.2.2"
+    "supertest": "6.3.3"
   },
   "files": [
     "HISTORY.md",
