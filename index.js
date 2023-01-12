@@ -12,55 +12,55 @@
  * @private
  */
 
-var createError = require('http-errors')
-var debug = require('debug')('send')
-var deprecate = require('depd')('send')
-var destroy = require('destroy')
-var encodeUrl = require('encodeurl')
-var escapeHtml = require('escape-html')
-var etag = require('etag')
-var fresh = require('fresh')
-var fs = require('fs')
-var mime = require('mime')
-var ms = require('ms')
-var onFinished = require('on-finished')
-var parseRange = require('range-parser')
-var path = require('path')
-var statuses = require('statuses')
-var Stream = require('stream')
-var util = require('util')
+const createError = require('http-errors')
+const debug = require('debug')('send')
+const deprecate = require('depd')('send')
+const destroy = require('destroy')
+const encodeUrl = require('encodeurl')
+const escapeHtml = require('escape-html')
+const etag = require('etag')
+const fresh = require('fresh')
+const fs = require('fs')
+const mime = require('mime')
+const ms = require('ms')
+const onFinished = require('on-finished')
+const parseRange = require('range-parser')
+const path = require('path')
+const statuses = require('statuses')
+const Stream = require('stream')
+const util = require('util')
 
 /**
  * Path function references.
  * @private
  */
 
-var extname = path.extname
-var join = path.join
-var normalize = path.normalize
-var resolve = path.resolve
-var sep = path.sep
+const extname = path.extname
+const join = path.join
+const normalize = path.normalize
+const resolve = path.resolve
+const sep = path.sep
 
 /**
  * Regular expression for identifying a bytes Range header.
  * @private
  */
 
-var BYTES_RANGE_REGEXP = /^ *bytes=/
+const BYTES_RANGE_REGEXP = /^ *bytes=/
 
 /**
  * Maximum value allowed for the max age.
  * @private
  */
 
-var MAX_MAXAGE = 60 * 60 * 24 * 365 * 1000 // 1 year
+const MAX_MAXAGE = 60 * 60 * 24 * 365 * 1000 // 1 year
 
 /**
  * Regular expression to match a path with a directory up component.
  * @private
  */
 
-var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/
+const UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/
 
 /**
  * Return a `SendStream` for `req` and `path`.
@@ -88,7 +88,7 @@ function send (req, path, options) {
 function SendStream (req, path, options) {
   Stream.call(this)
 
-  var opts = options || {}
+  const opts = options || {}
 
   this.options = opts
   this.path = path
@@ -203,7 +203,7 @@ SendStream.prototype.hidden = deprecate.function(function hidden (val) {
  */
 
 SendStream.prototype.index = deprecate.function(function index (paths) {
-  var index = !paths ? [] : normalizeList(paths, 'paths argument')
+  const index = !paths ? [] : normalizeList(paths, 'paths argument')
   debug('index %o', paths)
   this._index = index
   return this
@@ -262,9 +262,9 @@ SendStream.prototype.error = function error (status, err) {
     return this.emit('error', createHttpError(status, err))
   }
 
-  var res = this.res
-  var msg = statuses.message[status] || String(status)
-  var doc = createHtmlDocument('Error', escapeHtml(msg))
+  const res = this.res
+  const msg = statuses.message[status] || String(status)
+  const doc = createHtmlDocument('Error', escapeHtml(msg))
 
   // clear existing headers
   clearHeaders(res)
@@ -316,22 +316,22 @@ SendStream.prototype.isConditionalGET = function isConditionalGET () {
  */
 
 SendStream.prototype.isPreconditionFailure = function isPreconditionFailure () {
-  var req = this.req
-  var res = this.res
+  const req = this.req
+  const res = this.res
 
   // if-match
-  var match = req.headers['if-match']
+  const match = req.headers['if-match']
   if (match) {
-    var etag = res.getHeader('ETag')
+    const etag = res.getHeader('ETag')
     return !etag || (match !== '*' && parseTokenList(match).every(function (match) {
       return match !== etag && match !== 'W/' + etag && 'W/' + match !== etag
     }))
   }
 
   // if-unmodified-since
-  var unmodifiedSince = parseHttpDate(req.headers['if-unmodified-since'])
+  const unmodifiedSince = parseHttpDate(req.headers['if-unmodified-since'])
   if (!isNaN(unmodifiedSince)) {
-    var lastModified = parseHttpDate(res.getHeader('Last-Modified'))
+    const lastModified = parseHttpDate(res.getHeader('Last-Modified'))
     return isNaN(lastModified) || lastModified > unmodifiedSince
   }
 
@@ -345,7 +345,7 @@ SendStream.prototype.isPreconditionFailure = function isPreconditionFailure () {
  */
 
 SendStream.prototype.removeContentHeaderFields = function removeContentHeaderFields () {
-  var res = this.res
+  const res = this.res
 
   res.removeHeader('Content-Encoding')
   res.removeHeader('Content-Language')
@@ -361,7 +361,7 @@ SendStream.prototype.removeContentHeaderFields = function removeContentHeaderFie
  */
 
 SendStream.prototype.notModified = function notModified () {
-  var res = this.res
+  const res = this.res
   debug('not modified')
   this.removeContentHeaderFields()
   res.statusCode = 304
@@ -375,7 +375,7 @@ SendStream.prototype.notModified = function notModified () {
  */
 
 SendStream.prototype.headersAlreadySent = function headersAlreadySent () {
-  var err = new Error('Can\'t set headers after they are sent.')
+  const err = new Error('Can\'t set headers after they are sent.')
   debug('headers already sent')
   this.error(500, err)
 }
@@ -389,7 +389,7 @@ SendStream.prototype.headersAlreadySent = function headersAlreadySent () {
  */
 
 SendStream.prototype.isCachable = function isCachable () {
-  var statusCode = this.res.statusCode
+  const statusCode = this.res.statusCode
   return (statusCode >= 200 && statusCode < 300) ||
     statusCode === 304
 }
@@ -436,7 +436,7 @@ SendStream.prototype.isFresh = function isFresh () {
  */
 
 SendStream.prototype.isRangeFresh = function isRangeFresh () {
-  var ifRange = this.req.headers['if-range']
+  const ifRange = this.req.headers['if-range']
 
   if (!ifRange) {
     return true
@@ -444,12 +444,12 @@ SendStream.prototype.isRangeFresh = function isRangeFresh () {
 
   // if-range as etag
   if (ifRange.indexOf('"') !== -1) {
-    var etag = this.res.getHeader('ETag')
+    const etag = this.res.getHeader('ETag')
     return Boolean(etag && ifRange.indexOf(etag) !== -1)
   }
 
   // if-range as modified date
-  var lastModified = this.res.getHeader('Last-Modified')
+  const lastModified = this.res.getHeader('Last-Modified')
   return parseHttpDate(lastModified) <= parseHttpDate(ifRange)
 }
 
@@ -461,7 +461,7 @@ SendStream.prototype.isRangeFresh = function isRangeFresh () {
  */
 
 SendStream.prototype.redirect = function redirect (path) {
-  var res = this.res
+  const res = this.res
 
   if (hasListeners(this, 'directory')) {
     this.emit('directory', res, path)
@@ -473,8 +473,8 @@ SendStream.prototype.redirect = function redirect (path) {
     return
   }
 
-  var loc = encodeUrl(collapseLeadingSlashes(this.path + '/'))
-  var doc = createHtmlDocument('Redirecting', 'Redirecting to <a href="' + escapeHtml(loc) + '">' +
+  const loc = encodeUrl(collapseLeadingSlashes(this.path + '/'))
+  const doc = createHtmlDocument('Redirecting', 'Redirecting to <a href="' + escapeHtml(loc) + '">' +
     escapeHtml(loc) + '</a>')
 
   // redirect
@@ -497,13 +497,13 @@ SendStream.prototype.redirect = function redirect (path) {
 
 SendStream.prototype.pipe = function pipe (res) {
   // root path
-  var root = this._root
+  const root = this._root
 
   // references
   this.res = res
 
   // decode the path
-  var path = decode(this.path)
+  let path = decode(this.path)
   if (path === -1) {
     this.error(400)
     return res
@@ -515,7 +515,7 @@ SendStream.prototype.pipe = function pipe (res) {
     return res
   }
 
-  var parts
+  let parts
   if (root !== null) {
     // normalize
     if (path) {
@@ -551,7 +551,7 @@ SendStream.prototype.pipe = function pipe (res) {
 
   // dotfile handling
   if (containsDotFile(parts)) {
-    var access = this._dotfiles
+    let access = this._dotfiles
 
     // legacy support
     if (access === undefined) {
@@ -592,13 +592,13 @@ SendStream.prototype.pipe = function pipe (res) {
  */
 
 SendStream.prototype.send = function send (path, stat) {
-  var len = stat.size
-  var options = this.options
-  var opts = {}
-  var res = this.res
-  var req = this.req
-  var ranges = req.headers.range
-  var offset = options.start || 0
+  let len = stat.size
+  const options = this.options
+  const opts = {}
+  const res = this.res
+  const req = this.req
+  let ranges = req.headers.range
+  let offset = options.start || 0
 
   if (headersSent(res)) {
     // impossible to send now
@@ -630,7 +630,7 @@ SendStream.prototype.send = function send (path, stat) {
   // adjust len to start/end options
   len = Math.max(0, len - offset)
   if (options.end !== undefined) {
-    var bytes = options.end - offset + 1
+    const bytes = options.end - offset + 1
     if (len > bytes) len = bytes
   }
 
@@ -675,7 +675,7 @@ SendStream.prototype.send = function send (path, stat) {
   }
 
   // clone options
-  for (var prop in options) {
+  for (const prop in options) {
     opts[prop] = options[prop]
   }
 
@@ -702,8 +702,8 @@ SendStream.prototype.send = function send (path, stat) {
  * @api private
  */
 SendStream.prototype.sendFile = function sendFile (path) {
-  var i = 0
-  var self = this
+  let i = 0
+  const self = this
 
   debug('stat "%s"', path)
   fs.stat(path, function onstat (err, stat) {
@@ -724,7 +724,7 @@ SendStream.prototype.sendFile = function sendFile (path) {
         : self.error(404)
     }
 
-    var p = path + '.' + self._extensions[i++]
+    const p = path + '.' + self._extensions[i++]
 
     debug('stat "%s"', p)
     fs.stat(p, function (err, stat) {
@@ -743,8 +743,8 @@ SendStream.prototype.sendFile = function sendFile (path) {
  * @api private
  */
 SendStream.prototype.sendIndex = function sendIndex (path) {
-  var i = -1
-  var self = this
+  let i = -1
+  const self = this
 
   function next (err) {
     if (++i >= self._index.length) {
@@ -752,7 +752,7 @@ SendStream.prototype.sendIndex = function sendIndex (path) {
       return self.error(404)
     }
 
-    var p = join(path, self._index[i])
+    const p = join(path, self._index[i])
 
     debug('stat "%s"', p)
     fs.stat(p, function (err, stat) {
@@ -775,11 +775,11 @@ SendStream.prototype.sendIndex = function sendIndex (path) {
  */
 
 SendStream.prototype.stream = function stream (path, options) {
-  var self = this
-  var res = this.res
+  const self = this
+  const res = this.res
 
   // pipe
-  var stream = fs.createReadStream(path, options)
+  const stream = fs.createReadStream(path, options)
   this.emit('stream', stream)
   stream.pipe(res)
 
@@ -818,11 +818,11 @@ const isUtf8MimeType = utf8MimeTypeRE.test.bind(utf8MimeTypeRE)
  */
 
 SendStream.prototype.type = function type (path) {
-  var res = this.res
+  const res = this.res
 
   if (res.getHeader('Content-Type')) return
 
-  var type = mime.getType(path) || mime.default_type
+  const type = mime.getType(path) || mime.default_type
 
   if (!type) {
     debug('no content-type')
@@ -847,7 +847,7 @@ SendStream.prototype.type = function type (path) {
  */
 
 SendStream.prototype.setHeader = function setHeader (path, stat) {
-  var res = this.res
+  const res = this.res
 
   this.emit('headers', res, path, stat)
 
@@ -857,7 +857,7 @@ SendStream.prototype.setHeader = function setHeader (path, stat) {
   }
 
   if (this._cacheControl && !res.getHeader('Cache-Control')) {
-    var cacheControl = 'public, max-age=' + Math.floor(this._maxage / 1000)
+    let cacheControl = 'public, max-age=' + Math.floor(this._maxage / 1000)
 
     if (this._immutable) {
       cacheControl += ', immutable'
@@ -868,13 +868,13 @@ SendStream.prototype.setHeader = function setHeader (path, stat) {
   }
 
   if (this._lastModified && !res.getHeader('Last-Modified')) {
-    var modified = stat.mtime.toUTCString()
+    const modified = stat.mtime.toUTCString()
     debug('modified %s', modified)
     res.setHeader('Last-Modified', modified)
   }
 
   if (this._etag && !res.getHeader('ETag')) {
-    var val = etag(stat)
+    const val = etag(stat)
     debug('etag %s', val)
     res.setHeader('ETag', val)
   }
@@ -888,9 +888,9 @@ SendStream.prototype.setHeader = function setHeader (path, stat) {
  */
 
 function clearHeaders (res) {
-  var headers = getHeaderNames(res)
+  const headers = getHeaderNames(res)
 
-  for (var i = 0; i < headers.length; i++) {
+  for (let i = 0; i < headers.length; i++) {
     res.removeHeader(headers[i])
   }
 }
@@ -902,7 +902,8 @@ function clearHeaders (res) {
  * @private
  */
 function collapseLeadingSlashes (str) {
-  for (var i = 0; i < str.length; i++) {
+  let i = 0
+  for (i; i < str.length; i++) {
     if (str[i] !== '/') {
       break
     }
@@ -920,8 +921,8 @@ function collapseLeadingSlashes (str) {
  */
 
 function containsDotFile (parts) {
-  for (var i = 0; i < parts.length; i++) {
-    var part = parts[i]
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i]
     if (part.length > 1 && part[0] === '.') {
       return true
     }
@@ -1026,7 +1027,7 @@ function getHeaderNames (res) {
  */
 
 function hasListeners (emitter, type) {
-  var count = typeof emitter.listenerCount !== 'function'
+  const count = typeof emitter.listenerCount !== 'function'
     ? emitter.listeners(type).length
     : emitter.listenerCount(type)
 
@@ -1056,9 +1057,9 @@ function headersSent (res) {
  */
 
 function normalizeList (val, name) {
-  var list = [].concat(val || [])
+  const list = [].concat(val || [])
 
-  for (var i = 0; i < list.length; i++) {
+  for (let i = 0; i < list.length; i++) {
     if (typeof list[i] !== 'string') {
       throw new TypeError(name + ' must be array of strings or false')
     }
@@ -1075,7 +1076,7 @@ function normalizeList (val, name) {
  */
 
 function parseHttpDate (date) {
-  var timestamp = date && Date.parse(date)
+  const timestamp = date && Date.parse(date)
 
   return typeof timestamp === 'number'
     ? timestamp
@@ -1090,12 +1091,12 @@ function parseHttpDate (date) {
  */
 
 function parseTokenList (str) {
-  var end = 0
-  var list = []
-  var start = 0
+  let end = 0
+  const list = []
+  let start = 0
 
   // gather tokens
-  for (var i = 0, len = str.length; i < len; i++) {
+  for (let i = 0, len = str.length; i < len; i++) {
     switch (str.charCodeAt(i)) {
       case 0x20: /*   */
         if (start === end) {
@@ -1131,10 +1132,10 @@ function parseTokenList (str) {
  */
 
 function setHeaders (res, headers) {
-  var keys = Object.keys(headers)
+  const keys = Object.keys(headers)
 
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i]
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
     res.setHeader(key, headers[key])
   }
 }

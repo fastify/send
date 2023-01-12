@@ -1,19 +1,19 @@
 
 process.env.NO_DEPRECATION = 'send'
 
-var after = require('after')
-var assert = require('assert')
-var fs = require('fs')
-var http = require('http')
-var path = require('path')
-var request = require('supertest')
-var send = require('..')
+const after = require('after')
+const assert = require('assert')
+const fs = require('fs')
+const http = require('http')
+const path = require('path')
+const request = require('supertest')
+const send = require('..')
 
 // test server
 
-var dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
-var fixtures = path.join(__dirname, 'fixtures')
-var app = http.createServer(function (req, res) {
+const dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
+const fixtures = path.join(__dirname, 'fixtures')
+const app = http.createServer(function (req, res) {
   function error (err) {
     res.statusCode = err.status
     res.end(http.STATUS_CODES[err.status])
@@ -64,14 +64,14 @@ describe('send(file).pipe(res)', function () {
   })
 
   it('should treat an ENAMETOOLONG as a 404', function (done) {
-    var path = Array(100).join('foobar')
+    const path = Array(100).join('foobar')
     request(app)
       .get('/' + path)
       .expect(404, done)
   })
 
   it('should handle headers already sent error', function (done) {
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       res.write('0')
       send(req, req.url, { root: fixtures })
         .on('error', function (err) { res.end(' - ' + err.message) })
@@ -123,7 +123,7 @@ describe('send(file).pipe(res)', function () {
   })
 
   it('should emit ENOENT if the file does not exist', function (done) {
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       send(req, req.url, { root: fixtures })
         .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
         .pipe(res)
@@ -135,7 +135,7 @@ describe('send(file).pipe(res)', function () {
   })
 
   it('should not override content-type', function (done) {
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       res.setHeader('Content-Type', 'application/x-custom')
       send(req, req.url, { root: fixtures }).pipe(res)
     })
@@ -158,11 +158,11 @@ describe('send(file).pipe(res)', function () {
   })
 
   it('should 404 if file disappears after stat, before open', function (done) {
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       send(req, req.url, { root: 'test/fixtures' })
         .on('file', function () {
         // simulate file ENOENT after on open, after stat
-          var fn = this.send
+          const fn = this.send
           this.send = function (path, stat) {
             fn.call(this, (path + '__xxx_no_exist'), stat)
           }
@@ -176,7 +176,7 @@ describe('send(file).pipe(res)', function () {
   })
 
   it('should 500 on file stream error', function (done) {
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       send(req, req.url, { root: 'test/fixtures' })
         .on('stream', function (stream) {
         // simulate file error
@@ -194,8 +194,8 @@ describe('send(file).pipe(res)', function () {
 
   describe('"headers" event', function () {
     it('should fire when sending file', function (done) {
-      var cb = after(2, done)
-      var server = http.createServer(function (req, res) {
+      const cb = after(2, done)
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
@@ -207,8 +207,8 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should not fire on 404', function (done) {
-      var cb = after(1, done)
-      var server = http.createServer(function (req, res) {
+      const cb = after(1, done)
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
@@ -220,8 +220,8 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should fire on index', function (done) {
-      var cb = after(2, done)
-      var server = http.createServer(function (req, res) {
+      const cb = after(2, done)
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
@@ -233,8 +233,8 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should not fire on redirect', function (done) {
-      var cb = after(1, done)
-      var server = http.createServer(function (req, res) {
+      const cb = after(1, done)
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
@@ -246,8 +246,8 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should provide path', function (done) {
-      var cb = after(2, done)
-      var server = http.createServer(function (req, res) {
+      const cb = after(2, done)
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
@@ -265,8 +265,8 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should provide stat', function (done) {
-      var cb = after(2, done)
-      var server = http.createServer(function (req, res) {
+      const cb = after(2, done)
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
@@ -285,7 +285,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should allow altering headers', function (done) {
-      var server = http.createServer(function (req, res) {
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
@@ -312,7 +312,7 @@ describe('send(file).pipe(res)', function () {
 
   describe('when "directory" listeners are present', function () {
     it('should be called when sending directory', function (done) {
-      var server = http.createServer(function (req, res) {
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('directory', onDirectory)
           .pipe(res)
@@ -329,7 +329,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should be called with path', function (done) {
-      var server = http.createServer(function (req, res) {
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('directory', onDirectory)
           .pipe(res)
@@ -377,7 +377,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should respond with an HTML redirect', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url.replace('/snow', '/snow ☃'), { root: 'test/fixtures' })
           .pipe(res)
       })
@@ -405,7 +405,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should remove all previously-set headers', function (done) {
-      var server = createServer({ root: fixtures }, function (req, res) {
+      const server = createServer({ root: fixtures }, function (req, res) {
         res.setHeader('X-Foo', 'bar')
       })
 
@@ -418,7 +418,7 @@ describe('send(file).pipe(res)', function () {
 
   describe('with conditional-GET', function () {
     it('should remove Content headers with 304', function (done) {
-      var server = createServer({ root: fixtures }, function (req, res) {
+      const server = createServer({ root: fixtures }, function (req, res) {
         res.setHeader('Content-Language', 'en-US')
         res.setHeader('Content-Location', 'http://localhost/name.txt')
         res.setHeader('Contents', 'foo')
@@ -441,7 +441,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should not remove all Content-* headers', function (done) {
-      var server = createServer({ root: fixtures }, function (req, res) {
+      const server = createServer({ root: fixtures }, function (req, res) {
         res.setHeader('Content-Location', 'http://localhost/name.txt')
         res.setHeader('Content-Security-Policy', 'default-src \'self\'')
       })
@@ -507,8 +507,8 @@ describe('send(file).pipe(res)', function () {
           .get('/name.txt')
           .expect(200, function (err, res) {
             if (err) return done(err)
-            var lmod = new Date(res.headers['last-modified'])
-            var date = new Date(lmod - 60000)
+            const lmod = new Date(res.headers['last-modified'])
+            const date = new Date(lmod - 60000)
             request(app)
               .get('/name.txt')
               .set('If-Modified-Since', date.toUTCString())
@@ -561,8 +561,8 @@ describe('send(file).pipe(res)', function () {
           .get('/name.txt')
           .expect(200, function (err, res) {
             if (err) return done(err)
-            var lmod = new Date(res.headers['last-modified'])
-            var date = new Date(lmod - 60000).toUTCString()
+            const lmod = new Date(res.headers['last-modified'])
+            const date = new Date(lmod - 60000).toUTCString()
             request(app)
               .get('/name.txt')
               .set('If-Unmodified-Since', date)
@@ -666,7 +666,7 @@ describe('send(file).pipe(res)', function () {
       })
 
       it('should emit error 416 with content-range header', function (done) {
-        var server = http.createServer(function (req, res) {
+        const server = http.createServer(function (req, res) {
           send(req, req.url, { root: fixtures })
             .on('error', function (err) {
               res.setHeader('X-Content-Range', err.headers['Content-Range'])
@@ -717,7 +717,7 @@ describe('send(file).pipe(res)', function () {
           .get('/nums.txt')
           .expect(200, function (err, res) {
             if (err) return done(err)
-            var etag = res.headers.etag
+            const etag = res.headers.etag
 
             request(app)
               .get('/nums.txt')
@@ -732,7 +732,7 @@ describe('send(file).pipe(res)', function () {
           .get('/nums.txt')
           .expect(200, function (err, res) {
             if (err) return done(err)
-            var etag = res.headers.etag.replace(/"(.)/, '"0$1')
+            const etag = res.headers.etag.replace(/"(.)/, '"0$1')
 
             request(app)
               .get('/nums.txt')
@@ -747,7 +747,7 @@ describe('send(file).pipe(res)', function () {
           .get('/nums.txt')
           .expect(200, function (err, res) {
             if (err) return done(err)
-            var modified = res.headers['last-modified']
+            const modified = res.headers['last-modified']
 
             request(app)
               .get('/nums.txt')
@@ -762,7 +762,7 @@ describe('send(file).pipe(res)', function () {
           .get('/nums.txt')
           .expect(200, function (err, res) {
             if (err) return done(err)
-            var modified = Date.parse(res.headers['last-modified']) - 20000
+            const modified = Date.parse(res.headers['last-modified']) - 20000
 
             request(app)
               .get('/nums.txt')
@@ -813,7 +813,7 @@ describe('send(file).pipe(res)', function () {
 
   describe('.etag()', function () {
     it('should support disabling etags', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .etag(false)
           .pipe(res)
@@ -828,7 +828,7 @@ describe('send(file).pipe(res)', function () {
 
   describe('.from()', function () {
     it('should set with deprecated from', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url)
           .from(fixtures)
           .pipe(res)
@@ -842,7 +842,7 @@ describe('send(file).pipe(res)', function () {
 
   describe('.hidden()', function () {
     it('should default support sending hidden files', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .hidden(true)
           .pipe(res)
@@ -856,7 +856,7 @@ describe('send(file).pipe(res)', function () {
 
   describe('.index()', function () {
     it('should be configurable', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .index('tobi.html')
           .pipe(res)
@@ -868,7 +868,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should support disabling', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .index(false)
           .pipe(res)
@@ -880,7 +880,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should support fallbacks', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .index(['default.htm', 'index.html'])
           .pipe(res)
@@ -894,7 +894,7 @@ describe('send(file).pipe(res)', function () {
 
   describe('.maxage()', function () {
     it('should default to 0', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, 'test/fixtures/name.txt')
           .maxage(undefined)
           .pipe(res)
@@ -906,7 +906,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should floor to integer', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, 'test/fixtures/name.txt')
           .maxage(1234)
           .pipe(res)
@@ -918,7 +918,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should accept string', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, 'test/fixtures/name.txt')
           .maxage('30d')
           .pipe(res)
@@ -930,7 +930,7 @@ describe('send(file).pipe(res)', function () {
     })
 
     it('should max at 1 year', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, 'test/fixtures/name.txt')
           .maxage(Infinity)
           .pipe(res)
@@ -944,7 +944,7 @@ describe('send(file).pipe(res)', function () {
 
   describe('.root()', function () {
     it('should set root', function (done) {
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url)
           .root(fixtures)
           .pipe(res)
@@ -1169,7 +1169,7 @@ describe('send(file, options)', function () {
       })
 
       it('should 403 for dotfile without root', function (done) {
-        var server = http.createServer(function onRequest (req, res) {
+        const server = http.createServer(function onRequest (req, res) {
           send(req, fixtures + '/.mine' + req.url, { dotfiles: 'deny' }).pipe(res)
         })
 
@@ -1223,7 +1223,7 @@ describe('send(file, options)', function () {
       })
 
       it('should 404 for dotfile without root', function (done) {
-        var server = http.createServer(function onRequest (req, res) {
+        const server = http.createServer(function onRequest (req, res) {
           send(req, fixtures + '/.mine' + req.url, { dotfiles: 'ignore' }).pipe(res)
         })
 
@@ -1344,8 +1344,8 @@ describe('send(file, options)', function () {
     })
 
     it('should work without root', function (done) {
-      var server = http.createServer(function (req, res) {
-        var p = path.join(fixtures, 'pets').replace(/\\/g, '/') + '/'
+      const server = http.createServer(function (req, res) {
+        const p = path.join(fixtures, 'pets').replace(/\\/g, '/') + '/'
         send(req, p, { index: ['index.html'] })
           .pipe(res)
       })
@@ -1365,7 +1365,7 @@ describe('send(file, options)', function () {
       })
 
       it('should work with trailing slash', function (done) {
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, req.url, { root: fixtures + '/' })
             .pipe(res)
         })
@@ -1376,7 +1376,7 @@ describe('send(file, options)', function () {
       })
 
       it('should work with empty path', function (done) {
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, '', { root: fixtures })
             .pipe(res)
         })
@@ -1393,7 +1393,7 @@ describe('send(file, options)', function () {
       //       regressions around this use-case.
       //
       it('should try as file with empty path', function (done) {
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, '', { root: path.join(fixtures, 'name.txt') })
             .pipe(res)
         })
@@ -1410,7 +1410,7 @@ describe('send(file, options)', function () {
       })
 
       it('should allow .. in root', function (done) {
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, req.url, { root: fixtures + '/../fixtures' })
             .pipe(res)
         })
@@ -1435,7 +1435,7 @@ describe('send(file, options)', function () {
 
     describe('when missing', function () {
       it('should consider .. malicious', function (done) {
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, fixtures + req.url)
             .pipe(res)
         })
@@ -1446,7 +1446,7 @@ describe('send(file, options)', function () {
       })
 
       it('should still serve files with dots in name', function (done) {
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, fixtures + req.url)
             .pipe(res)
         })
