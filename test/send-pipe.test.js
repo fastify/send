@@ -34,7 +34,7 @@ test('send(file).pipe(res)', function (t) {
     request(app)
       .get('/name.txt')
       .expect('Content-Length', '4')
-      .expect(200, 'tobi', () => t.pass())
+      .expect(200, 'tobi', err => t.error(err))
   })
 
   t.test('should stream a zero-length file', function (t) {
@@ -54,7 +54,7 @@ test('send(file).pipe(res)', function (t) {
     request(app)
       .get('/empty.txt')
       .expect('Content-Length', '0')
-      .expect(200, '', () => t.pass())
+      .expect(200, '', err => t.error(err))
   })
 
   t.test('should decode the given path as a URI', function (t) {
@@ -73,7 +73,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/some%20thing.txt')
-      .expect(200, 'hey', () => t.pass())
+      .expect(200, 'hey', err => t.error(err))
   })
 
   t.test('should serve files with dots in name', function (t) {
@@ -92,7 +92,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/do..ts.txt')
-      .expect(200, '...', () => t.pass())
+      .expect(200, '...', err => t.error(err))
   })
 
   t.test('should treat a malformed URI as a bad request', function (t) {
@@ -111,7 +111,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/some%99thing.txt')
-      .expect(400, 'Bad Request', () => t.pass())
+      .expect(400, 'Bad Request', err => t.error(err))
   })
 
   t.test('should 400 on NULL bytes', function (t) {
@@ -130,7 +130,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/some%00thing.txt')
-      .expect(400, 'Bad Request', () => t.pass())
+      .expect(400, 'Bad Request', err => t.error(err))
   })
 
   t.test('should treat an ENAMETOOLONG as a 404', function (t) {
@@ -150,7 +150,7 @@ test('send(file).pipe(res)', function (t) {
     const path = Array(100).join('foobar')
     request(app)
       .get('/' + path)
-      .expect(404, () => t.pass())
+      .expect(404, err => t.error(err))
   })
 
   t.test('should handle headers already sent error', function (t) {
@@ -164,7 +164,7 @@ test('send(file).pipe(res)', function (t) {
     })
     request(app)
       .get('/name.txt')
-      .expect(200, '0 - Can\'t set headers after they are sent.', () => t.pass())
+      .expect(200, '0 - Can\'t set headers after they are sent.', err => t.error(err))
   })
 
   t.test('should support HEAD', function (t) {
@@ -186,7 +186,7 @@ test('send(file).pipe(res)', function (t) {
       .expect(200)
       .expect('Content-Length', '4')
       .expect(shouldNotHaveBody(t))
-      .end(() => t.pass())
+      .end(err => t.error(err))
   })
 
   t.test('should add an ETag header field', function (t) {
@@ -206,7 +206,7 @@ test('send(file).pipe(res)', function (t) {
     request(app)
       .get('/name.txt')
       .expect('etag', /^W\/"[^"]+"$/)
-      .end(() => t.pass())
+      .end(err => t.error(err))
   })
 
   t.test('should add a Date header field', function (t) {
@@ -225,7 +225,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/name.txt')
-      .expect('date', dateRegExp, () => t.pass())
+      .expect('date', dateRegExp, err => t.error(err))
   })
 
   t.test('should add a Last-Modified header field', function (t) {
@@ -244,7 +244,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/name.txt')
-      .expect('last-modified', dateRegExp, () => t.pass())
+      .expect('last-modified', dateRegExp, err => t.error(err))
   })
 
   t.test('should add a Accept-Ranges header field', function (t) {
@@ -263,7 +263,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/name.txt')
-      .expect('Accept-Ranges', 'bytes', () => t.pass())
+      .expect('Accept-Ranges', 'bytes', err => t.error(err))
   })
 
   t.test('should 404 if the file does not exist', function (t) {
@@ -282,7 +282,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/meow')
-      .expect(404, 'Not Found', () => t.pass())
+      .expect(404, 'Not Found', err => t.error(err))
   })
 
   t.test('should emit ENOENT if the file does not exist', function (t) {
@@ -296,7 +296,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/meow')
-      .expect(200, '404 ENOENT', () => t.pass())
+      .expect(200, '404 ENOENT', err => t.error(err))
   })
 
   t.test('should not override content-type', function (t) {
@@ -308,7 +308,7 @@ test('send(file).pipe(res)', function (t) {
     })
     request(app)
       .get('/name.txt')
-      .expect('Content-Type', 'application/x-custom', () => t.pass())
+      .expect('Content-Type', 'application/x-custom', err => t.error(err))
   })
 
   t.test('should set Content-Type via mime map', function (t) {
@@ -333,7 +333,7 @@ test('send(file).pipe(res)', function (t) {
         request(app)
           .get('/tobi.html')
           .expect('Content-Type', 'text/html; charset=UTF-8')
-          .expect(200, () => t.pass())
+          .expect(200, err => t.error(err))
       })
   })
 
@@ -354,7 +354,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/name.txt')
-      .expect(404, () => t.pass())
+      .expect(404, err => t.error(err))
   })
 
   t.test('should 500 on file stream error', function (t) {
@@ -373,14 +373,14 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/name.txt')
-      .expect(500, () => t.pass())
+      .expect(500, err => t.error(err))
   })
 
   t.test('"headers" event', function (t) {
     t.plan(7)
     t.test('should fire when sending file', function (t) {
       t.plan(1)
-      const cb = after(2, () => t.pass())
+      const cb = after(2, err => t.error(err))
       const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
@@ -394,7 +394,7 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should not fire on 404', function (t) {
       t.plan(1)
-      const cb = after(1, () => t.pass())
+      const cb = after(1, err => t.error(err))
       const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
@@ -408,7 +408,7 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should fire on index', function (t) {
       t.plan(1)
-      const cb = after(2, () => t.pass())
+      const cb = after(2, err => t.error(err))
       const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
@@ -422,7 +422,7 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should not fire on redirect', function (t) {
       t.plan(1)
-      const cb = after(1, () => t.pass())
+      const cb = after(1, err => t.error(err))
       const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
@@ -436,7 +436,7 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should provide path', function (t) {
       t.plan(3)
-      const cb = after(2, () => t.pass())
+      const cb = after(2, err => t.error(err))
       const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
@@ -456,7 +456,7 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should provide stat', function (t) {
       t.plan(4)
-      const cb = after(2, () => t.pass())
+      const cb = after(2, err => t.error(err))
       const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
@@ -498,7 +498,7 @@ test('send(file).pipe(res)', function (t) {
         .expect('ETag', 'W/"everything"')
         .expect('X-Created', dateRegExp)
         .expect('tobi')
-        .end(() => t.pass())
+        .end(err => t.error(err))
     })
   })
 
@@ -520,7 +520,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(server)
         .get('/pets')
-        .expect(400, 'No directory for you', () => t.pass())
+        .expect(400, 'No directory for you', err => t.error(err))
     })
 
     t.test('should be called with path', function (t) {
@@ -537,7 +537,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(server)
         .get('/pets')
-        .expect(200, path.normalize(path.join(fixtures, 'pets')), () => t.pass())
+        .expect(200, path.normalize(path.join(fixtures, 'pets')), err => t.error(err))
     })
   })
 
@@ -550,7 +550,7 @@ test('send(file).pipe(res)', function (t) {
       request(createServer({ root: fixtures }))
         .get('/pets')
         .expect('Location', '/pets/')
-        .expect(301, () => t.pass())
+        .expect(301, err => t.error(err))
     })
 
     t.test('should respond with an HTML redirect', function (t) {
@@ -560,7 +560,7 @@ test('send(file).pipe(res)', function (t) {
         .get('/pets')
         .expect('Location', '/pets/')
         .expect('Content-Type', /html/)
-        .expect(301, />Redirecting to <a href="\/pets\/">\/pets\/<\/a></, () => t.pass())
+        .expect(301, />Redirecting to <a href="\/pets\/">\/pets\/<\/a></, err => t.error(err))
     })
 
     t.test('should respond with default Content-Security-Policy', function (t) {
@@ -570,7 +570,7 @@ test('send(file).pipe(res)', function (t) {
         .get('/pets')
         .expect('Location', '/pets/')
         .expect('Content-Security-Policy', "default-src 'none'")
-        .expect(301, () => t.pass())
+        .expect(301, err => t.error(err))
     })
 
     t.test('should not redirect to protocol-relative locations', function (t) {
@@ -579,7 +579,7 @@ test('send(file).pipe(res)', function (t) {
       request(createServer({ root: fixtures }))
         .get('//pets')
         .expect('Location', '/pets/')
-        .expect(301, () => t.pass())
+        .expect(301, err => t.error(err))
     })
 
     t.test('should respond with an HTML redirect', function (t) {
@@ -594,7 +594,7 @@ test('send(file).pipe(res)', function (t) {
         .get('/snow')
         .expect('Location', '/snow%20%E2%98%83/')
         .expect('Content-Type', /html/)
-        .expect(301, />Redirecting to <a href="\/snow%20%E2%98%83\/">\/snow%20%E2%98%83\/<\/a></, () => t.pass())
+        .expect(301, />Redirecting to <a href="\/snow%20%E2%98%83\/">\/snow%20%E2%98%83\/<\/a></, err => t.error(err))
     })
   })
 
@@ -606,7 +606,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(createServer({ root: fixtures }))
         .get('/foobar')
-        .expect(404, />Not Found</, () => t.pass())
+        .expect(404, />Not Found</, err => t.error(err))
     })
 
     t.test('should respond with default Content-Security-Policy', function (t) {
@@ -615,7 +615,7 @@ test('send(file).pipe(res)', function (t) {
       request(createServer({ root: fixtures }))
         .get('/foobar')
         .expect('Content-Security-Policy', "default-src 'none'")
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
 
     t.test('should remove all previously-set headers', function (t) {
@@ -628,7 +628,7 @@ test('send(file).pipe(res)', function (t) {
       request(server)
         .get('/foobar')
         .expect(shouldNotHaveHeader('X-Foo', t))
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
   })
 
@@ -656,7 +656,7 @@ test('send(file).pipe(res)', function (t) {
             .expect(shouldNotHaveHeader('Content-Type', t))
             .expect('Content-Location', 'http://localhost/name.txt')
             .expect('Contents', 'foo')
-            .expect(304, () => t.pass())
+            .expect(304, err => t.error(err))
         })
     })
 
@@ -679,7 +679,7 @@ test('send(file).pipe(res)', function (t) {
             .expect(shouldNotHaveHeader('Content-Type', t))
             .expect('Content-Location', 'http://localhost/name.txt')
             .expect('Content-Security-Policy', 'default-src \'self\'')
-            .expect(304, () => t.pass())
+            .expect(304, err => t.error(err))
         })
     })
 
@@ -703,7 +703,7 @@ test('send(file).pipe(res)', function (t) {
         request(app)
           .get('/name.txt')
           .set('If-Match', '*')
-          .expect(200, () => t.pass())
+          .expect(200, err => t.error(err))
       })
 
       t.test('should respond with 412 when ETag unmatched', function (t) {
@@ -723,7 +723,7 @@ test('send(file).pipe(res)', function (t) {
         request(app)
           .get('/name.txt')
           .set('If-Match', ' "foo",, "bar" ,')
-          .expect(412, () => t.pass())
+          .expect(412, err => t.error(err))
       })
 
       t.test('should respond with 200 when ETag matched', function (t) {
@@ -747,7 +747,7 @@ test('send(file).pipe(res)', function (t) {
             request(app)
               .get('/name.txt')
               .set('If-Match', '"foo", "bar", ' + res.headers.etag)
-              .expect(200, () => t.pass())
+              .expect(200, err => t.error(err))
           })
       })
     })
@@ -776,7 +776,7 @@ test('send(file).pipe(res)', function (t) {
             request(app)
               .get('/name.txt')
               .set('If-Modified-Since', res.headers['last-modified'])
-              .expect(304, () => t.pass())
+              .expect(304, err => t.error(err))
           })
       })
 
@@ -803,7 +803,7 @@ test('send(file).pipe(res)', function (t) {
             request(app)
               .get('/name.txt')
               .set('If-Modified-Since', date.toUTCString())
-              .expect(200, 'tobi', () => t.pass())
+              .expect(200, 'tobi', err => t.error(err))
           })
       })
     })
@@ -832,7 +832,7 @@ test('send(file).pipe(res)', function (t) {
             request(app)
               .get('/name.txt')
               .set('If-None-Match', res.headers.etag)
-              .expect(304, () => t.pass())
+              .expect(304, err => t.error(err))
           })
       })
 
@@ -857,7 +857,7 @@ test('send(file).pipe(res)', function (t) {
             request(app)
               .get('/name.txt')
               .set('If-None-Match', '"123"')
-              .expect(200, 'tobi', () => t.pass())
+              .expect(200, 'tobi', err => t.error(err))
           })
       })
     })
@@ -886,7 +886,7 @@ test('send(file).pipe(res)', function (t) {
             request(app)
               .get('/name.txt')
               .set('If-Unmodified-Since', res.headers['last-modified'])
-              .expect(200, () => t.pass())
+              .expect(200, err => t.error(err))
           })
       })
 
@@ -913,7 +913,7 @@ test('send(file).pipe(res)', function (t) {
             request(app)
               .get('/name.txt')
               .set('If-Unmodified-Since', date)
-              .expect(412, () => t.pass())
+              .expect(412, err => t.error(err))
           })
       })
 
@@ -934,7 +934,7 @@ test('send(file).pipe(res)', function (t) {
         request(app)
           .get('/name.txt')
           .set('If-Unmodified-Since', 'foo')
-          .expect(200, () => t.pass())
+          .expect(200, err => t.error(err))
       })
     })
   })
@@ -959,7 +959,7 @@ test('send(file).pipe(res)', function (t) {
       request(app)
         .get('/nums.txt')
         .set('Range', 'bytes=0-4')
-        .expect(206, '12345', () => t.pass())
+        .expect(206, '12345', err => t.error(err))
     })
 
     t.test('should ignore non-byte ranges', function (t) {
@@ -979,7 +979,7 @@ test('send(file).pipe(res)', function (t) {
       request(app)
         .get('/nums.txt')
         .set('Range', 'items=0-4')
-        .expect(200, '123456789', () => t.pass())
+        .expect(200, '123456789', err => t.error(err))
     })
 
     t.test('should be inclusive', function (t) {
@@ -999,7 +999,7 @@ test('send(file).pipe(res)', function (t) {
       request(app)
         .get('/nums.txt')
         .set('Range', 'bytes=0-0')
-        .expect(206, '1', () => t.pass())
+        .expect(206, '1', err => t.error(err))
     })
 
     t.test('should set Content-Range', function (t) {
@@ -1020,7 +1020,7 @@ test('send(file).pipe(res)', function (t) {
         .get('/nums.txt')
         .set('Range', 'bytes=2-5')
         .expect('Content-Range', 'bytes 2-5/9')
-        .expect(206, () => t.pass())
+        .expect(206, err => t.error(err))
     })
 
     t.test('should support -n', function (t) {
@@ -1040,7 +1040,7 @@ test('send(file).pipe(res)', function (t) {
       request(app)
         .get('/nums.txt')
         .set('Range', 'bytes=-3')
-        .expect(206, '789', () => t.pass())
+        .expect(206, '789', err => t.error(err))
     })
 
     t.test('should support n-', function (t) {
@@ -1060,7 +1060,7 @@ test('send(file).pipe(res)', function (t) {
       request(app)
         .get('/nums.txt')
         .set('Range', 'bytes=3-')
-        .expect(206, '456789', () => t.pass())
+        .expect(206, '456789', err => t.error(err))
     })
 
     t.test('should respond with 206 "Partial Content"', function (t) {
@@ -1080,7 +1080,7 @@ test('send(file).pipe(res)', function (t) {
       request(app)
         .get('/nums.txt')
         .set('Range', 'bytes=0-4')
-        .expect(206, () => t.pass())
+        .expect(206, err => t.error(err))
     })
 
     t.test('should set Content-Length to the # of octets transferred', function (t) {
@@ -1101,7 +1101,7 @@ test('send(file).pipe(res)', function (t) {
         .get('/nums.txt')
         .set('Range', 'bytes=2-3')
         .expect('Content-Length', '2')
-        .expect(206, '34', () => t.pass())
+        .expect(206, '34', err => t.error(err))
     })
 
     t.test('when last-byte-pos of the range is greater the length', function (t) {
@@ -1125,7 +1125,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .set('Range', 'bytes=2-50')
           .expect('Content-Range', 'bytes 2-8/9')
-          .expect(206, () => t.pass())
+          .expect(206, err => t.error(err))
       })
 
       t.test('should adapt the Content-Length accordingly', function (t) {
@@ -1146,7 +1146,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .set('Range', 'bytes=2-50')
           .expect('Content-Length', '7')
-          .expect(206, () => t.pass())
+          .expect(206, err => t.error(err))
       })
     })
 
@@ -1171,7 +1171,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .set('Range', 'bytes=9-50')
           .expect('Content-Range', 'bytes */9')
-          .expect(416, () => t.pass())
+          .expect(416, err => t.error(err))
       })
 
       t.test('should emit error 416 with content-range header', function (t) {
@@ -1191,7 +1191,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .set('Range', 'bytes=9-50')
           .expect('X-Content-Range', 'bytes */9')
-          .expect(416, () => t.pass())
+          .expect(416, err => t.error(err))
       })
     })
 
@@ -1215,7 +1215,7 @@ test('send(file).pipe(res)', function (t) {
         request(app)
           .get('/nums.txt')
           .set('Range', 'asdf')
-          .expect(200, '123456789', () => t.pass())
+          .expect(200, '123456789', err => t.error(err))
       })
     })
 
@@ -1240,7 +1240,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .set('Range', 'bytes=1-1,3-')
           .expect(shouldNotHaveHeader('Content-Range', t))
-          .expect(200, '123456789', () => t.pass())
+          .expect(200, '123456789', err => t.error(err))
       })
 
       t.test('should respond with 206 is all ranges can be combined', function (t) {
@@ -1261,7 +1261,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .set('Range', 'bytes=1-2,3-5')
           .expect('Content-Range', 'bytes 1-5/9')
-          .expect(206, '23456', () => t.pass())
+          .expect(206, '23456', err => t.error(err))
       })
     })
 
@@ -1292,7 +1292,7 @@ test('send(file).pipe(res)', function (t) {
               .get('/nums.txt')
               .set('If-Range', etag)
               .set('Range', 'bytes=0-0')
-              .expect(206, '1', () => t.pass())
+              .expect(206, '1', err => t.error(err))
           })
       })
 
@@ -1320,7 +1320,7 @@ test('send(file).pipe(res)', function (t) {
               .get('/nums.txt')
               .set('If-Range', etag)
               .set('Range', 'bytes=0-0')
-              .expect(200, '123456789', () => t.pass())
+              .expect(200, '123456789', err => t.error(err))
           })
       })
 
@@ -1348,7 +1348,7 @@ test('send(file).pipe(res)', function (t) {
               .get('/nums.txt')
               .set('If-Range', modified)
               .set('Range', 'bytes=0-0')
-              .expect(206, '1', () => t.pass())
+              .expect(206, '1', err => t.error(err))
           })
       })
 
@@ -1376,7 +1376,7 @@ test('send(file).pipe(res)', function (t) {
               .get('/nums.txt')
               .set('If-Range', new Date(modified).toUTCString())
               .set('Range', 'bytes=0-0')
-              .expect(200, '123456789', () => t.pass())
+              .expect(200, '123456789', err => t.error(err))
           })
       })
 
@@ -1398,7 +1398,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .set('If-Range', 'foo')
           .set('Range', 'bytes=0-0')
-          .expect(200, '123456789', () => t.pass())
+          .expect(200, '123456789', err => t.error(err))
       })
     })
   })
@@ -1411,7 +1411,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(createServer({ root: fixtures, start: 3, end: 5 }))
         .get('/nums.txt')
-        .expect(200, '456', () => t.pass())
+        .expect(200, '456', err => t.error(err))
     })
 
     t.test('should adjust too large end', function (t) {
@@ -1419,7 +1419,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(createServer({ root: fixtures, start: 3, end: 90 }))
         .get('/nums.txt')
-        .expect(200, '456789', () => t.pass())
+        .expect(200, '456789', err => t.error(err))
     })
 
     t.test('should support start/end with Range request', function (t) {
@@ -1428,7 +1428,7 @@ test('send(file).pipe(res)', function (t) {
       request(createServer({ root: fixtures, start: 0, end: 2 }))
         .get('/nums.txt')
         .set('Range', 'bytes=-2')
-        .expect(206, '23', () => t.pass())
+        .expect(206, '23', err => t.error(err))
     })
 
     t.test('should support start/end with unsatisfiable Range request', function (t) {
@@ -1438,7 +1438,7 @@ test('send(file).pipe(res)', function (t) {
         .get('/nums.txt')
         .set('Range', 'bytes=5-9')
         .expect('Content-Range', 'bytes */3')
-        .expect(416, () => t.pass())
+        .expect(416, err => t.error(err))
     })
   })
 
@@ -1457,7 +1457,7 @@ test('send(file).pipe(res)', function (t) {
       request(app)
         .get('/name.txt')
         .expect(shouldNotHaveHeader('ETag', t))
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
   })
 
@@ -1475,7 +1475,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/pets/../name.txt')
-        .expect(200, 'tobi', () => t.pass())
+        .expect(200, 'tobi', err => t.error(err))
     })
   })
 
@@ -1493,7 +1493,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/.hidden.txt')
-        .expect(200, 'secret', () => t.pass())
+        .expect(200, 'secret', err => t.error(err))
     })
   })
 
@@ -1511,7 +1511,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/')
-        .expect(200, '<p>tobi</p>', () => t.pass())
+        .expect(200, '<p>tobi</p>', err => t.error(err))
     })
 
     t.test('should support disabling', function (t) {
@@ -1525,7 +1525,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/pets/')
-        .expect(403, () => t.pass())
+        .expect(403, err => t.error(err))
     })
 
     t.test('should support fallbacks', function (t) {
@@ -1539,7 +1539,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/pets/')
-        .expect(200, fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'), () => t.pass())
+        .expect(200, fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'), err => t.error(err))
     })
   })
 
@@ -1557,7 +1557,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=0', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=0', err => t.error(err))
     })
 
     t.test('should floor to integer', function (t) {
@@ -1571,7 +1571,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=1', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=1', err => t.error(err))
     })
 
     t.test('should accept string', function (t) {
@@ -1585,7 +1585,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=2592000', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=2592000', err => t.error(err))
     })
 
     t.test('should max at 1 year', function (t) {
@@ -1599,7 +1599,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=31536000', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=31536000', err => t.error(err))
     })
   })
 
@@ -1617,7 +1617,7 @@ test('send(file).pipe(res)', function (t) {
 
       request(app)
         .get('/pets/../name.txt')
-        .expect(200, 'tobi', () => t.pass())
+        .expect(200, 'tobi', err => t.error(err))
     })
   })
 })

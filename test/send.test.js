@@ -26,7 +26,7 @@ test('send(file, options)', function (t) {
       request(createServer({ acceptRanges: false, root: fixtures }))
         .get('/nums.txt')
         .expect(shouldNotHaveHeader('Accept-Ranges', t))
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
 
     t.test('should ignore requested range', function (t) {
@@ -37,7 +37,7 @@ test('send(file, options)', function (t) {
         .set('Range', 'bytes=0-2')
         .expect(shouldNotHaveHeader('Accept-Ranges', t))
         .expect(shouldNotHaveHeader('Content-Range', t))
-        .expect(200, '123456789', () => t.pass())
+        .expect(200, '123456789', err => t.error(err))
     })
   })
 
@@ -49,7 +49,7 @@ test('send(file, options)', function (t) {
       request(createServer({ cacheControl: false, root: fixtures }))
         .get('/name.txt')
         .expect(shouldNotHaveHeader('Cache-Control', t))
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
 
     t.test('should ignore maxAge option', function (t) {
@@ -58,7 +58,7 @@ test('send(file, options)', function (t) {
       request(createServer({ cacheControl: false, maxAge: 1000, root: fixtures }))
         .get('/name.txt')
         .expect(shouldNotHaveHeader('Cache-Control', t))
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
   })
 
@@ -71,7 +71,7 @@ test('send(file, options)', function (t) {
       request(createServer({ etag: false, root: fixtures }))
         .get('/name.txt')
         .expect(shouldNotHaveHeader('ETag', t))
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
   })
 
@@ -83,7 +83,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ extensions: 42, root: fixtures }))
         .get('/pets/')
-        .expect(500, /TypeError: extensions option/, () => t.pass())
+        .expect(500, /TypeError: extensions option/, err => t.error(err))
     })
 
     t.test('should reject true', function (t) {
@@ -91,7 +91,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ extensions: true, root: fixtures }))
         .get('/pets/')
-        .expect(500, /TypeError: extensions option/, () => t.pass())
+        .expect(500, /TypeError: extensions option/, err => t.error(err))
     })
 
     t.test('should be not be enabled by default', function (t) {
@@ -99,7 +99,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures }))
         .get('/tobi')
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
 
     t.test('should be configurable', function (t) {
@@ -107,7 +107,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ extensions: 'txt', root: fixtures }))
         .get('/name')
-        .expect(200, 'tobi', () => t.pass())
+        .expect(200, 'tobi', err => t.error(err))
     })
 
     t.test('should support disabling extensions', function (t) {
@@ -115,7 +115,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ extensions: false, root: fixtures }))
         .get('/name')
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
 
     t.test('should support fallbacks', function (t) {
@@ -123,7 +123,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ extensions: ['htm', 'html', 'txt'], root: fixtures }))
         .get('/name')
-        .expect(200, '<p>tobi</p>', () => t.pass())
+        .expect(200, '<p>tobi</p>', err => t.error(err))
     })
 
     t.test('should 404 if nothing found', function (t) {
@@ -131,7 +131,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ extensions: ['htm', 'html', 'txt'], root: fixtures }))
         .get('/bob')
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
 
     t.test('should skip directories', function (t) {
@@ -139,7 +139,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ extensions: ['file', 'dir'], root: fixtures }))
         .get('/name')
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
 
     t.test('should not search if file has extension', function (t) {
@@ -147,7 +147,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ extensions: 'html', root: fixtures }))
         .get('/thing.html')
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
   })
 
@@ -160,7 +160,7 @@ test('send(file, options)', function (t) {
       request(createServer({ lastModified: false, root: fixtures }))
         .get('/name.txt')
         .expect(shouldNotHaveHeader('Last-Modified', t))
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
   })
 
@@ -172,7 +172,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ from: fixtures }))
         .get('/pets/../name.txt')
-        .expect(200, 'tobi', () => t.pass())
+        .expect(200, 'tobi', err => t.error(err))
     })
   })
 
@@ -184,7 +184,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures }))
         .get('/.hidden.txt')
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
 
     t.test('should allow file within dotfile directory for back-compat', function (t) {
@@ -192,7 +192,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures }))
         .get('/.mine/name.txt')
-        .expect(200, /tobi/, () => t.pass())
+        .expect(200, /tobi/, err => t.error(err))
     })
 
     t.test('should reject bad value', function (t) {
@@ -200,7 +200,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ dotfiles: 'bogus' }))
         .get('/name.txt')
-        .expect(500, /dotfiles/, () => t.pass())
+        .expect(500, /dotfiles/, err => t.error(err))
     })
 
     t.test('when "allow"', function (t) {
@@ -210,21 +210,21 @@ test('send(file, options)', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'allow', root: fixtures }))
           .get('/.hidden.txt')
-          .expect(200, 'secret', () => t.pass())
+          .expect(200, 'secret', err => t.error(err))
       })
 
       t.test('should send within dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'allow', root: fixtures }))
           .get('/.mine/name.txt')
-          .expect(200, /tobi/, () => t.pass())
+          .expect(200, /tobi/, err => t.error(err))
       })
 
       t.test('should 404 for non-existent dotfile', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'allow', root: fixtures }))
           .get('/.nothere')
-          .expect(404, () => t.pass())
+          .expect(404, err => t.error(err))
       })
     })
 
@@ -235,63 +235,63 @@ test('send(file, options)', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.hidden.txt')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should 403 for dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.mine')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should 403 for dotfile directory with trailing slash', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.mine/')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should 403 for file within dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.mine/name.txt')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should 403 for non-existent dotfile', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.nothere')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should 403 for non-existent dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.what/name.txt')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should 403 for dotfile in directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/pets/.hidden')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should 403 for dotfile in dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.mine/.hidden')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should send files in root dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: path.join(fixtures, '.mine') }))
           .get('/name.txt')
-          .expect(200, /tobi/, () => t.pass())
+          .expect(200, /tobi/, err => t.error(err))
       })
 
       t.test('should 403 for dotfile without root', function (t) {
@@ -302,7 +302,7 @@ test('send(file, options)', function (t) {
 
         request(server)
           .get('/name.txt')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
     })
 
@@ -314,7 +314,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.hidden.txt')
-          .expect(404, () => t.pass())
+          .expect(404, err => t.error(err))
       })
 
       t.test('should 404 for dotfile directory', function (t) {
@@ -322,7 +322,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.mine')
-          .expect(404, () => t.pass())
+          .expect(404, err => t.error(err))
       })
 
       t.test('should 404 for dotfile directory with trailing slash', function (t) {
@@ -330,7 +330,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.mine/')
-          .expect(404, () => t.pass())
+          .expect(404, err => t.error(err))
       })
 
       t.test('should 404 for file within dotfile directory', function (t) {
@@ -338,7 +338,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.mine/name.txt')
-          .expect(404, () => t.pass())
+          .expect(404, err => t.error(err))
       })
 
       t.test('should 404 for non-existent dotfile', function (t) {
@@ -346,7 +346,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.nothere')
-          .expect(404, () => t.pass())
+          .expect(404, err => t.error(err))
       })
 
       t.test('should 404 for non-existent dotfile directory', function (t) {
@@ -354,7 +354,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.what/name.txt')
-          .expect(404, () => t.pass())
+          .expect(404, err => t.error(err))
       })
 
       t.test('should send files in root dotfile directory', function (t) {
@@ -362,7 +362,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ dotfiles: 'ignore', root: path.join(fixtures, '.mine') }))
           .get('/name.txt')
-          .expect(200, /tobi/, () => t.pass())
+          .expect(200, /tobi/, err => t.error(err))
       })
 
       t.test('should 404 for dotfile without root', function (t) {
@@ -374,7 +374,7 @@ test('send(file, options)', function (t) {
 
         request(server)
           .get('/name.txt')
-          .expect(404, () => t.pass())
+          .expect(404, err => t.error(err))
       })
     })
   })
@@ -397,14 +397,14 @@ test('send(file, options)', function (t) {
       })
       request(app)
         .get('/.hidden.txt')
-        .expect(404, 'Not Found', () => t.pass())
+        .expect(404, 'Not Found', err => t.error(err))
     })
 
     t.test('should default support sending hidden files', function (t) {
       t.plan(1)
       request(createServer({ hidden: true, root: fixtures }))
         .get('/.hidden.txt')
-        .expect(200, 'secret', () => t.pass())
+        .expect(200, 'secret', err => t.error(err))
     })
   })
 
@@ -416,7 +416,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures }))
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=0', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=0', err => t.error(err))
     })
 
     t.test('should set immutable directive in Cache-Control', function (t) {
@@ -424,7 +424,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ immutable: true, maxAge: '1h', root: fixtures }))
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=3600, immutable', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=3600, immutable', err => t.error(err))
     })
   })
 
@@ -435,28 +435,28 @@ test('send(file, options)', function (t) {
       t.plan(1)
       request(createServer({ root: fixtures }))
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=0', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=0', err => t.error(err))
     })
 
     t.test('should floor to integer', function (t) {
       t.plan(1)
       request(createServer({ maxAge: 123956, root: fixtures }))
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=123', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=123', err => t.error(err))
     })
 
     t.test('should accept string', function (t) {
       t.plan(1)
       request(createServer({ maxAge: '30d', root: fixtures }))
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=2592000', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=2592000', err => t.error(err))
     })
 
     t.test('should max at 1 year', function (t) {
       t.plan(1)
       request(createServer({ maxAge: '2y', root: fixtures }))
         .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=31536000', () => t.pass())
+        .expect('Cache-Control', 'public, max-age=31536000', err => t.error(err))
     })
   })
 
@@ -468,7 +468,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures, index: 42 }))
         .get('/pets/')
-        .expect(500, /TypeError: index option/, () => t.pass())
+        .expect(500, /TypeError: index option/, err => t.error(err))
     })
 
     t.test('should reject true', function (t) {
@@ -476,7 +476,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures, index: true }))
         .get('/pets/')
-        .expect(500, /TypeError: index option/, () => t.pass())
+        .expect(500, /TypeError: index option/, err => t.error(err))
     })
 
     t.test('should default to index.html', function (t) {
@@ -484,7 +484,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures }))
         .get('/pets/')
-        .expect(fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'), () => t.pass())
+        .expect(fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'), err => t.error(err))
     })
 
     t.test('should be configurable', function (t) {
@@ -492,7 +492,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures, index: 'tobi.html' }))
         .get('/')
-        .expect(200, '<p>tobi</p>', () => t.pass())
+        .expect(200, '<p>tobi</p>', err => t.error(err))
     })
 
     t.test('should support disabling', function (t) {
@@ -500,7 +500,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures, index: false }))
         .get('/pets/')
-        .expect(403, () => t.pass())
+        .expect(403, err => t.error(err))
     })
 
     t.test('should support fallbacks', function (t) {
@@ -508,7 +508,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures, index: ['default.htm', 'index.html'] }))
         .get('/pets/')
-        .expect(200, fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'), () => t.pass())
+        .expect(200, fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'), err => t.error(err))
     })
 
     t.test('should 404 if no index file found (file)', function (t) {
@@ -516,7 +516,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures, index: 'default.htm' }))
         .get('/pets/')
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
 
     t.test('should 404 if no index file found (dir)', function (t) {
@@ -524,7 +524,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures, index: 'pets' }))
         .get('/')
-        .expect(404, () => t.pass())
+        .expect(404, err => t.error(err))
     })
 
     t.test('should not follow directories', function (t) {
@@ -532,7 +532,7 @@ test('send(file, options)', function (t) {
 
       request(createServer({ root: fixtures, index: ['pets', 'name.txt'] }))
         .get('/')
-        .expect(200, 'tobi', () => t.pass())
+        .expect(200, 'tobi', err => t.error(err))
     })
 
     t.test('should work without root', function (t) {
@@ -546,7 +546,7 @@ test('send(file, options)', function (t) {
 
       request(server)
         .get('/')
-        .expect(200, /tobi/, () => t.pass())
+        .expect(200, /tobi/, err => t.error(err))
     })
   })
 
@@ -560,7 +560,7 @@ test('send(file, options)', function (t) {
         t.plan(1)
         request(createServer({ root: fixtures }))
           .get('/pets/../name.txt')
-          .expect(200, 'tobi', () => t.pass())
+          .expect(200, 'tobi', err => t.error(err))
       })
 
       t.test('should work with trailing slash', function (t) {
@@ -573,7 +573,7 @@ test('send(file, options)', function (t) {
 
         request(app)
           .get('/name.txt')
-          .expect(200, 'tobi', () => t.pass())
+          .expect(200, 'tobi', err => t.error(err))
       })
 
       t.test('should work with empty path', function (t) {
@@ -586,7 +586,7 @@ test('send(file, options)', function (t) {
 
         request(app)
           .get('/name.txt')
-          .expect(301, /Redirecting to/, () => t.pass())
+          .expect(301, /Redirecting to/, err => t.error(err))
       })
 
       //
@@ -605,7 +605,7 @@ test('send(file, options)', function (t) {
 
         request(app)
           .get('/')
-          .expect(200, 'tobi', () => t.pass())
+          .expect(200, 'tobi', err => t.error(err))
       })
 
       t.test('should restrict paths to within root', function (t) {
@@ -613,7 +613,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ root: fixtures }))
           .get('/pets/../../send.js')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should allow .. in root', function (t) {
@@ -626,7 +626,7 @@ test('send(file, options)', function (t) {
 
         request(app)
           .get('/pets/../../send.js')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should not allow root transversal', function (t) {
@@ -634,7 +634,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ root: path.join(fixtures, 'name.d') }))
           .get('/../name.dir/name.txt')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should not allow root path disclosure', function (t) {
@@ -642,7 +642,7 @@ test('send(file, options)', function (t) {
 
         request(createServer({ root: fixtures }))
           .get('/pets/../../fixtures/name.txt')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
     })
 
@@ -659,7 +659,7 @@ test('send(file, options)', function (t) {
 
         request(app)
           .get('/../send.js')
-          .expect(403, () => t.pass())
+          .expect(403, err => t.error(err))
       })
 
       t.test('should still serve files with dots in name', function (t) {
@@ -672,7 +672,7 @@ test('send(file, options)', function (t) {
 
         request(app)
           .get('/do..ts.txt')
-          .expect(200, '...', () => t.pass())
+          .expect(200, '...', err => t.error(err))
       })
     })
   })
