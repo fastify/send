@@ -32,18 +32,13 @@
   },
   "devDependencies": {
     "after": "0.8.2",
-    "eslint": "7.32.0",
-    "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.25.4",
-    "eslint-plugin-markdown": "2.2.1",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "5.2.0",
-    "eslint-plugin-standard": "4.1.0",
+    "standard": "^17.0.0",
     "supertest": "6.2.2",
     "tap": "^16.3.3"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
     "test": "npm run test:unit",
     "test:unit": "tap"
   }
