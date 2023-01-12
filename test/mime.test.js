@@ -19,7 +19,7 @@ test('send.mime', function (t) {
   })
 
   t.test('.default_type', function (t) {
-    t.plan(2)
+    t.plan(3)
 
     t.before(function () {
       this.default_type = send.mime.default_type
@@ -46,6 +46,15 @@ test('send.mime', function (t) {
       request(createServer({ root: fixtures }))
         .get('/no_ext')
         .expect(shouldNotHaveHeader('Content-Type', t))
+        .expect(200, () => t.pass())
+    })
+
+    t.test('should return Content-Type without charset', function (t) {
+      t.plan(1)
+
+      request(createServer({ root: fixtures }))
+        .get('/images/node-js.png')
+        .expect('Content-Type', 'image/png')
         .expect(200, () => t.pass())
     })
   })

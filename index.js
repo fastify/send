@@ -63,14 +63,6 @@ const MAX_MAXAGE = 60 * 60 * 24 * 365 * 1000 // 1 year
 const UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/
 
 /**
- * Module exports.
- * @public
- */
-
-module.exports = send
-module.exports.mime = mime
-
-/**
  * Return a `SendStream` for `req` and `path`.
  *
  * @param {object} req
@@ -814,6 +806,9 @@ SendStream.prototype.stream = function stream (path, options) {
   })
 }
 
+const utf8MimeTypeRE = /^text\/|^application\/(javascript|json)/
+const isUtf8MimeType = utf8MimeTypeRE.test.bind(utf8MimeTypeRE)
+
 /**
  * Set content-type based on `path`
  * if it hasn't been explicitly set.
@@ -827,17 +822,19 @@ SendStream.prototype.type = function type (path) {
 
   if (res.getHeader('Content-Type')) return
 
-  const type = mime.lookup(path)
+  const type = mime.getType(path) || mime.default_type
 
   if (!type) {
     debug('no content-type')
     return
   }
 
-  const charset = mime.charsets.lookup(type)
-
   debug('content-type %s', type)
-  res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''))
+  if (isUtf8MimeType(type)) {
+    res.setHeader('Content-Type', type + '; charset=UTF-8')
+  } else {
+    res.setHeader('Content-Type', type)
+  }
 }
 
 /**
@@ -1142,3 +1139,15 @@ function setHeaders (res, headers) {
     res.setHeader(key, headers[key])
   }
 }
+
+/**
+ * Module exports.
+ * @public
+ */
+
+module.exports = send
+module.exports.default = send
+module.exports.send = send
+
+module.exports.isUtf8MimeType = isUtf8MimeType
+module.exports.mime = mime
