@@ -1,4 +1,4 @@
 files:
   - test/**/*.test.js
 
-check-coverage: 96
+branches: 96
