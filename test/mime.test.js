@@ -36,7 +36,7 @@ test('send.mime', function (t) {
       request(createServer({ root: fixtures }))
         .get('/no_ext')
         .expect('Content-Type', 'text/plain; charset=UTF-8')
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
 
     t.test('should not add Content-Type for undefined default', function (t) {
@@ -46,7 +46,7 @@ test('send.mime', function (t) {
       request(createServer({ root: fixtures }))
         .get('/no_ext')
         .expect(shouldNotHaveHeader('Content-Type', t))
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
 
     t.test('should return Content-Type without charset', function (t) {
@@ -55,7 +55,7 @@ test('send.mime', function (t) {
       request(createServer({ root: fixtures }))
         .get('/images/node-js.png')
         .expect('Content-Type', 'image/png')
-        .expect(200, () => t.pass())
+        .expect(200, err => t.error(err))
     })
   })
 })
