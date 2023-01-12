@@ -3,12 +3,12 @@
 process.env.NO_DEPRECATION = 'send'
 
 const { test } = require('tap')
-var path = require('path')
-var request = require('supertest')
-var send = require('..')
+const path = require('path')
+const request = require('supertest')
+const send = require('..')
 const { shouldNotHaveHeader, createServer } = require('./utils')
 
-var fixtures = path.join(__dirname, 'fixtures')
+const fixtures = path.join(__dirname, 'fixtures')
 
 test('send.mime', function (t) {
   t.plan(2)

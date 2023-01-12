@@ -3,16 +3,16 @@
 process.env.NO_DEPRECATION = 'send'
 
 const { test } = require('tap')
-var after = require('after')
-var fs = require('fs')
-var http = require('http')
-var path = require('path')
-var request = require('supertest')
-var send = require('..')
+const after = require('after')
+const fs = require('fs')
+const http = require('http')
+const path = require('path')
+const request = require('supertest')
+const send = require('..')
 const { shouldNotHaveBody, createServer, shouldNotHaveHeader } = require('./utils')
 
-var dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
-var fixtures = path.join(__dirname, 'fixtures')
+const dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
+const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file).pipe(res)', function (t) {
   t.plan(32)
@@ -20,7 +20,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should stream the file contents', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -40,7 +40,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should stream a zero-length file', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -60,7 +60,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should decode the given path as a URI', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -79,7 +79,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should serve files with dots in name', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -98,7 +98,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should treat a malformed URI as a bad request', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -117,7 +117,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should 400 on NULL bytes', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -136,7 +136,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should treat an ENAMETOOLONG as a 404', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -147,7 +147,7 @@ test('send(file).pipe(res)', function (t) {
         .pipe(res)
     })
 
-    var path = Array(100).join('foobar')
+    const path = Array(100).join('foobar')
     request(app)
       .get('/' + path)
       .expect(404, () => t.pass())
@@ -156,7 +156,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should handle headers already sent error', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       res.write('0')
       send(req, req.url, { root: fixtures })
         .on('error', function (err) { res.end(' - ' + err.message) })
@@ -170,7 +170,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should support HEAD', function (t) {
     t.plan(2)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -192,7 +192,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should add an ETag header field', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -212,7 +212,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should add a Date header field', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -231,7 +231,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should add a Last-Modified header field', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -250,7 +250,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should add a Accept-Ranges header field', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -269,7 +269,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should 404 if the file does not exist', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -288,7 +288,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should emit ENOENT if the file does not exist', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       send(req, req.url, { root: fixtures })
         .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
         .pipe(res)
@@ -302,7 +302,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should not override content-type', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       res.setHeader('Content-Type', 'application/x-custom')
       send(req, req.url, { root: fixtures }).pipe(res)
     })
@@ -314,7 +314,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should set Content-Type via mime map', function (t) {
     t.plan(2)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       function error (err) {
         res.statusCode = err.status
         res.end(http.STATUS_CODES[err.status])
@@ -340,11 +340,11 @@ test('send(file).pipe(res)', function (t) {
   t.test('should 404 if file disappears after stat, before open', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       send(req, req.url, { root: 'test/fixtures' })
         .on('file', function () {
           // simulate file ENOENT after on open, after stat
-          var fn = this.send
+          const fn = this.send
           this.send = function (path, stat) {
             fn.call(this, (path + '__xxx_no_exist'), stat)
           }
@@ -360,7 +360,7 @@ test('send(file).pipe(res)', function (t) {
   t.test('should 500 on file stream error', function (t) {
     t.plan(1)
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       send(req, req.url, { root: 'test/fixtures' })
         .on('stream', function (stream) {
           // simulate file error
@@ -380,8 +380,8 @@ test('send(file).pipe(res)', function (t) {
     t.plan(7)
     t.test('should fire when sending file', function (t) {
       t.plan(1)
-      var cb = after(2, () => t.pass())
-      var server = http.createServer(function (req, res) {
+      const cb = after(2, () => t.pass())
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
@@ -394,8 +394,8 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should not fire on 404', function (t) {
       t.plan(1)
-      var cb = after(1, () => t.pass())
-      var server = http.createServer(function (req, res) {
+      const cb = after(1, () => t.pass())
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
@@ -408,8 +408,8 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should fire on index', function (t) {
       t.plan(1)
-      var cb = after(2, () => t.pass())
-      var server = http.createServer(function (req, res) {
+      const cb = after(2, () => t.pass())
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
@@ -422,8 +422,8 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should not fire on redirect', function (t) {
       t.plan(1)
-      var cb = after(1, () => t.pass())
-      var server = http.createServer(function (req, res) {
+      const cb = after(1, () => t.pass())
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
@@ -436,8 +436,8 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should provide path', function (t) {
       t.plan(3)
-      var cb = after(2, () => t.pass())
-      var server = http.createServer(function (req, res) {
+      const cb = after(2, () => t.pass())
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
@@ -456,8 +456,8 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should provide stat', function (t) {
       t.plan(4)
-      var cb = after(2, () => t.pass())
-      var server = http.createServer(function (req, res) {
+      const cb = after(2, () => t.pass())
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
@@ -477,7 +477,7 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should allow altering headers', function (t) {
       t.plan(1)
-      var server = http.createServer(function (req, res) {
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
@@ -507,7 +507,7 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should be called when sending directory', function (t) {
       t.plan(1)
-      var server = http.createServer(function (req, res) {
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('directory', onDirectory)
           .pipe(res)
@@ -525,7 +525,7 @@ test('send(file).pipe(res)', function (t) {
 
     t.test('should be called with path', function (t) {
       t.plan(1)
-      var server = http.createServer(function (req, res) {
+      const server = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .on('directory', onDirectory)
           .pipe(res)
@@ -585,7 +585,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should respond with an HTML redirect', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url.replace('/snow', '/snow ☃'), { root: 'test/fixtures' })
           .pipe(res)
       })
@@ -621,7 +621,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should remove all previously-set headers', function (t) {
       t.plan(2)
 
-      var server = createServer({ root: fixtures }, function (req, res) {
+      const server = createServer({ root: fixtures }, function (req, res) {
         res.setHeader('X-Foo', 'bar')
       })
 
@@ -638,7 +638,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should remove Content headers with 304', function (t) {
       t.plan(5)
 
-      var server = createServer({ root: fixtures }, function (req, res) {
+      const server = createServer({ root: fixtures }, function (req, res) {
         res.setHeader('Content-Language', 'en-US')
         res.setHeader('Content-Location', 'http://localhost/name.txt')
         res.setHeader('Contents', 'foo')
@@ -663,7 +663,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should not remove all Content-* headers', function (t) {
       t.plan(4)
 
-      var server = createServer({ root: fixtures }, function (req, res) {
+      const server = createServer({ root: fixtures }, function (req, res) {
         res.setHeader('Content-Location', 'http://localhost/name.txt')
         res.setHeader('Content-Security-Policy', 'default-src \'self\'')
       })
@@ -689,7 +689,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when "*"', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -709,7 +709,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 412 when ETag unmatched', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -729,7 +729,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when ETag matched', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -758,7 +758,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 304 when unmodified', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -783,7 +783,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when modified', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -798,8 +798,8 @@ test('send(file).pipe(res)', function (t) {
           .get('/name.txt')
           .expect(200, function (err, res) {
             t.error(err)
-            var lmod = new Date(res.headers['last-modified'])
-            var date = new Date(lmod - 60000)
+            const lmod = new Date(res.headers['last-modified'])
+            const date = new Date(lmod - 60000)
             request(app)
               .get('/name.txt')
               .set('If-Modified-Since', date.toUTCString())
@@ -814,7 +814,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 304 when ETag matched', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -839,7 +839,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when ETag unmatched', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -868,7 +868,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when unmodified', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -893,7 +893,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 412 when modified', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -908,8 +908,8 @@ test('send(file).pipe(res)', function (t) {
           .get('/name.txt')
           .expect(200, function (err, res) {
             t.error(err)
-            var lmod = new Date(res.headers['last-modified'])
-            var date = new Date(lmod - 60000).toUTCString()
+            const lmod = new Date(res.headers['last-modified'])
+            const date = new Date(lmod - 60000).toUTCString()
             request(app)
               .get('/name.txt')
               .set('If-Unmodified-Since', date)
@@ -920,7 +920,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when invalid date', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -945,7 +945,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should support byte ranges', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -965,7 +965,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should ignore non-byte ranges', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -985,7 +985,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should be inclusive', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -1005,7 +1005,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should set Content-Range', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -1026,7 +1026,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should support -n', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -1046,7 +1046,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should support n-', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -1066,7 +1066,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should respond with 206 "Partial Content"', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -1086,7 +1086,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should set Content-Length to the # of octets transferred', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -1110,7 +1110,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('is taken to be equal to one less than the length', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1131,7 +1131,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should adapt the Content-Length accordingly', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1156,7 +1156,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 416', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1177,7 +1177,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should emit error 416 with content-range header', function (t) {
         t.plan(1)
 
-        var server = http.createServer(function (req, res) {
+        const server = http.createServer(function (req, res) {
           send(req, req.url, { root: fixtures })
             .on('error', function (err) {
               res.setHeader('X-Content-Range', err.headers['Content-Range'])
@@ -1201,7 +1201,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 and the entire contents', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1225,7 +1225,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 and the entire contents', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1246,7 +1246,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 206 is all ranges can be combined', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1271,7 +1271,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with parts when etag unchanged', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1286,7 +1286,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .expect(200, function (err, res) {
             t.error(err)
-            var etag = res.headers.etag
+            const etag = res.headers.etag
 
             request(app)
               .get('/nums.txt')
@@ -1299,7 +1299,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when etag changed', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1314,7 +1314,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .expect(200, function (err, res) {
             t.error(err)
-            var etag = res.headers.etag.replace(/"(.)/, '"0$1')
+            const etag = res.headers.etag.replace(/"(.)/, '"0$1')
 
             request(app)
               .get('/nums.txt')
@@ -1327,7 +1327,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with parts when modified unchanged', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1342,7 +1342,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .expect(200, function (err, res) {
             t.error(err)
-            var modified = res.headers['last-modified']
+            const modified = res.headers['last-modified']
 
             request(app)
               .get('/nums.txt')
@@ -1355,7 +1355,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when modified changed', function (t) {
         t.plan(2)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1370,7 +1370,7 @@ test('send(file).pipe(res)', function (t) {
           .get('/nums.txt')
           .expect(200, function (err, res) {
             t.error(err)
-            var modified = Date.parse(res.headers['last-modified']) - 20000
+            const modified = Date.parse(res.headers['last-modified']) - 20000
 
             request(app)
               .get('/nums.txt')
@@ -1383,7 +1383,7 @@ test('send(file).pipe(res)', function (t) {
       t.test('should respond with 200 when invalid value', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           function error (err) {
             res.statusCode = err.status
             res.end(http.STATUS_CODES[err.status])
@@ -1448,7 +1448,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should support disabling etags', function (t) {
       t.plan(2)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .etag(false)
           .pipe(res)
@@ -1467,7 +1467,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should set with deprecated from', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url)
           .from(fixtures)
           .pipe(res)
@@ -1485,7 +1485,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should default support sending hidden files', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .hidden(true)
           .pipe(res)
@@ -1503,7 +1503,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should be configurable', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .index('tobi.html')
           .pipe(res)
@@ -1517,7 +1517,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should support disabling', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .index(false)
           .pipe(res)
@@ -1531,7 +1531,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should support fallbacks', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url, { root: fixtures })
           .index(['default.htm', 'index.html'])
           .pipe(res)
@@ -1549,7 +1549,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should default to 0', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, 'test/fixtures/name.txt')
           .maxage(undefined)
           .pipe(res)
@@ -1563,7 +1563,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should floor to integer', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, 'test/fixtures/name.txt')
           .maxage(1234)
           .pipe(res)
@@ -1577,7 +1577,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should accept string', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, 'test/fixtures/name.txt')
           .maxage('30d')
           .pipe(res)
@@ -1591,7 +1591,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should max at 1 year', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, 'test/fixtures/name.txt')
           .maxage(Infinity)
           .pipe(res)
@@ -1609,7 +1609,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should set root', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         send(req, req.url)
           .root(fixtures)
           .pipe(res)

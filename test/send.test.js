@@ -3,16 +3,16 @@
 process.env.NO_DEPRECATION = 'send'
 
 const { test } = require('tap')
-var fs = require('fs')
-var http = require('http')
-var path = require('path')
-var request = require('supertest')
-var send = require('..')
+const fs = require('fs')
+const http = require('http')
+const path = require('path')
+const request = require('supertest')
+const send = require('..')
 const { shouldNotHaveHeader, createServer } = require('./utils')
 
 // test server
 
-var fixtures = path.join(__dirname, 'fixtures')
+const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file, options)', function (t) {
   t.plan(12)
@@ -296,7 +296,7 @@ test('send(file, options)', function (t) {
 
       t.test('should 403 for dotfile without root', function (t) {
         t.plan(1)
-        var server = http.createServer(function onRequest (req, res) {
+        const server = http.createServer(function onRequest (req, res) {
           send(req, fixtures + '/.mine' + req.url, { dotfiles: 'deny' }).pipe(res)
         })
 
@@ -368,7 +368,7 @@ test('send(file, options)', function (t) {
       t.test('should 404 for dotfile without root', function (t) {
         t.plan(1)
 
-        var server = http.createServer(function onRequest (req, res) {
+        const server = http.createServer(function onRequest (req, res) {
           send(req, fixtures + '/.mine' + req.url, { dotfiles: 'ignore' }).pipe(res)
         })
 
@@ -385,7 +385,7 @@ test('send(file, options)', function (t) {
     t.test('should default to false', function (t) {
       t.plan(1)
 
-      var app = http.createServer(function (req, res) {
+      const app = http.createServer(function (req, res) {
         function error (err) {
           res.statusCode = err.status
           res.end(http.STATUS_CODES[err.status])
@@ -538,8 +538,8 @@ test('send(file, options)', function (t) {
     t.test('should work without root', function (t) {
       t.plan(1)
 
-      var server = http.createServer(function (req, res) {
-        var p = path.join(fixtures, 'pets').replace(/\\/g, '/') + '/'
+      const server = http.createServer(function (req, res) {
+        const p = path.join(fixtures, 'pets').replace(/\\/g, '/') + '/'
         send(req, p, { index: ['index.html'] })
           .pipe(res)
       })
@@ -566,7 +566,7 @@ test('send(file, options)', function (t) {
       t.test('should work with trailing slash', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, req.url, { root: fixtures + '/' })
             .pipe(res)
         })
@@ -579,7 +579,7 @@ test('send(file, options)', function (t) {
       t.test('should work with empty path', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, '', { root: fixtures })
             .pipe(res)
         })
@@ -598,7 +598,7 @@ test('send(file, options)', function (t) {
       t.test('should try as file with empty path', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, '', { root: path.join(fixtures, 'name.txt') })
             .pipe(res)
         })
@@ -619,7 +619,7 @@ test('send(file, options)', function (t) {
       t.test('should allow .. in root', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, req.url, { root: fixtures + '/../fixtures' })
             .pipe(res)
         })
@@ -652,7 +652,7 @@ test('send(file, options)', function (t) {
       t.test('should consider .. malicious', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, fixtures + req.url)
             .pipe(res)
         })
@@ -665,7 +665,7 @@ test('send(file, options)', function (t) {
       t.test('should still serve files with dots in name', function (t) {
         t.plan(1)
 
-        var app = http.createServer(function (req, res) {
+        const app = http.createServer(function (req, res) {
           send(req, fixtures + req.url)
             .pipe(res)
         })
