@@ -42,16 +42,6 @@
     "supertest": "6.2.2",
     "tap": "^16.3.3"
   },
-  "files": [
-    "HISTORY.md",
-    "LICENSE",
-    "README.md",
-    "SECURITY.md",
-    "index.js"
-  ],
-  "engines": {
-    "node": ">= 0.8.0"
-  },
   "scripts": {
     "lint": "eslint .",
     "test": "npm run test:unit",
