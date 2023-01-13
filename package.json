@@ -44,6 +44,7 @@
     "lint": "standard | snazzy",
     "lint:fix": "standard --fix | snazzy",
     "test": "npm run test:unit && npm run test:typescript",
+    "test:coverage": "tap --coverage-report=html",
     "test:typescript": "tsd",
     "test:unit": "tap"
   }

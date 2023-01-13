@@ -6,13 +6,14 @@ const http = require('http')
 const path = require('path')
 const request = require('supertest')
 const send = require('..')
+const os = require('os')
 const { shouldNotHaveBody, createServer, shouldNotHaveHeader } = require('./utils')
 
 const dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
 const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file).pipe(res)', function (t) {
-  t.plan(27)
+  t.plan(29)
 
   t.test('should stream the file contents', function (t) {
     t.plan(1)
@@ -294,6 +295,36 @@ test('send(file).pipe(res)', function (t) {
     request(app)
       .get('/meow')
       .expect(200, '404 ENOENT', err => t.error(err))
+  })
+
+  t.test('should emit ENAMETOOLONG if the filename is too long', function (t) {
+    t.plan(1)
+
+    const app = http.createServer(function (req, res) {
+      send(req, req.url, { root: fixtures })
+        .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
+        .pipe(res)
+    })
+
+    const longFilename = new Array(512).fill('a').join('')
+
+    request(app)
+      .get('/' + longFilename)
+      .expect(200, os.platform() === 'win32' ? '404 ENOENT' : '404 ENAMETOOLONG', err => t.error(err))
+  })
+
+  t.test('should emit ENOTDIR if the requested resource is not a directory', function (t) {
+    t.plan(1)
+
+    const app = http.createServer(function (req, res) {
+      send(req, req.url, { root: fixtures })
+        .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
+        .pipe(res)
+    })
+
+    request(app)
+      .get('/nums.txt/invalid')
+      .expect(200, os.platform() === 'win32' ? '404 ENOENT' : '404 ENOTDIR', err => t.error(err))
   })
 
   t.test('should not override content-type', function (t) {
@@ -630,7 +661,7 @@ test('send(file).pipe(res)', function (t) {
   })
 
   t.test('with conditional-GET', function (t) {
-    t.plan(6)
+    t.plan(7)
 
     t.test('should remove Content headers with 304', function (t) {
       t.plan(5)
@@ -644,6 +675,32 @@ test('send(file).pipe(res)', function (t) {
       request(server)
         .get('/name.txt')
         .expect(200, function (err, res) {
+          t.error(err)
+          request(server)
+            .get('/name.txt')
+            .set('If-None-Match', res.headers.etag)
+            .expect(shouldNotHaveHeader('Content-Language', t))
+            .expect(shouldNotHaveHeader('Content-Length', t))
+            .expect(shouldNotHaveHeader('Content-Type', t))
+            .expect('Content-Location', 'http://localhost/name.txt')
+            .expect('Contents', 'foo')
+            .expect(304, err => t.error(err))
+        })
+    })
+
+    t.test('should remove Content headers with 304 /2', function (t) {
+      t.plan(5)
+
+      const server = createServer({ root: fixtures }, function (req, res) {
+        res.setHeader('Content-Language', 'en-US')
+        res.setHeader('Content-Location', 'http://localhost/name.txt')
+        res.setHeader('Contents', 'foo')
+        res.statusCode = 304
+      })
+
+      request(server)
+        .get('/name.txt')
+        .expect(304, function (err, res) {
           t.error(err)
           request(server)
             .get('/name.txt')
