@@ -32,6 +32,7 @@
     "statuses": "2.0.1"
   },
   "devDependencies": {
+    "@fastify/pre-commit": "^2.0.2",
     "@types/node": "^18.11.18",
     "after": "0.8.2",
     "snazzy": "^9.0.0",
@@ -47,5 +48,9 @@
     "test:coverage": "tap --coverage-report=html",
     "test:typescript": "tsd",
     "test:unit": "tap"
-  }
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ]
 }
