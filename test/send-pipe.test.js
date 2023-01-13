@@ -12,7 +12,7 @@ const dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
 const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file).pipe(res)', function (t) {
-  t.plan(28)
+  t.plan(29)
 
   t.test('should stream the file contents', function (t) {
     t.plan(1)
@@ -310,6 +310,22 @@ test('send(file).pipe(res)', function (t) {
     request(app)
       .get('/' + longFilename)
       .expect(200, '404 ENAMETOOLONG', err => t.error(err))
+  })
+
+  t.test('should emit ENOTDIR if the requested resource is not a directory', function (t) {
+    t.plan(1)
+
+    const app = http.createServer(function (req, res) {
+      send(req, req.url, { root: fixtures })
+        .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
+        .pipe(res)
+    })
+
+    request(app)
+      .get('/nums.txt/invalid')
+      .expect(200, '404 ENOTDIR', 
+      
+      err => t.error(err))
   })
 
   t.test('should not override content-type', function (t) {
