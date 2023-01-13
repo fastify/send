@@ -1,7 +1,5 @@
 'use strict'
 
-process.env.NO_DEPRECATION = 'send'
-
 const { test } = require('tap')
 const path = require('path')
 const request = require('supertest')

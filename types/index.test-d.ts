@@ -17,9 +17,7 @@ send(req, '/test.html', {
   root: __dirname + '/wwwroot'
 }).pipe(res);
 
-send(req, '/test.html')
-  .maxage(0)
-  .root(__dirname + '/wwwroot')
+send(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot'})
   .on('error', (err: any) => {
     res.statusCode = err.status || 500;
     res.end(err.message);
