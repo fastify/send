@@ -25,7 +25,6 @@ const ms = require('ms')
 const onFinished = require('on-finished')
 const parseRange = require('range-parser')
 const path = require('path')
-const statuses = require('statuses')
 const Stream = require('stream')
 const util = require('util')
 
@@ -60,6 +59,15 @@ const MAX_MAXAGE = 60 * 60 * 24 * 365 * 1000 // 1 year
  */
 
 const UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/
+
+const ERROR_RESPONSES = {
+  400: createHtmlDocument('Error', 'Bad Request'),
+  403: createHtmlDocument('Error', 'Forbidden'),
+  404: createHtmlDocument('Error', 'Not Found'),
+  412: createHtmlDocument('Error', 'Precondition Failed'),
+  416: createHtmlDocument('Error', 'Range Not Satisfiable'),
+  500: createHtmlDocument('Error', 'Internal Server Error')
+}
 
 /**
  * Return a `SendStream` for `req` and `path`.
@@ -184,8 +192,6 @@ SendStream.prototype.error = function error (status, err) {
   }
 
   const res = this.res
-  const msg = statuses.message[status]
-  const doc = createHtmlDocument('Error', escapeHtml(msg))
 
   // clear existing headers
   clearHeaders(res)
@@ -195,13 +201,15 @@ SendStream.prototype.error = function error (status, err) {
     setHeaders(res, err.headers)
   }
 
+  const doc = ERROR_RESPONSES[status]
+
   // send basic response
   res.statusCode = status
   res.setHeader('Content-Type', 'text/html; charset=UTF-8')
-  res.setHeader('Content-Length', Buffer.byteLength(doc))
+  res.setHeader('Content-Length', doc[1])
   res.setHeader('Content-Security-Policy', "default-src 'none'")
   res.setHeader('X-Content-Type-Options', 'nosniff')
-  res.end(doc)
+  res.end(doc[0])
 }
 
 /**
@@ -403,11 +411,11 @@ SendStream.prototype.redirect = function redirect (path) {
   // redirect
   res.statusCode = 301
   res.setHeader('Content-Type', 'text/html; charset=UTF-8')
-  res.setHeader('Content-Length', Buffer.byteLength(doc))
+  res.setHeader('Content-Length', doc[1])
   res.setHeader('Content-Security-Policy', "default-src 'none'")
   res.setHeader('X-Content-Type-Options', 'nosniff')
   res.setHeader('Location', loc)
-  res.end(doc)
+  res.end(doc[0])
 }
 
 /**
@@ -874,7 +882,7 @@ function contentRange (type, size, range) {
  */
 
 function createHtmlDocument (title, body) {
-  return '<!DOCTYPE html>\n' +
+  const html = '<!DOCTYPE html>\n' +
     '<html lang="en">\n' +
     '<head>\n' +
     '<meta charset="utf-8">\n' +
@@ -884,6 +892,8 @@ function createHtmlDocument (title, body) {
     '<pre>' + body + '</pre>\n' +
     '</body>\n' +
     '</html>\n'
+
+  return [html, Buffer.byteLength(html)]
 }
 
 /**
