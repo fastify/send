@@ -325,7 +325,11 @@ SendStream.prototype.isCachable = function isCachable () {
 SendStream.prototype.onStatError = function onStatError (error) {
   switch (error.code) {
     case 'ENAMETOOLONG':
+      this.error(404, error)
+      break
     case 'ENOENT':
+      this.error(404, error)
+      break
     case 'ENOTDIR':
       this.error(404, error)
       break
