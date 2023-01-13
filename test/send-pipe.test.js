@@ -12,7 +12,7 @@ const dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
 const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file).pipe(res)', function (t) {
-  t.plan(27)
+  t.plan(28)
 
   t.test('should stream the file contents', function (t) {
     t.plan(1)
@@ -294,6 +294,22 @@ test('send(file).pipe(res)', function (t) {
     request(app)
       .get('/meow')
       .expect(200, '404 ENOENT', err => t.error(err))
+  })
+
+  t.test('should emit ENAMETOOLONG if the filename is too long', function (t) {
+    t.plan(1)
+
+    const app = http.createServer(function (req, res) {
+      send(req, req.url, { root: fixtures })
+        .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
+        .pipe(res)
+    })
+
+    const longFilename = new Array(256).fill('a').join('')
+
+    request(app)
+      .get('/' + longFilename)
+      .expect(200, '404 ENAMETOOLONG', err => t.error(err))
   })
 
   t.test('should not override content-type', function (t) {
