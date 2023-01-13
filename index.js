@@ -251,14 +251,16 @@ SendStream.prototype.maxage = deprecate.function(function maxage (maxAge) {
 /**
  * Emit error with `status`.
  *
+ * @memberof SendStream
  * @param {number} status
  * @param {Error} [err]
+ * @this {Stream}
  * @private
  */
 
 SendStream.prototype.error = function error (status, err) {
   // emit if listeners instead of responding
-  if (hasListeners(this, 'error')) {
+  if (this.listenerCount('error')) {
     return this.emit('error', createHttpError(status, err))
   }
 
@@ -463,7 +465,7 @@ SendStream.prototype.isRangeFresh = function isRangeFresh () {
 SendStream.prototype.redirect = function redirect (path) {
   const res = this.res
 
-  if (hasListeners(this, 'directory')) {
+  if (this.listenerCount('directory')) {
     this.emit('directory', res, path)
     return
   }
@@ -1012,26 +1014,6 @@ function getHeaderNames (res) {
   return typeof res.getHeaderNames !== 'function'
     ? Object.keys(res._headers || {})
     : res.getHeaderNames()
-}
-
-/**
- * Determine if emitter has listeners of a given type.
- *
- * The way to do this check is done three different ways in Node.js >= 0.8
- * so this consolidates them into a minimal set using instance methods.
- *
- * @param {EventEmitter} emitter
- * @param {string} type
- * @returns {boolean}
- * @private
- */
-
-function hasListeners (emitter, type) {
-  const count = typeof emitter.listenerCount !== 'function'
-    ? emitter.listeners(type).length
-    : emitter.listenerCount(type)
-
-  return count > 0
 }
 
 /**
