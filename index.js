@@ -260,7 +260,7 @@ SendStream.prototype.maxage = deprecate.function(function maxage (maxAge) {
 
 SendStream.prototype.error = function error (status, err) {
   // emit if listeners instead of responding
-  if (this.listenerCount('error')) {
+  if (this.listenerCount('error') > 0) {
     return this.emit('error', createHttpError(status, err))
   }
 
@@ -465,7 +465,7 @@ SendStream.prototype.isRangeFresh = function isRangeFresh () {
 SendStream.prototype.redirect = function redirect (path) {
   const res = this.res
 
-  if (this.listenerCount('directory')) {
+  if (this.listenerCount('directory') > 0) {
     this.emit('directory', res, path)
     return
   }
