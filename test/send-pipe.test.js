@@ -324,7 +324,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/nums.txt/invalid')
-      .expect(200, os.platform() === 'win32' ? '404 ENOENT' :'404 ENOTDIR', err => t.error(err))
+      .expect(200, os.platform() === 'win32' ? '404 ENOENT' : '404 ENOTDIR', err => t.error(err))
   })
 
   t.test('should not override content-type', function (t) {
