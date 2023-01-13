@@ -184,7 +184,7 @@ SendStream.prototype.error = function error (status, err) {
   }
 
   const res = this.res
-  const msg = statuses.message[status] || String(status)
+  const msg = statuses.message[status]
   const doc = createHtmlDocument('Error', escapeHtml(msg))
 
   // clear existing headers
@@ -474,10 +474,9 @@ SendStream.prototype.pipe = function pipe (res) {
   if (containsDotFile(parts)) {
     let access = this._dotfiles
 
-    // legacy support
     if (access === undefined) {
       access = parts[parts.length - 1][0] === '.'
-        ? (this._hidden ? 'allow' : 'ignore')
+        ? 'ignore'
         : 'allow'
     }
 

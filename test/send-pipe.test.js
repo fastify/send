@@ -630,7 +630,7 @@ test('send(file).pipe(res)', function (t) {
   })
 
   t.test('with conditional-GET', function (t) {
-    t.plan(6)
+    t.plan(7)
 
     t.test('should remove Content headers with 304', function (t) {
       t.plan(5)
@@ -644,6 +644,32 @@ test('send(file).pipe(res)', function (t) {
       request(server)
         .get('/name.txt')
         .expect(200, function (err, res) {
+          t.error(err)
+          request(server)
+            .get('/name.txt')
+            .set('If-None-Match', res.headers.etag)
+            .expect(shouldNotHaveHeader('Content-Language', t))
+            .expect(shouldNotHaveHeader('Content-Length', t))
+            .expect(shouldNotHaveHeader('Content-Type', t))
+            .expect('Content-Location', 'http://localhost/name.txt')
+            .expect('Contents', 'foo')
+            .expect(304, err => t.error(err))
+        })
+    })
+
+    t.test('should remove Content headers with 304 /2', function (t) {
+      t.plan(5)
+
+      const server = createServer({ root: fixtures }, function (req, res) {
+        res.setHeader('Content-Language', 'en-US')
+        res.setHeader('Content-Location', 'http://localhost/name.txt')
+        res.setHeader('Contents', 'foo')
+        res.statusCode = 304
+      })
+
+      request(server)
+        .get('/name.txt')
+        .expect(304, function (err, res) {
           t.error(err)
           request(server)
             .get('/name.txt')
