@@ -28,6 +28,7 @@ const path = require('path')
 const statuses = require('statuses')
 const Stream = require('stream')
 const util = require('util')
+const decode = require('fast-decode-uri-component')
 
 /**
  * Path function references.
@@ -427,7 +428,7 @@ SendStream.prototype.pipe = function pipe (res) {
 
   // decode the path
   let path = decode(this.path)
-  if (path === -1) {
+  if (path === null) {
     this.error(400)
     return res
   }
@@ -902,24 +903,6 @@ function createHttpError (status, err) {
   return err instanceof Error
     ? createError(status, err, { expose: false })
     : createError(status, err)
-}
-
-/**
- * decodeURIComponent.
- *
- * Allows V8 to only deoptimize this fn instead of all
- * of send().
- *
- * @param {String} path
- * @api private
- */
-
-function decode (path) {
-  try {
-    return decodeURIComponent(path)
-  } catch (err) {
-    return -1
-  }
 }
 
 /**
