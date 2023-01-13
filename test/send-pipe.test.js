@@ -305,7 +305,7 @@ test('send(file).pipe(res)', function (t) {
         .pipe(res)
     })
 
-    const longFilename = new Array(256).fill('a').join('')
+    const longFilename = new Array(512).fill('a').join('')
 
     request(app)
       .get('/' + longFilename)
