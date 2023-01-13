@@ -6,6 +6,7 @@ const http = require('http')
 const path = require('path')
 const request = require('supertest')
 const send = require('..')
+const os = require('os')
 const { shouldNotHaveBody, createServer, shouldNotHaveHeader } = require('./utils')
 
 const dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
@@ -309,7 +310,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/' + longFilename)
-      .expect(200, '404 ENAMETOOLONG', err => t.error(err))
+      .expect(200, os.platform() === 'win32' ? '404 ENOENT' : '404 ENAMETOOLONG', err => t.error(err))
   })
 
   t.test('should emit ENOTDIR if the requested resource is not a directory', function (t) {
@@ -323,9 +324,7 @@ test('send(file).pipe(res)', function (t) {
 
     request(app)
       .get('/nums.txt/invalid')
-      .expect(200, '404 ENOTDIR',
-
-        err => t.error(err))
+      .expect(200, os.platform() === 'win32' ? '404 ENOENT' :'404 ENOTDIR', err => t.error(err))
   })
 
   t.test('should not override content-type', function (t) {
