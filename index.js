@@ -557,7 +557,7 @@ SendStream.prototype.send = function send (path, stat) {
   }
 
   // Range support
-  if (this._acceptRanges && BYTES_RANGE_REGEXP.test(ranges)) {
+  if (this._acceptRanges && ranges !== undefined && BYTES_RANGE_REGEXP.test(ranges)) {
     // parse
     ranges = parseRange(len, ranges, {
       combine: true
