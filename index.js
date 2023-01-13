@@ -323,14 +323,12 @@ SendStream.prototype.isCachable = function isCachable () {
  */
 
 SendStream.prototype.onStatError = function onStatError (error) {
+  // POSIX throws ENAMETOOLONG and ENOTDIR, Windows only ENOENT
+  /* istanbul ignore next */
   switch (error.code) {
     case 'ENAMETOOLONG':
-      this.error(404, error)
-      break
-    case 'ENOENT':
-      this.error(404, error)
-      break
     case 'ENOTDIR':
+    case 'ENOENT':
       this.error(404, error)
       break
     default:
