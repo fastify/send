@@ -1,7 +1,5 @@
 'use strict'
 
-process.env.NO_DEPRECATION = 'send'
-
 const { test } = require('tap')
 const fs = require('fs')
 const http = require('http')
@@ -15,7 +13,7 @@ const { shouldNotHaveHeader, createServer } = require('./utils')
 const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file, options)', function (t) {
-  t.plan(12)
+  t.plan(10)
 
   t.test('acceptRanges', function (t) {
     t.plan(2)
@@ -161,18 +159,6 @@ test('send(file, options)', function (t) {
         .get('/name.txt')
         .expect(shouldNotHaveHeader('Last-Modified', t))
         .expect(200, err => t.error(err))
-    })
-  })
-
-  t.test('from', function (t) {
-    t.plan(1)
-
-    t.test('should set with deprecated from', function (t) {
-      t.plan(1)
-
-      request(createServer({ from: fixtures }))
-        .get('/pets/../name.txt')
-        .expect(200, 'tobi', err => t.error(err))
     })
   })
 
@@ -376,35 +362,6 @@ test('send(file, options)', function (t) {
           .get('/name.txt')
           .expect(404, err => t.error(err))
       })
-    })
-  })
-
-  t.test('hidden', function (t) {
-    t.plan(2)
-
-    t.test('should default to false', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        function error (err) {
-          res.statusCode = err.status
-          res.end(http.STATUS_CODES[err.status])
-        }
-
-        send(req, req.url, { root: fixtures })
-          .on('error', error)
-          .pipe(res)
-      })
-      request(app)
-        .get('/.hidden.txt')
-        .expect(404, 'Not Found', err => t.error(err))
-    })
-
-    t.test('should default support sending hidden files', function (t) {
-      t.plan(1)
-      request(createServer({ hidden: true, root: fixtures }))
-        .get('/.hidden.txt')
-        .expect(200, 'secret', err => t.error(err))
     })
   })
 

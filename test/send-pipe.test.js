@@ -1,10 +1,7 @@
 'use strict'
 
-process.env.NO_DEPRECATION = 'send'
-
 const { test } = require('tap')
 const after = require('after')
-const fs = require('fs')
 const http = require('http')
 const path = require('path')
 const request = require('supertest')
@@ -15,7 +12,7 @@ const dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/
 const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file).pipe(res)', function (t) {
-  t.plan(32)
+  t.plan(27)
 
   t.test('should stream the file contents', function (t) {
     t.plan(1)
@@ -1439,167 +1436,6 @@ test('send(file).pipe(res)', function (t) {
         .set('Range', 'bytes=5-9')
         .expect('Content-Range', 'bytes */3')
         .expect(416, err => t.error(err))
-    })
-  })
-
-  t.test('.etag()', function (t) {
-    t.plan(1)
-
-    t.test('should support disabling etags', function (t) {
-      t.plan(2)
-
-      const app = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
-          .etag(false)
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/name.txt')
-        .expect(shouldNotHaveHeader('ETag', t))
-        .expect(200, err => t.error(err))
-    })
-  })
-
-  t.test('.from()', function (t) {
-    t.plan(1)
-
-    t.test('should set with deprecated from', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, req.url)
-          .from(fixtures)
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/pets/../name.txt')
-        .expect(200, 'tobi', err => t.error(err))
-    })
-  })
-
-  t.test('.hidden()', function (t) {
-    t.plan(1)
-
-    t.test('should default support sending hidden files', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
-          .hidden(true)
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/.hidden.txt')
-        .expect(200, 'secret', err => t.error(err))
-    })
-  })
-
-  t.test('.index()', function (t) {
-    t.plan(3)
-
-    t.test('should be configurable', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
-          .index('tobi.html')
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/')
-        .expect(200, '<p>tobi</p>', err => t.error(err))
-    })
-
-    t.test('should support disabling', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
-          .index(false)
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/pets/')
-        .expect(403, err => t.error(err))
-    })
-
-    t.test('should support fallbacks', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
-          .index(['default.htm', 'index.html'])
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/pets/')
-        .expect(200, fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'), err => t.error(err))
-    })
-  })
-
-  t.test('.maxage()', function (t) {
-    t.plan(4)
-
-    t.test('should default to 0', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, 'test/fixtures/name.txt')
-          .maxage(undefined)
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=0', err => t.error(err))
-    })
-
-    t.test('should floor to integer', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, 'test/fixtures/name.txt')
-          .maxage(1234)
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=1', err => t.error(err))
-    })
-
-    t.test('should accept string', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, 'test/fixtures/name.txt')
-          .maxage('30d')
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=2592000', err => t.error(err))
-    })
-
-    t.test('should max at 1 year', function (t) {
-      t.plan(1)
-
-      const app = http.createServer(function (req, res) {
-        send(req, 'test/fixtures/name.txt')
-          .maxage(Infinity)
-          .pipe(res)
-      })
-
-      request(app)
-        .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=31536000', err => t.error(err))
     })
   })
 
