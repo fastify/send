@@ -15,7 +15,6 @@
 const createError = require('http-errors')
 const debug = require('debug')('send')
 const destroy = require('destroy')
-const encodeUrl = require('encodeurl')
 const escapeHtml = require('escape-html')
 const etag = require('etag')
 const fresh = require('fresh')
@@ -405,7 +404,7 @@ SendStream.prototype.redirect = function redirect (path) {
     return
   }
 
-  const loc = encodeUrl(collapseLeadingSlashes(this.path + '/'))
+  const loc = encodeURI(collapseLeadingSlashes(this.path + '/'))
   const doc = createHtmlDocument('Redirecting', 'Redirecting to <a href="' + escapeHtml(loc) + '">' +
     escapeHtml(loc) + '</a>')
 
