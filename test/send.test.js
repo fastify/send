@@ -163,7 +163,7 @@ test('send(file, options)', function (t) {
   })
 
   t.test('dotfiles', function (t) {
-    t.plan(6)
+    t.plan(5)
 
     t.test('should default to "ignore"', function (t) {
       t.plan(1)
@@ -171,14 +171,6 @@ test('send(file, options)', function (t) {
       request(createServer({ root: fixtures }))
         .get('/.hidden.txt')
         .expect(404, err => t.error(err))
-    })
-
-    t.test('should allow file within dotfile directory for back-compat', function (t) {
-      t.plan(1)
-
-      request(createServer({ root: fixtures }))
-        .get('/.mine/name.txt')
-        .expect(200, /tobi/, err => t.error(err))
     })
 
     t.test('should reject bad value', function (t) {

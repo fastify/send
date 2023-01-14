@@ -120,11 +120,6 @@ function SendStream (req, path, options) {
     throw new TypeError('dotfiles option must be "allow", "deny", or "ignore"')
   }
 
-  // legacy support
-  if (opts.dotfiles === undefined) {
-    this._dotfiles = undefined
-  }
-
   this._extensions = opts.extensions !== undefined
     ? normalizeList(opts.extensions, 'extensions option')
     : []
@@ -481,16 +476,8 @@ SendStream.prototype.pipe = function pipe (res) {
 
   // dotfile handling
   if (containsDotFile(parts)) {
-    let access = this._dotfiles
-
-    if (access === undefined) {
-      access = parts[parts.length - 1][0] === '.'
-        ? 'ignore'
-        : 'allow'
-    }
-
-    debug('%s dotfile "%s"', access, path)
-    switch (access) {
+    debug('%s dotfile "%s"', this._dotfiles, path)
+    switch (this._dotfiles) {
       case 'allow':
         break
       case 'deny':
