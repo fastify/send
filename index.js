@@ -13,7 +13,7 @@
  */
 
 const createError = require('http-errors')
-const debug = require('debug')('send')
+const debug = require('node:util').debuglog('send')
 const escapeHtml = require('escape-html')
 const etag = require('etag')
 const fresh = require('fresh')
