@@ -14,7 +14,6 @@
 
 const createError = require('http-errors')
 const debug = require('debug')('send')
-const destroy = require('destroy')
 const encodeUrl = require('encodeurl')
 const escapeHtml = require('escape-html')
 const etag = require('etag')
@@ -716,7 +715,7 @@ SendStream.prototype.stream = function stream (path, options) {
 
   // cleanup
   function cleanup () {
-    destroy(stream, true)
+    stream.destroy()
   }
 
   // response finished, cleanup
