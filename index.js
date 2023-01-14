@@ -14,8 +14,6 @@
 
 const createError = require('http-errors')
 const debug = require('node:util').debuglog('send')
-const destroy = require('destroy')
-const encodeUrl = require('encodeurl')
 const escapeHtml = require('escape-html')
 const etag = require('etag')
 const fresh = require('fresh')
@@ -120,11 +118,6 @@ function SendStream (req, path, options) {
 
   if (this._dotfiles !== 'ignore' && this._dotfiles !== 'allow' && this._dotfiles !== 'deny') {
     throw new TypeError('dotfiles option must be "allow", "deny", or "ignore"')
-  }
-
-  // legacy support
-  if (opts.dotfiles === undefined) {
-    this._dotfiles = undefined
   }
 
   this._extensions = opts.extensions !== undefined
@@ -405,7 +398,7 @@ SendStream.prototype.redirect = function redirect (path) {
     return
   }
 
-  const loc = encodeUrl(collapseLeadingSlashes(this.path + '/'))
+  const loc = encodeURI(collapseLeadingSlashes(this.path + '/'))
   const doc = createHtmlDocument('Redirecting', 'Redirecting to <a href="' + escapeHtml(loc) + '">' +
     escapeHtml(loc) + '</a>')
 
@@ -483,16 +476,8 @@ SendStream.prototype.pipe = function pipe (res) {
 
   // dotfile handling
   if (containsDotFile(parts)) {
-    let access = this._dotfiles
-
-    if (access === undefined) {
-      access = parts[parts.length - 1][0] === '.'
-        ? 'ignore'
-        : 'allow'
-    }
-
-    debug('%s dotfile "%s"', access, path)
-    switch (access) {
+    debug('%s dotfile "%s"', this._dotfiles, path)
+    switch (this._dotfiles) {
       case 'allow':
         break
       case 'deny':
@@ -716,7 +701,7 @@ SendStream.prototype.stream = function stream (path, options) {
 
   // cleanup
   function cleanup () {
-    destroy(stream, true)
+    stream.destroy()
   }
 
   // response finished, cleanup
