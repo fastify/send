@@ -13,7 +13,7 @@
  */
 
 const createError = require('http-errors')
-const debug = require('debug')('send')
+const debug = require('node:util').debuglog('send')
 const destroy = require('destroy')
 const encodeUrl = require('encodeurl')
 const escapeHtml = require('escape-html')

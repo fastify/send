@@ -153,10 +153,10 @@ caching, it's small enough that it does not need caching at all ;).
 
 ## Debugging
 
-To enable `debug()` instrumentation output export __DEBUG__:
+To enable `debug()` instrumentation output export __NODE_DEBUG__:
 
 ```
-$ DEBUG=send node app
+$ NODE_DEBUG=send node app
 ```
 
 ## Running tests
