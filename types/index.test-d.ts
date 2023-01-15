@@ -1,5 +1,6 @@
 import { expectType } from 'tsd'
 import send from '..'
+import { SendStream } from '..';
 
 send.mime.define({
   'application/x-my-type': ['x-mt', 'x-mtt']
@@ -17,7 +18,7 @@ send(req, '/test.html', {
   root: __dirname + '/wwwroot'
 }).pipe(res);
 
-send(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot'})
+send(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot' })
   .on('error', (err: any) => {
     res.statusCode = err.status || 500;
     res.end(err.message);
@@ -31,3 +32,5 @@ send(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot'})
     res.setHeader('Content-Disposition', 'attachment');
   })
   .pipe(res);
+
+const test = new SendStream(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot' });

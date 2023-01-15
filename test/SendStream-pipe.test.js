@@ -5,7 +5,7 @@ const after = require('after')
 const http = require('http')
 const path = require('path')
 const request = require('supertest')
-const send = require('..')
+const SendStream = require('../lib/SendStream')
 const os = require('os')
 const { shouldNotHaveBody, createServer, shouldNotHaveHeader } = require('./utils')
 
@@ -24,7 +24,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -44,7 +44,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -64,7 +64,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -83,7 +83,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -102,7 +102,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -121,7 +121,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -140,7 +140,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -156,7 +156,7 @@ test('send(file).pipe(res)', function (t) {
 
     const app = http.createServer(function (req, res) {
       res.write('0')
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', function (err) { res.end(' - ' + err.message) })
         .pipe(res)
     })
@@ -174,7 +174,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -196,7 +196,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -216,7 +216,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -235,7 +235,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -254,7 +254,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -273,7 +273,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -287,7 +287,7 @@ test('send(file).pipe(res)', function (t) {
     t.plan(1)
 
     const app = http.createServer(function (req, res) {
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
         .pipe(res)
     })
@@ -301,7 +301,7 @@ test('send(file).pipe(res)', function (t) {
     t.plan(1)
 
     const app = http.createServer(function (req, res) {
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
         .pipe(res)
     })
@@ -317,7 +317,7 @@ test('send(file).pipe(res)', function (t) {
     t.plan(1)
 
     const app = http.createServer(function (req, res) {
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', function (err) { res.end(err.statusCode + ' ' + err.code) })
         .pipe(res)
     })
@@ -332,7 +332,7 @@ test('send(file).pipe(res)', function (t) {
 
     const app = http.createServer(function (req, res) {
       res.setHeader('Content-Type', 'application/x-custom')
-      send(req, req.url, { root: fixtures }).pipe(res)
+      new SendStream(req, req.url, { root: fixtures }).pipe(res)
     })
     request(app)
       .get('/name.txt')
@@ -348,7 +348,7 @@ test('send(file).pipe(res)', function (t) {
         res.end(http.STATUS_CODES[err.status])
       }
 
-      send(req, req.url, { root: fixtures })
+      new SendStream(req, req.url, { root: fixtures })
         .on('error', error)
         .pipe(res)
     })
@@ -369,7 +369,7 @@ test('send(file).pipe(res)', function (t) {
     t.plan(1)
 
     const app = http.createServer(function (req, res) {
-      send(req, req.url, { root: 'test/fixtures' })
+      new SendStream(req, req.url, { root: 'test/fixtures' })
         .on('file', function () {
           // simulate file ENOENT after on open, after stat
           const fn = this.send
@@ -389,7 +389,7 @@ test('send(file).pipe(res)', function (t) {
     t.plan(1)
 
     const app = http.createServer(function (req, res) {
-      send(req, req.url, { root: 'test/fixtures' })
+      new SendStream(req, req.url, { root: 'test/fixtures' })
         .on('stream', function (stream) {
           // simulate file error
           stream.on('open', function () {
@@ -410,7 +410,7 @@ test('send(file).pipe(res)', function (t) {
       t.plan(1)
       const cb = after(2, err => t.error(err))
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
       })
@@ -424,7 +424,7 @@ test('send(file).pipe(res)', function (t) {
       t.plan(1)
       const cb = after(1, err => t.error(err))
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
       })
@@ -438,7 +438,7 @@ test('send(file).pipe(res)', function (t) {
       t.plan(1)
       const cb = after(2, err => t.error(err))
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
       })
@@ -452,7 +452,7 @@ test('send(file).pipe(res)', function (t) {
       t.plan(1)
       const cb = after(1, err => t.error(err))
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('headers', function () { cb() })
           .pipe(res)
       })
@@ -466,7 +466,7 @@ test('send(file).pipe(res)', function (t) {
       t.plan(3)
       const cb = after(2, err => t.error(err))
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
       })
@@ -486,7 +486,7 @@ test('send(file).pipe(res)', function (t) {
       t.plan(4)
       const cb = after(2, err => t.error(err))
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
       })
@@ -506,7 +506,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should allow altering headers', function (t) {
       t.plan(1)
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('headers', onHeaders)
           .pipe(res)
       })
@@ -536,7 +536,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should be called when sending directory', function (t) {
       t.plan(1)
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('directory', onDirectory)
           .pipe(res)
       })
@@ -554,7 +554,7 @@ test('send(file).pipe(res)', function (t) {
     t.test('should be called with path', function (t) {
       t.plan(1)
       const server = http.createServer(function (req, res) {
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('directory', onDirectory)
           .pipe(res)
       })
@@ -614,7 +614,7 @@ test('send(file).pipe(res)', function (t) {
       t.plan(1)
 
       const app = http.createServer(function (req, res) {
-        send(req, req.url.replace('/snow', '/snow ☃'), { root: 'test/fixtures' })
+        new SendStream(req, req.url.replace('/snow', '/snow ☃'), { root: 'test/fixtures' })
           .pipe(res)
       })
 
@@ -749,7 +749,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -769,7 +769,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -789,7 +789,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -818,7 +818,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -843,7 +843,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -874,7 +874,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -899,7 +899,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -928,7 +928,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -953,7 +953,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -980,7 +980,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1005,7 +1005,7 @@ test('send(file).pipe(res)', function (t) {
           res.end(http.STATUS_CODES[err.status])
         }
 
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('error', error)
           .pipe(res)
       })
@@ -1025,7 +1025,7 @@ test('send(file).pipe(res)', function (t) {
           res.end(http.STATUS_CODES[err.status])
         }
 
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('error', error)
           .pipe(res)
       })
@@ -1045,7 +1045,7 @@ test('send(file).pipe(res)', function (t) {
           res.end(http.STATUS_CODES[err.status])
         }
 
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('error', error)
           .pipe(res)
       })
@@ -1065,7 +1065,7 @@ test('send(file).pipe(res)', function (t) {
           res.end(http.STATUS_CODES[err.status])
         }
 
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('error', error)
           .pipe(res)
       })
@@ -1086,7 +1086,7 @@ test('send(file).pipe(res)', function (t) {
           res.end(http.STATUS_CODES[err.status])
         }
 
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('error', error)
           .pipe(res)
       })
@@ -1106,7 +1106,7 @@ test('send(file).pipe(res)', function (t) {
           res.end(http.STATUS_CODES[err.status])
         }
 
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('error', error)
           .pipe(res)
       })
@@ -1126,7 +1126,7 @@ test('send(file).pipe(res)', function (t) {
           res.end(http.STATUS_CODES[err.status])
         }
 
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('error', error)
           .pipe(res)
       })
@@ -1146,7 +1146,7 @@ test('send(file).pipe(res)', function (t) {
           res.end(http.STATUS_CODES[err.status])
         }
 
-        send(req, req.url, { root: fixtures })
+        new SendStream(req, req.url, { root: fixtures })
           .on('error', error)
           .pipe(res)
       })
@@ -1170,7 +1170,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1191,7 +1191,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1216,7 +1216,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1232,7 +1232,7 @@ test('send(file).pipe(res)', function (t) {
         t.plan(1)
 
         const server = http.createServer(function (req, res) {
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', function (err) {
               res.setHeader('X-Content-Range', err.headers['Content-Range'])
               res.statusCode = err.statusCode
@@ -1261,7 +1261,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1285,7 +1285,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1306,7 +1306,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1331,7 +1331,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1359,7 +1359,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1387,7 +1387,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1415,7 +1415,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1443,7 +1443,7 @@ test('send(file).pipe(res)', function (t) {
             res.end(http.STATUS_CODES[err.status])
           }
 
-          send(req, req.url, { root: fixtures })
+          new SendStream(req, req.url, { root: fixtures })
             .on('error', error)
             .pipe(res)
         })
@@ -1503,7 +1503,7 @@ test('send(file).pipe(res)', function (t) {
       t.plan(1)
 
       const app = http.createServer(function (req, res) {
-        send(req, req.url)
+        new SendStream(req, req.url)
           .root(fixtures)
           .pipe(res)
       })
