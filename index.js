@@ -15,7 +15,6 @@
 const createError = require('http-errors')
 const debug = require('node:util').debuglog('send')
 const escapeHtml = require('escape-html')
-const etag = require('etag')
 const fresh = require('fresh')
 const fs = require('fs')
 const mime = require('mime')
@@ -790,9 +789,9 @@ SendStream.prototype.setHeader = function setHeader (path, stat) {
   }
 
   if (this._etag && !res.getHeader('ETag')) {
-    const val = etag(stat)
-    debug('etag %s', val)
-    res.setHeader('ETag', val)
+    const etag = 'W/"' + stat.size.toString(16) + '-' + stat.mtime.getTime().toString(16) + '"'
+    debug('etag %s', etag)
+    res.setHeader('ETag', etag)
   }
 }
 
