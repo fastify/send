@@ -19,7 +19,6 @@
   ],
   "dependencies": {
     "escape-html": "~1.0.3",
-    "etag": "~1.8.1",
     "fast-decode-uri-component": "^1.0.1",
     "fresh": "0.5.2",
     "http-errors": "2.0.0",
