@@ -4,7 +4,7 @@
 [![NPM version](https://img.shields.io/npm/v/@fastify/send.svg?style=flat)](https://www.npmjs.com/package/@fastify/send)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
 
-Send is a library for streaming files from the file system as a http response
+Send is a library for streaming files from the file system as an HTTP response
 supporting partial responses (Ranges), conditional-GET negotiation (If-Match,
 If-Unmodified-Since, If-None-Match, If-Modified-Since), high test coverage,
 and granular events which may be leveraged to take appropriate actions in your
@@ -49,9 +49,9 @@ true. Disabling this will ignore the `immutable` and `maxAge` options.
 
 Set how "dotfiles" are treated when encountered. A dotfile is a file
 or directory that begins with a dot ("."). Note this check is done on
-the path itself without checking if the path actually exists on the
+the path itself without checking if the path exists on the
 disk. If `root` is specified, only the dotfiles above the root are
-checked (i.e. the root itself can be within a dotfile when when set
+checked (i.e. the root itself can be within a dotfile when set
 to "deny").
 
   - `'allow'` No special treatment for dotfiles.
@@ -100,7 +100,7 @@ system's last modified value.
 
 ##### maxAge
 
-Provide a max-age in milliseconds for http caching, defaults to 0.
+Provide a max-age in milliseconds for HTTP caching, defaults to 0.
 This can also be a string accepted by the
 [ms](https://www.npmjs.org/package/ms#readme) module.
 
@@ -131,7 +131,7 @@ object, typically `send(req, path, options).pipe(res)`.
 
 ### .mime
 
-The `mime` export is the global instance of of the
+The `mime` export is the global instance of the
 [`mime` npm module](https://www.npmjs.com/package/mime).
 
 This is used to configure the MIME types that are associated with file extensions
@@ -228,7 +228,7 @@ server.listen(3000)
 
 ### Custom directory index view
 
-This is a example of serving up a structure of directories with a
+This is an example of serving up a structure of directories with a
 custom function to render a listing of a directory.
 
 ```js
