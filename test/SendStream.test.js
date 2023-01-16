@@ -5,14 +5,14 @@ const fs = require('fs')
 const http = require('http')
 const path = require('path')
 const request = require('supertest')
-const send = require('..')
+const SendStream = require('..').SendStream
 const { shouldNotHaveHeader, createServer } = require('./utils')
 
 // test server
 
 const fixtures = path.join(__dirname, 'fixtures')
 
-test('send(file, options)', function (t) {
+test('SendStream(file, options)', function (t) {
   t.plan(10)
 
   t.test('acceptRanges', function (t) {
@@ -184,14 +184,14 @@ test('send(file, options)', function (t) {
     t.test('when "allow"', function (t) {
       t.plan(3)
 
-      t.test('should send dotfile', function (t) {
+      t.test('should SendStream dotfile', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'allow', root: fixtures }))
           .get('/.hidden.txt')
           .expect(200, 'secret', err => t.error(err))
       })
 
-      t.test('should send within dotfile directory', function (t) {
+      t.test('should SendStream within dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'allow', root: fixtures }))
           .get('/.mine/name.txt')
@@ -265,7 +265,7 @@ test('send(file, options)', function (t) {
           .expect(403, err => t.error(err))
       })
 
-      t.test('should send files in root dotfile directory', function (t) {
+      t.test('should SendStream files in root dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: path.join(fixtures, '.mine') }))
           .get('/name.txt')
@@ -275,7 +275,7 @@ test('send(file, options)', function (t) {
       t.test('should 403 for dotfile without root', function (t) {
         t.plan(1)
         const server = http.createServer(function onRequest (req, res) {
-          send(req, fixtures + '/.mine' + req.url, { dotfiles: 'deny' }).pipe(res)
+          new SendStream(req, fixtures + '/.mine' + req.url, { dotfiles: 'deny' }).pipe(res)
         })
 
         request(server)
@@ -335,7 +335,7 @@ test('send(file, options)', function (t) {
           .expect(404, err => t.error(err))
       })
 
-      t.test('should send files in root dotfile directory', function (t) {
+      t.test('should SendStream files in root dotfile directory', function (t) {
         t.plan(1)
 
         request(createServer({ dotfiles: 'ignore', root: path.join(fixtures, '.mine') }))
@@ -347,7 +347,7 @@ test('send(file, options)', function (t) {
         t.plan(1)
 
         const server = http.createServer(function onRequest (req, res) {
-          send(req, fixtures + '/.mine' + req.url, { dotfiles: 'ignore' }).pipe(res)
+          new SendStream(req, fixtures + '/.mine' + req.url, { dotfiles: 'ignore' }).pipe(res)
         })
 
         request(server)
@@ -489,7 +489,7 @@ test('send(file, options)', function (t) {
 
       const server = http.createServer(function (req, res) {
         const p = path.join(fixtures, 'pets').replace(/\\/g, '/') + '/'
-        send(req, p, { index: ['index.html'] })
+        new SendStream(req, p, { index: ['index.html'] })
           .pipe(res)
       })
 
@@ -516,7 +516,7 @@ test('send(file, options)', function (t) {
         t.plan(1)
 
         const app = http.createServer(function (req, res) {
-          send(req, req.url, { root: fixtures + '/' })
+          new SendStream(req, req.url, { root: fixtures + '/' })
             .pipe(res)
         })
 
@@ -529,7 +529,7 @@ test('send(file, options)', function (t) {
         t.plan(1)
 
         const app = http.createServer(function (req, res) {
-          send(req, '', { root: fixtures })
+          new SendStream(req, '', { root: fixtures })
             .pipe(res)
         })
 
@@ -548,7 +548,7 @@ test('send(file, options)', function (t) {
         t.plan(1)
 
         const app = http.createServer(function (req, res) {
-          send(req, '', { root: path.join(fixtures, 'name.txt') })
+          new SendStream(req, '', { root: path.join(fixtures, 'name.txt') })
             .pipe(res)
         })
 
@@ -561,7 +561,7 @@ test('send(file, options)', function (t) {
         t.plan(1)
 
         request(createServer({ root: fixtures }))
-          .get('/pets/../../send.js')
+          .get('/pets/../../SendStream.js')
           .expect(403, err => t.error(err))
       })
 
@@ -569,12 +569,12 @@ test('send(file, options)', function (t) {
         t.plan(1)
 
         const app = http.createServer(function (req, res) {
-          send(req, req.url, { root: fixtures + '/../fixtures' })
+          new SendStream(req, req.url, { root: fixtures + '/../fixtures' })
             .pipe(res)
         })
 
         request(app)
-          .get('/pets/../../send.js')
+          .get('/pets/../../SendStream.js')
           .expect(403, err => t.error(err))
       })
 
@@ -602,12 +602,12 @@ test('send(file, options)', function (t) {
         t.plan(1)
 
         const app = http.createServer(function (req, res) {
-          send(req, fixtures + req.url)
+          new SendStream(req, fixtures + req.url)
             .pipe(res)
         })
 
         request(app)
-          .get('/../send.js')
+          .get('/../SendStream.js')
           .expect(403, err => t.error(err))
       })
 
@@ -615,7 +615,7 @@ test('send(file, options)', function (t) {
         t.plan(1)
 
         const app = http.createServer(function (req, res) {
-          send(req, fixtures + req.url)
+          new SendStream(req, fixtures + req.url)
             .pipe(res)
         })
 

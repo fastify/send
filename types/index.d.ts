@@ -112,7 +112,10 @@ declare namespace send {
     start?: number | undefined;
   }
 
-  export interface SendStream extends stream.Stream {
+  export class SendStream extends stream.Stream {
+
+    constructor(req: stream.Readable, path: string, options?: SendOptions);
+
     /**
      * Emit error with `status`.
      */
