@@ -21,7 +21,6 @@
     "benchmark": "^2.1.4",
     "escape-html": "~1.0.3",
     "fast-decode-uri-component": "^1.0.1",
-    "fresh": "0.5.2",
     "http-errors": "2.0.0",
     "mime": "^3.0.0",
     "ms": "2.1.3",
