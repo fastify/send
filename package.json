@@ -18,7 +18,6 @@
     "server"
   ],
   "dependencies": {
-    "benchmark": "^2.1.4",
     "escape-html": "~1.0.3",
     "fast-decode-uri-component": "^1.0.1",
     "fresh": "0.5.2",
@@ -31,6 +30,7 @@
     "@fastify/pre-commit": "^2.0.2",
     "@types/node": "^18.11.18",
     "after": "0.8.2",
+    "benchmark": "^2.1.4",
     "snazzy": "^9.0.0",
     "standard": "^17.0.0",
     "supertest": "6.3.3",
