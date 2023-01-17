@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const parseRange = require('../lib/parseRange')
+const { parseRange } = require('../lib/parseRange')
 
 test('parseRange', function (t) {
   t.plan(13)
