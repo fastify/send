@@ -23,8 +23,7 @@
     "fresh": "0.5.2",
     "http-errors": "2.0.0",
     "mime": "^3.0.0",
-    "@lukeed/ms": "^2.0.1",
-    "on-finished": "2.4.1"
+    "@lukeed/ms": "^2.0.1"
   },
   "devDependencies": {
     "@fastify/pre-commit": "^2.0.2",
