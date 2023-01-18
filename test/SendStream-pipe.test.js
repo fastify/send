@@ -738,7 +738,7 @@ test('send(file).pipe(res)', function (t) {
     })
 
     t.test('where "If-Match" is set', function (t) {
-      t.plan(3)
+      t.plan(4)
 
       t.test('should respond with 200 when "*"', function (t) {
         t.plan(1)
@@ -780,7 +780,7 @@ test('send(file).pipe(res)', function (t) {
           .expect(412, err => t.error(err))
       })
 
-      t.test('should respond with 200 when ETag matched', function (t) {
+      t.test('should respond with 200 when ETag matched /1', function (t) {
         t.plan(2)
 
         const app = http.createServer(function (req, res) {
@@ -804,10 +804,35 @@ test('send(file).pipe(res)', function (t) {
               .expect(200, err => t.error(err))
           })
       })
+
+      t.test('should respond with 200 when ETag matched /2', function (t) {
+        t.plan(2)
+
+        const app = http.createServer(function (req, res) {
+          function error (err) {
+            res.statusCode = err.status
+            res.end(http.STATUS_CODES[err.status])
+          }
+
+          new SendStream(req, req.url, { root: fixtures })
+            .on('error', error)
+            .pipe(res)
+        })
+
+        request(app)
+          .get('/name.txt')
+          .expect(200, function (err, res) {
+            t.error(err)
+            request(app)
+              .get('/name.txt')
+              .set('If-Match', '"foo", ' + res.headers.etag + ', "bar"')
+              .expect(200, err => t.error(err))
+          })
+      })
     })
 
     t.test('where "If-Modified-Since" is set', function (t) {
-      t.plan(2)
+      t.plan(3)
 
       t.test('should respond with 304 when unmodified', function (t) {
         t.plan(2)
@@ -860,10 +885,36 @@ test('send(file).pipe(res)', function (t) {
               .expect(200, 'tobi', err => t.error(err))
           })
       })
+
+      t.test('should respond with 200 when modified', function (t) {
+        t.plan(2)
+
+        const app = http.createServer(function (req, res) {
+          function error (err) {
+            res.statusCode = err.status
+            res.end(http.STATUS_CODES[err.status])
+          }
+
+          new SendStream(req, req.url, { root: fixtures })
+            .on('error', error)
+            .pipe(res)
+        })
+
+        request(app)
+          .get('/name.txt')
+          .expect(200, function (err, res) {
+            t.error(err)
+            request(app)
+              .get('/name.txt')
+              .set('If-Modified-Since', res.headers['last-modified'])
+              .set('cache-control', 'no-cache')
+              .expect(200, 'tobi', err => t.error(err))
+          })
+      })
     })
 
     t.test('where "If-None-Match" is set', function (t) {
-      t.plan(2)
+      t.plan(6)
 
       t.test('should respond with 304 when ETag matched', function (t) {
         t.plan(2)
@@ -911,6 +962,102 @@ test('send(file).pipe(res)', function (t) {
             request(app)
               .get('/name.txt')
               .set('If-None-Match', '"123"')
+              .expect(200, 'tobi', err => t.error(err))
+          })
+      })
+
+      t.test('should respond with 200 when ETag is not generated', function (t) {
+        t.plan(2)
+
+        const app = http.createServer(function (req, res) {
+          function error (err) {
+            res.statusCode = err.status
+            res.end(http.STATUS_CODES[err.status])
+          }
+
+          new SendStream(req, req.url, { etag: false, root: fixtures })
+            .on('error', error)
+            .pipe(res)
+        })
+
+        request(app)
+          .get('/name.txt')
+          .expect(200, function (err, res) {
+            t.error(err)
+            request(app)
+              .get('/name.txt')
+              .set('If-None-Match', '"123"')
+              .expect(200, 'tobi', err => t.error(err))
+          })
+      })
+
+      t.test('should respond with 306 Not Modified when using wildcard * on existing file', function (t) {
+        t.plan(2)
+
+        const app = http.createServer(function (req, res) {
+          function error (err) {
+            res.statusCode = err.status
+            res.end(http.STATUS_CODES[err.status])
+          }
+
+          new SendStream(req, req.url, { etag: false, root: fixtures })
+            .on('error', error)
+            .pipe(res)
+        })
+
+        request(app)
+          .get('/name.txt')
+          .expect(200, function (err, res) {
+            t.error(err)
+            request(app)
+              .get('/name.txt')
+              .set('If-None-Match', '*')
+              .expect(304, '', err => t.error(err))
+          })
+      })
+
+      t.test('should respond with 404 Not Found when using wildcard * on non-existing file', function (t) {
+        t.plan(1)
+
+        const app = http.createServer(function (req, res) {
+          function error (err) {
+            res.statusCode = err.status
+            res.end(http.STATUS_CODES[err.status])
+          }
+
+          new SendStream(req, req.url, { etag: false, root: fixtures })
+            .on('error', error)
+            .pipe(res)
+        })
+
+        request(app)
+          .get('/asdf.txt')
+          .set('If-None-Match', '*')
+          .expect(404, 'Not Found', err => t.error(err))
+      })
+
+      t.test('should respond with 200 cache-control is set to no-cache', function (t) {
+        t.plan(2)
+
+        const app = http.createServer(function (req, res) {
+          function error (err) {
+            res.statusCode = err.status
+            res.end(http.STATUS_CODES[err.status])
+          }
+
+          new SendStream(req, req.url, { root: fixtures })
+            .on('error', error)
+            .pipe(res)
+        })
+
+        request(app)
+          .get('/name.txt')
+          .expect(200, function (err, res) {
+            t.error(err)
+            request(app)
+              .get('/name.txt')
+              .set('If-None-Match', res.headers.etag)
+              .set('cache-control', 'no-cache')
               .expect(200, 'tobi', err => t.error(err))
           })
       })
