@@ -11,7 +11,7 @@
  * Module dependencies.
  * @private
  */
-const isUtf8MimeType = require('./lib/isUtf8MimeType')
+const isUtf8MimeType = require('./lib/isUtf8MimeType').isUtf8MimeType
 const mime = require('mime')
 const SendStream = require('./lib/SendStream')
 
