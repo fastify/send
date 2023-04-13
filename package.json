@@ -11,7 +11,10 @@
   "main": "index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
-  "repository": "fastify/send",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fastify/send.git"
+  },
   "keywords": [
     "static",
     "file",
