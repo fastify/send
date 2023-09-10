@@ -173,7 +173,7 @@ $ npm test
 This simple example will send a specific file to all requests.
 
 ```js
-var http = require('http')
+var http = require('node:http')
 var send = require('send')
 
 var server = http.createServer(function onRequest (req, res) {
@@ -191,7 +191,7 @@ given directory as the top-level. For example, a request
 `GET /foo.txt` will send back `/www/public/foo.txt`.
 
 ```js
-var http = require('http')
+var http = require('node:http')
 var parseUrl = require('parseurl')
 var send = require('@fastify/send')
 
@@ -206,7 +206,7 @@ server.listen(3000)
 ### Custom file types
 
 ```js
-var http = require('http')
+var http = require('node:http')
 var parseUrl = require('parseurl')
 var send = require('@fastify/send')
 
@@ -232,8 +232,8 @@ This is an example of serving up a structure of directories with a
 custom function to render a listing of a directory.
 
 ```js
-var http = require('http')
-var fs = require('fs')
+var http = require('node:http')
+var fs = require('node:fs')
 var parseUrl = require('parseurl')
 var send = require('@fastify/send')
 
@@ -270,7 +270,7 @@ function directory (res, path) {
 ### Serving from a root directory with custom error-handling
 
 ```js
-var http = require('http')
+var http = require('node:http')
 var parseUrl = require('parseurl')
 var send = require('@fastify/send')
 

@@ -2,11 +2,11 @@
 
 const { test } = require('tap')
 const after = require('after')
-const http = require('http')
-const path = require('path')
+const http = require('node:http')
+const path = require('node:path')
 const request = require('supertest')
 const SendStream = require('../lib/SendStream')
-const os = require('os')
+const os = require('node:os')
 const { shouldNotHaveBody, createServer, shouldNotHaveHeader } = require('./utils')
 
 const dateRegExp = /^\w{3}, \d+ \w+ \d+ \d+:\d+:\d+ \w+$/

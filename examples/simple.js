@@ -1,8 +1,8 @@
 'use strict'
 
-const http = require('http')
+const http = require('node:http')
 const send = require('..')
-const path = require('path')
+const path = require('node:path')
 
 const indexPath = path.join(__dirname, 'index.html')
 
