@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const path = require('path')
+const path = require('node:path')
 const request = require('supertest')
 const send = require('..')
 const { shouldNotHaveHeader, createServer } = require('./utils')

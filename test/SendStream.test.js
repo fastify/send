@@ -1,9 +1,9 @@
 'use strict'
 
 const { test } = require('tap')
-const fs = require('fs')
-const http = require('http')
-const path = require('path')
+const fs = require('node:fs')
+const http = require('node:http')
+const path = require('node:path')
 const request = require('supertest')
 const SendStream = require('..').SendStream
 const { shouldNotHaveHeader, createServer } = require('./utils')
