@@ -9,6 +9,7 @@
     "Jesús Leganés Combarro <piranna@gmail.com>"
   ],
   "main": "index.js",
+  "type": "commonjs",
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
