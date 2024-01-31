@@ -151,3 +151,9 @@ yarn.lock
 # `npm pack` artifacts
 fastify-send-*.tgz
 package*/
+
+# ==== end copy from .gitignore ====
+# non production files
+.git*
+.taprc
+test
