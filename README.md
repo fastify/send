@@ -20,6 +20,20 @@ This is a [Node.js](https://nodejs.org/en/) module available through the
 $ npm install @fastify/send
 ```
 
+### TypeScript
+
+Due to the updates on `@types/mime@4` to remove the typing
+support of `mime`. If you need to install the types, you
+must use `@types/mime@3`.
+
+```bash
+$ npm install -D @types/mime@3
+```
+
+If you facing the problem of invalid types of `mime`, you 
+should check which exact package is linked to `@types/mime@4`
+and file an issue to that package.
+
 ## API
 
 ```js
