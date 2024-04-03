@@ -22,17 +22,12 @@ $ npm install @fastify/send
 
 ### TypeScript
 
-Due to the updates on `@types/mime@4` to remove the typing
-support of `mime`. If you need to install the types, you
-must use `@types/mime@3`.
+To install types you must use `@types/mime@3`.
+`@types/mime@4` removed the `mime` types.
 
 ```bash
 $ npm install -D @types/mime@3
 ```
-
-If you facing the problem of invalid types of `mime`, you 
-should check which exact package is linked to `@types/mime@4`
-and file an issue to that package.
 
 ## API
 
