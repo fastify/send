@@ -22,7 +22,7 @@ $ npm install @fastify/send
 
 ### TypeScript
 
-`@types/mime@3 must be used if wanting to use TypeScript;
+`@types/mime@3` must be used if wanting to use TypeScript;
 `@types/mime@4` removed the `mime` types.
 
 ```bash
