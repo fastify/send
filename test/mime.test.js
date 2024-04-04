@@ -19,11 +19,11 @@ test('send.mime', function (t) {
   t.test('.default_type', function (t) {
     t.plan(3)
 
-    t.before(function () {
+    t.before(() => {
       this.default_type = send.mime.default_type
     })
 
-    t.afterEach(function () {
+    t.afterEach(() => {
       send.mime.default_type = this.default_type
     })
 
