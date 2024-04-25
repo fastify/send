@@ -20,6 +20,15 @@ This is a [Node.js](https://nodejs.org/en/) module available through the
 $ npm install @fastify/send
 ```
 
+### TypeScript
+
+`@types/mime@3` must be used if wanting to use TypeScript;
+`@types/mime@4` removed the `mime` types.
+
+```bash
+$ npm install -D @types/mime@3
+```
+
 ## API
 
 ```js
