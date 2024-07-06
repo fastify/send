@@ -1,6 +1,6 @@
-import { expectType } from 'tsd'
-import send from '..'
-import { SendStream } from '..';
+import { Readable } from 'stream';
+import { expectType } from 'tsd';
+import send, { SendResult } from '..';
 
 send.mime.define({
   'application/x-my-type': ['x-mt', 'x-mtt']
@@ -10,27 +10,26 @@ expectType<(value: string) => boolean>(send.isUtf8MimeType)
 expectType<boolean>(send.isUtf8MimeType('application/json'))
 
 const req: any = {}
-const res: any = {}
 
-send(req, '/test.html', {
-  immutable: true,
-  maxAge: 0,
-  root: __dirname + '/wwwroot'
-}).pipe(res);
+{
+  const result = await send(req, '/test.html', {
+    immutable: true,
+    maxAge: 0,
+    root: __dirname + '/wwwroot'
+  });
 
-send(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot' })
-  .on('error', (err: any) => {
-    res.statusCode = err.status || 500;
-    res.end(err.message);
-  })
-  .on('directory', () => {
-    res.statusCode = 301;
-    res.setHeader('Location', req.url + '/');
-    res.end(`Redirecting to ${req.url}/`);
-  })
-  .on('headers', (res: any, path: string, stat: any) => {
-    res.setHeader('Content-Disposition', 'attachment');
-  })
-  .pipe(res);
+  expectType<SendResult>(result)
+  expectType<number>(result.statusCode)
+  expectType<Record<string, string>>(result.headers)
+  expectType<Readable>(result.stream)
+}
 
-const test = new SendStream(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot' });
+{
+  const result = await send(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot' })
+
+  expectType<SendResult>(result)
+  expectType<number>(result.statusCode)
+  expectType<Record<string, string>>(result.headers)
+  expectType<Readable>(result.stream)
+}
+
