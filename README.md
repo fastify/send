@@ -37,9 +37,9 @@ var send = require('@fastify/send')
 
 ### send(req, path, [options])
 
-Create a new `SendStream` for the given path to send to a `res`. The `req` is
-the Node.js HTTP request and the `path` is a urlencoded path to send (urlencoded,
-not the actual file-system path).
+Provide `statusCode`, `headers` and `stream` for the given path to send to a
+`res`. The `req` is the Node.js HTTP request and the `path `is a urlencoded path
+to send (urlencoded, not the actual file-system path).
 
 #### Options
 
@@ -122,22 +122,6 @@ Serve files relative to `path`.
 Byte offset at which the stream starts, defaults to 0. The start is inclusive,
 meaning `start: 2` will include the 3rd byte in the stream.
 
-#### Events
-
-The `SendStream` is an event emitter and will emit the following events:
-
-  - `error` an error occurred `(err)`
-  - `directory` a directory was requested `(res, path)`
-  - `file` a file was requested `(path, stat)`
-  - `headers` the headers are about to be set on a file `(res, path, stat)`
-  - `stream` file streaming has started `(stream)`
-  - `end` streaming has completed
-
-#### .pipe
-
-The `pipe` method is used to pipe the response into the Node.js HTTP response
-object, typically `send(req, path, options).pipe(res)`.
-
 ### .mime
 
 The `mime` export is the global instance of the
@@ -146,12 +130,6 @@ The `mime` export is the global instance of the
 This is used to configure the MIME types that are associated with file extensions
 as well as other options for how to resolve the MIME type of a file (like the
 default type to use for an unknown file extension).
-
-## Error-handling
-
-By default when no `error` listeners are present an automatic response will be
-made, otherwise you have full control over the response, aka you may show a 5xx
-page etc.
 
 ## Caching
 
@@ -185,9 +163,10 @@ This simple example will send a specific file to all requests.
 var http = require('node:http')
 var send = require('send')
 
-var server = http.createServer(function onRequest (req, res) {
-  send(req, '/path/to/index.html')
-    .pipe(res)
+var server = http.createServer(async function onRequest (req, res) {
+  const { statusCode, headers, stream } = await send(req, '/path/to/index.html')
+  res.writeHead(statusCode, headers)
+  stream.pipe(res)
 })
 
 server.listen(3000)
@@ -204,9 +183,10 @@ var http = require('node:http')
 var parseUrl = require('parseurl')
 var send = require('@fastify/send')
 
-var server = http.createServer(function onRequest (req, res) {
-  send(req, parseUrl(req).pathname, { root: '/www/public' })
-    .pipe(res)
+var server = http.createServer(async function onRequest (req, res) {
+  const { statusCode, headers, stream } = await send(req, parseUrl(req).pathname, { root: '/www/public' })
+  res.writeHead(statusCode, headers)
+  stream.pipe(res)
 })
 
 server.listen(3000)
@@ -228,88 +208,9 @@ send.mime.define({
 })
 
 var server = http.createServer(function onRequest (req, res) {
-  send(req, parseUrl(req).pathname, { root: '/www/public' })
-    .pipe(res)
-})
-
-server.listen(3000)
-```
-
-### Custom directory index view
-
-This is an example of serving up a structure of directories with a
-custom function to render a listing of a directory.
-
-```js
-var http = require('node:http')
-var fs = require('node:fs')
-var parseUrl = require('parseurl')
-var send = require('@fastify/send')
-
-// Transfer arbitrary files from within /www/example.com/public/*
-// with a custom handler for directory listing
-var server = http.createServer(function onRequest (req, res) {
-  send(req, parseUrl(req).pathname, { index: false, root: '/www/public' })
-    .once('directory', directory)
-    .pipe(res)
-})
-
-server.listen(3000)
-
-// Custom directory handler
-function directory (res, path) {
-  var stream = this
-
-  // redirect to trailing slash for consistent url
-  if (!stream.hasTrailingSlash()) {
-    return stream.redirect(path)
-  }
-
-  // get directory list
-  fs.readdir(path, function onReaddir (err, list) {
-    if (err) return stream.error(err)
-
-    // render an index for the directory
-    res.setHeader('Content-Type', 'text/plain; charset=UTF-8')
-    res.end(list.join('\n') + '\n')
-  })
-}
-```
-
-### Serving from a root directory with custom error-handling
-
-```js
-var http = require('node:http')
-var parseUrl = require('parseurl')
-var send = require('@fastify/send')
-
-var server = http.createServer(function onRequest (req, res) {
-  // your custom error-handling logic:
-  function error (err) {
-    res.statusCode = err.status || 500
-    res.end(err.message)
-  }
-
-  // your custom headers
-  function headers (res, path, stat) {
-    // serve all files for download
-    res.setHeader('Content-Disposition', 'attachment')
-  }
-
-  // your custom directory handling logic:
-  function redirect () {
-    res.statusCode = 301
-    res.setHeader('Location', req.url + '/')
-    res.end('Redirecting to ' + req.url + '/')
-  }
-
-  // transfer arbitrary files from within
-  // /www/example.com/public/*
-  send(req, parseUrl(req).pathname, { root: '/www/public' })
-    .on('error', error)
-    .on('directory', redirect)
-    .on('headers', headers)
-    .pipe(res)
+  const { statusCode, headers, stream } = await send(req, parseUrl(req).pathname, { root: '/www/public' })
+  res.writeHead(statusCode, headers)
+  stream.pipe(res)
 })
 
 server.listen(3000)
