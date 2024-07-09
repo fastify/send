@@ -5,13 +5,12 @@
 /// <reference types="node" />
 
 import * as stream from "stream";
-import * as fs from "fs";
 
 /**
  * Create a new SendStream for the given path to send to a res.
  * The req is the Node.js HTTP request and the path is a urlencoded path to send (urlencoded, not the actual file-system path).
  */
-declare function send(req: stream.Readable, path: string, options?: send.SendOptions): send.SendStream;
+declare function send(req: stream.Readable, path: string, options?: send.SendOptions): Promise<send.SendResult>;
 
 type Send = typeof send;
 
@@ -112,99 +111,10 @@ declare namespace send {
     start?: number | undefined;
   }
 
-  export class SendStream extends stream.Stream {
-
-    constructor(req: stream.Readable, path: string, options?: SendOptions);
-
-    /**
-     * Emit error with `status`.
-     */
-    error(status: number, error?: Error): void;
-
-    /**
-     * Check if the pathname ends with "/".
-     */
-    hasTrailingSlash(): boolean;
-
-    /**
-     * Check if this is a conditional GET request.
-     */
-    isConditionalGET(): boolean;
-
-    /**
-     * Strip content-* header fields.
-     */
-    removeContentHeaderFields(): void;
-
-    /**
-     * Respond with 304 not modified.
-     */
-    notModified(): void;
-
-    /**
-     * Raise error that headers already sent.
-     */
-    headersAlreadySent(): void;
-
-    /**
-     * Check if the request is cacheable, aka responded with 2xx or 304 (see RFC 2616 section 14.2{5,6}).
-     */
-    isCachable(): boolean;
-
-    /**
-     * Handle stat() error.
-     */
-    onStatError(error: Error): void;
-
-    /**
-     * Check if the cache is fresh.
-     */
-    isFresh(): boolean;
-
-    /**
-     * Check if the range is fresh.
-     */
-    isRangeFresh(): boolean;
-
-    /**
-     * Redirect to path.
-     */
-    redirect(path: string): void;
-
-    /**
-     * Pipe to `res`.
-     */
-    pipe<T extends NodeJS.WritableStream>(res: T): T;
-
-    /**
-     * Transfer `path`.
-     */
-    send(path: string, stat?: fs.Stats): void;
-
-    /**
-     * Transfer file for `path`.
-     */
-    sendFile(path: string): void;
-
-    /**
-     * Transfer index for `path`.
-     */
-    sendIndex(path: string): void;
-
-    /**
-     * Transfer index for `path`.
-     */
-    stream(path: string, options?: {}): void;
-
-    /**
-     * Set content-type based on `path` if it hasn't been explicitly set.
-     */
-    type(path: string): void;
-
-    /**
-     * Set response header fields, most fields may be pre-defined.
-     */
-    setHeader(path: string, stat: fs.Stats): void;
+  export interface SendResult {
+    statusCode: number
+    headers: Record<string, string>
+    stream: stream.Readable
   }
 
   export const send: Send

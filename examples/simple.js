@@ -6,9 +6,10 @@ const path = require('node:path')
 
 const indexPath = path.join(__dirname, 'index.html')
 
-const server = http.createServer(function onRequest (req, res) {
-  send(req, indexPath)
-    .pipe(res)
+const server = http.createServer(async function onRequest (req, res) {
+  const { statusCode, headers, stream } = await send(req, indexPath)
+  res.writeHead(statusCode, headers)
+  stream.pipe(res)
 })
 
 server.listen(3000)
