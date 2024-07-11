@@ -122,6 +122,64 @@ Serve files relative to `path`.
 Byte offset at which the stream starts, defaults to 0. The start is inclusive,
 meaning `start: 2` will include the 3rd byte in the stream.
 
+##### onSendDirectory(path)
+
+Customize behavior when directory was requested.
+
+```js
+const server = http.createServer(async function (req, res) {
+  const { statusCode, headers, stream } = await send(req, req.url, { 
+    root: fixtures,
+    onSendDirectory
+  })
+  res.writeHead(statusCode, headers)
+  stream.pipe(res)
+})
+
+function onSendDirectory () {
+  return { statusCode: 400, headers: {}, stream: Readable.from('No directory for you') }
+}
+```
+
+##### onSendFile(path, stat)
+
+Customize behavior when file was requested.
+
+```js
+const app = http.createServer(async function (req, res) {
+  const { statusCode, headers, stream } = await send(req, req.url, { 
+    root: fixtures,
+    onSendFile
+  })
+  res.writeHead(statusCode, headers)
+  stream.pipe(res)
+})
+
+function onSendFile (filePath) {
+  return { statusCode: 200, headers: {}, stream: createReadStream(filePath) }
+}
+```
+
+##### onSendError(statusCode, error)
+
+Customize behavior when error occured.
+
+```js
+const app = http.createServer(async function (req, res) {
+  const { statusCode, headers, stream } = await send(req, req.url, { 
+    root: fixtures,
+    onSendError
+  })
+  res.writeHead(statusCode, headers)
+  stream.pipe(res)
+})
+
+function onSendError (statusCode, err) {
+  t.equal(statusCode, 404)
+  return { statusCode: 200, headers: {}, stream: Readable.from('no error') }
+}
+```
+
 ### .mime
 
 The `mime` export is the global instance of the

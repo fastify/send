@@ -4,6 +4,7 @@
 
 /// <reference types="node" />
 
+import { Dirent } from "fs";
 import * as stream from "stream";
 
 /**
@@ -109,6 +110,12 @@ declare namespace send {
      * The start is inclusive, meaning start: 2 will include the 3rd byte in the stream.
      */
     start?: number | undefined;
+
+    onSendDirectory(path: string): SendResult
+
+    onSendFile(path: string, stat: Dirent): SendResult
+
+    onSendError(statusCode: number, error: Error): SendResult
   }
 
   export interface SendResult {
