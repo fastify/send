@@ -19,7 +19,7 @@ test('send(file)', function (t) {
     t.test('should be called when sending directory', function (t) {
       t.plan(1)
       const server = http.createServer(async function (req, res) {
-        const { statusCode, headers, stream } = await send(req, req.url, { 
+        const { statusCode, headers, stream } = await send(req, req.url, {
           root: fixtures,
           onSendDirectory
         })
@@ -39,7 +39,7 @@ test('send(file)', function (t) {
     t.test('should be called with path', function (t) {
       t.plan(1)
       const server = http.createServer(async function (req, res) {
-        const { statusCode, headers, stream } = await send(req, req.url, { 
+        const { statusCode, headers, stream } = await send(req, req.url, {
           root: fixtures,
           onSendDirectory
         })
@@ -61,7 +61,7 @@ test('send(file)', function (t) {
     t.plan(1)
 
     const app = http.createServer(async function (req, res) {
-      const { statusCode, headers, stream } = await send(req, req.url, { 
+      const { statusCode, headers, stream } = await send(req, req.url, {
         root: fixtures,
         onSendFile
       })
@@ -82,7 +82,7 @@ test('send(file)', function (t) {
     t.plan(2)
 
     const app = http.createServer(async function (req, res) {
-      const { statusCode, headers, stream } = await send(req, req.url, { 
+      const { statusCode, headers, stream } = await send(req, req.url, {
         root: fixtures,
         onSendError
       })
