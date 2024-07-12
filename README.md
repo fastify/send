@@ -216,6 +216,75 @@ var server = http.createServer(function onRequest (req, res) {
 server.listen(3000)
 ```
 
+### Custom directory index view
+
+This is an example of serving up a structure of directories with a
+custom function to render a listing of a directory.
+
+```js
+var http = require('node:http')
+var fs = require('node:fs')
+var parseUrl = require('parseurl')
+var send = require('@fastify/send')
+
+// Transfer arbitrary files from within /www/example.com/public/*
+// with a custom handler for directory listing
+var server = http.createServer(async function onRequest (req, res) {
+  const { statusCode, headers, stream, type, metadata } = await send(req, parseUrl(req).pathname, { index: false, root: '/www/public' })
+  if(type === 'directory') {
+    // get directory list
+    const list = await readdir(metadata.path)
+    // render an index for the directory
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=UTF-8' })
+    res.end(list.join('\n') + '\n')
+  } else {
+    res.writeHead(statusCode, headers)
+    stream.pipe(res)
+  }
+})
+
+server.listen(3000)
+```
+
+### Serving from a root directory with custom error-handling
+
+```js
+var http = require('node:http')
+var parseUrl = require('parseurl')
+var send = require('@fastify/send')
+
+var server = http.createServer(async function onRequest (req, res) {
+  // transfer arbitrary files from within
+  // /www/example.com/public/*
+  const { statusCode, headers, stream, type, metadata } = await send(req, parseUrl(req).pathname, { root: '/www/public' })
+  switch (type) {
+    case 'directory': {
+      // your custom directory handling logic:
+      res.writeHead(301, {
+        'Location': metadata.requestPath + '/'
+      })
+      res.end('Redirecting to ' + metadata.requestPath + '/')
+      break
+    }
+    case 'error': {
+      // your custom error-handling logic:
+      res.writeHead(metadata.error.status ?? 500, {})
+      res.end(metadata.error.message)
+      break
+    }
+    default: {
+      // your custom headers
+      // serve all files for download
+      res.setHeader('Content-Disposition', 'attachment')
+      res.writeHead(statusCode, headers)
+      stream.pipe(res)
+    }
+  }
+})
+
+server.listen(3000)
+```
+
 ## License
 
 [MIT](LICENSE)

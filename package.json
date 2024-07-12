@@ -22,10 +22,11 @@
     "server"
   ],
   "dependencies": {
+    "@lukeed/ms": "^2.0.2",
     "escape-html": "~1.0.3",
     "fast-decode-uri-component": "^1.0.1",
-    "mime": "^3",
-    "@lukeed/ms": "^2.0.2"
+    "http-errors": "^2.0.0",
+    "mime": "^3"
   },
   "devDependencies": {
     "@fastify/pre-commit": "^2.1.0",
