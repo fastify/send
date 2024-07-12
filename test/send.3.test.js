@@ -127,7 +127,7 @@ test('send(file)', function (t) {
 
     request(app)
       .get('/not-exists')
-      .expect(500, err => t.error(err))
+      .expect(404, err => t.error(err))
 
     request(app)
       .get('/pets/index.html')
