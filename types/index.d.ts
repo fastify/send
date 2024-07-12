@@ -137,7 +137,7 @@ declare namespace send {
   export interface ErrorSendResult extends BaseSendResult {
     type: 'error'
     metadata: {
-      error?: Error
+      error: Error
     }
   }
 

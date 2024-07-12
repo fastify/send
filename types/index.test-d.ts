@@ -51,6 +51,6 @@ switch (result.type) {
   }
   case 'error': {
     expectType<ErrorSendResult>(result)
-    expectType<Error | undefined>(result.metadata.error)
+    expectType<Error>(result.metadata.error)
   }
 }

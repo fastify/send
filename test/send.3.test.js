@@ -53,46 +53,23 @@ test('send(file)', function (t) {
   })
 
   t.test('error type', function (t) {
-    t.plan(2)
+    t.plan(6)
 
-    t.test('with metadata.error', function (t) {
-      t.plan(6)
-
-      const app = http.createServer(async function (req, res) {
-        const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
-        t.equal(type, 'error')
-        t.notOk(metadata.path)
-        t.notOk(metadata.stat)
-        t.ok(metadata.error)
-        t.notOk(metadata.requestPath)
-        res.writeHead(statusCode, headers)
-        stream.pipe(res)
-      })
-
-      const path = Array(100).join('foobar')
-      request(app)
-        .get('/' + path)
-        .expect(404, err => t.error(err))
+    const app = http.createServer(async function (req, res) {
+      const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
+      t.equal(type, 'error')
+      t.notOk(metadata.path)
+      t.notOk(metadata.stat)
+      t.ok(metadata.error)
+      t.notOk(metadata.requestPath)
+      res.writeHead(statusCode, headers)
+      stream.pipe(res)
     })
 
-    t.test('without metadata.error', function (t) {
-      t.plan(6)
-
-      const app = http.createServer(async function (req, res) {
-        const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
-        t.equal(type, 'error')
-        t.notOk(metadata.path)
-        t.notOk(metadata.stat)
-        t.notOk(metadata.error)
-        t.notOk(metadata.requestPath)
-        res.writeHead(statusCode, headers)
-        stream.pipe(res)
-      })
-
-      request(app)
-        .get('/some%00thing.txt')
-        .expect(400, /Bad Request/, err => t.error(err))
-    })
+    const path = Array(100).join('foobar')
+    request(app)
+      .get('/' + path)
+      .expect(404, err => t.error(err))
   })
 
   t.test('custom directory index view', function (t) {
