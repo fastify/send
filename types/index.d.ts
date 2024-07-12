@@ -4,6 +4,7 @@
 
 /// <reference types="node" />
 
+import { Dirent } from "fs";
 import * as stream from "stream";
 
 /**
@@ -111,11 +112,36 @@ declare namespace send {
     start?: number | undefined;
   }
 
-  export interface SendResult {
+  export interface BaseSendResult {
     statusCode: number
     headers: Record<string, string>
     stream: stream.Readable
   }
+
+  export interface FileSendResult extends BaseSendResult {
+    type: 'file'
+    metadata: {
+      path: string
+      stat: Dirent
+    }
+  }
+
+  export interface DirectorySendResult extends BaseSendResult {
+    type: 'directory'
+    metadata: {
+      path: string
+      requestPath: string
+    }
+  }
+
+  export interface ErrorSendResult extends BaseSendResult {
+    type: 'error'
+    metadata: {
+      error?: Error
+    }
+  }
+
+  export type SendResult = FileSendResult | DirectorySendResult | ErrorSendResult
 
   export const send: Send
 

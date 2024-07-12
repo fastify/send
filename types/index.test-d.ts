@@ -1,6 +1,7 @@
+import { Dirent } from 'fs';
 import { Readable } from 'stream';
 import { expectType } from 'tsd';
-import send, { SendResult } from '..';
+import send, { DirectorySendResult, ErrorSendResult, FileSendResult, SendResult } from '..';
 
 send.mime.define({
   'application/x-my-type': ['x-mt', 'x-mtt']
@@ -33,3 +34,23 @@ const req: any = {}
   expectType<Readable>(result.stream)
 }
 
+
+const result = await send(req, '/test.html')
+switch (result.type) {
+  case 'file': {
+    expectType<FileSendResult>(result)
+    expectType<string>(result.metadata.path)
+    expectType<Dirent>(result.metadata.stat)
+    break
+  }
+  case 'directory': {
+    expectType<DirectorySendResult>(result)
+    expectType<string>(result.metadata.path)
+    expectType<string>(result.metadata.requestPath)
+    break
+  }
+  case 'error': {
+    expectType<ErrorSendResult>(result)
+    expectType<Error | undefined>(result.metadata.error)
+  }
+}
