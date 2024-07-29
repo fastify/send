@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@fastify/pre-commit": "^2.1.0",
-    "@types/node": "^20.12.2",
+    "@types/node": "^22.0.0",
     "after": "0.8.2",
     "benchmark": "^2.1.4",
     "snazzy": "^9.0.0",
