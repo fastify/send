@@ -588,7 +588,7 @@ test('send(file).pipe(res)', function (t) {
         .get('/pets')
         .expect('Location', '/pets/')
         .expect('Content-Type', /html/)
-        .expect(301, />Redirecting to <a href="\/pets\/">\/pets\/<\/a></, err => t.error(err))
+        .expect(301, />Redirecting to \/pets\/</, err => t.error(err))
     })
 
     t.test('should respond with default Content-Security-Policy', function (t) {
@@ -622,7 +622,7 @@ test('send(file).pipe(res)', function (t) {
         .get('/snow')
         .expect('Location', '/snow%20%E2%98%83/')
         .expect('Content-Type', /html/)
-        .expect(301, />Redirecting to <a href="\/snow%20%E2%98%83\/">\/snow%20%E2%98%83\/<\/a></, err => t.error(err))
+        .expect(301, />Redirecting to \/snow%20%E2%98%83\/</, err => t.error(err))
     })
   })
 
