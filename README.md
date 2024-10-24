@@ -134,7 +134,7 @@ default type to use for an unknown file extension).
 ## Caching
 
 It does _not_ perform internal caching, you should use a reverse proxy cache
-such as nish for this, or those fancy things called CDNs. If your
+such as Varnish for this, or those fancy things called CDNs. If your
 application is small enough that it would benefit from single-node memory
 caching, it's small enough that it does not need caching at all ;).
 
