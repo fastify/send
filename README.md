@@ -32,7 +32,7 @@ $ npm install -D @types/mime@3
 ## API
 
 ```js
-var send = require('@fastify/send')
+const send = require('@fastify/send')
 ```
 
 ### send(req, path, [options])
@@ -134,7 +134,7 @@ default type to use for an unknown file extension).
 ## Caching
 
 It does _not_ perform internal caching, you should use a reverse proxy cache
-such as Varnish for this, or those fancy things called CDNs. If your
+such as nish for this, or those fancy things called CDNs. If your
 application is small enough that it would benefit from single-node memory
 caching, it's small enough that it does not need caching at all ;).
 
@@ -160,10 +160,10 @@ $ npm test
 This simple example will send a specific file to all requests.
 
 ```js
-var http = require('node:http')
-var send = require('send')
+const http = require('node:http')
+const send = require('send')
 
-var server = http.createServer(async function onRequest (req, res) {
+const server = http.createServer(async function onRequest (req, res) {
   const { statusCode, headers, stream } = await send(req, '/path/to/index.html')
   res.writeHead(statusCode, headers)
   stream.pipe(res)
@@ -179,11 +179,11 @@ given directory as the top-level. For example, a request
 `GET /foo.txt` will send back `/www/public/foo.txt`.
 
 ```js
-var http = require('node:http')
-var parseUrl = require('parseurl')
-var send = require('@fastify/send')
+const http = require('node:http')
+const parseUrl = require('parseurl')
+const send = require('@fastify/send')
 
-var server = http.createServer(async function onRequest (req, res) {
+const server = http.createServer(async function onRequest (req, res) {
   const { statusCode, headers, stream } = await send(req, parseUrl(req).pathname, { root: '/www/public' })
   res.writeHead(statusCode, headers)
   stream.pipe(res)
@@ -195,9 +195,9 @@ server.listen(3000)
 ### Custom file types
 
 ```js
-var http = require('node:http')
-var parseUrl = require('parseurl')
-var send = require('@fastify/send')
+const http = require('node:http')
+const parseUrl = require('parseurl')
+const send = require('@fastify/send')
 
 // Default unknown types to text/plain
 send.mime.default_type = 'text/plain'
@@ -207,7 +207,7 @@ send.mime.define({
   'application/x-my-type': ['x-mt', 'x-mtt']
 })
 
-var server = http.createServer(function onRequest (req, res) {
+const server = http.createServer(function onRequest (req, res) {
   const { statusCode, headers, stream } = await send(req, parseUrl(req).pathname, { root: '/www/public' })
   res.writeHead(statusCode, headers)
   stream.pipe(res)
@@ -222,14 +222,14 @@ This is an example of serving up a structure of directories with a
 custom function to render a listing of a directory.
 
 ```js
-var http = require('node:http')
-var fs = require('node:fs')
-var parseUrl = require('parseurl')
-var send = require('@fastify/send')
+const http = require('node:http')
+const fs = require('node:fs')
+const parseUrl = require('parseurl')
+const send = require('@fastify/send')
 
 // Transfer arbitrary files from within /www/example.com/public/*
 // with a custom handler for directory listing
-var server = http.createServer(async function onRequest (req, res) {
+const server = http.createServer(async function onRequest (req, res) {
   const { statusCode, headers, stream, type, metadata } = await send(req, parseUrl(req).pathname, { index: false, root: '/www/public' })
   if(type === 'directory') {
     // get directory list
@@ -249,11 +249,11 @@ server.listen(3000)
 ### Serving from a root directory with custom error-handling
 
 ```js
-var http = require('node:http')
-var parseUrl = require('parseurl')
-var send = require('@fastify/send')
+const http = require('node:http')
+const parseUrl = require('parseurl')
+const send = require('@fastify/send')
 
-var server = http.createServer(async function onRequest (req, res) {
+const server = http.createServer(async function onRequest (req, res) {
   // transfer arbitrary files from within
   // /www/example.com/public/*
   const { statusCode, headers, stream, type, metadata } = await send(req, parseUrl(req).pathname, { root: '/www/public' })
