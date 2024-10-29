@@ -21,6 +21,11 @@
     "file",
     "server"
   ],
+  "files": [
+    "index.js",
+    "lib",
+    "types"
+  ],
   "dependencies": {
     "@lukeed/ms": "^2.0.2",
     "escape-html": "~1.0.3",
