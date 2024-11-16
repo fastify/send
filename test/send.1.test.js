@@ -6,7 +6,7 @@ const http = require('node:http')
 const path = require('node:path')
 const request = require('supertest')
 const send = require('..').send
-const { shouldNotHaveHeader, createServer } = require('./utils')
+const { shouldNotHaveHeader, shouldHaveHeader, createServer } = require('./utils')
 
 // test server
 
@@ -16,7 +16,7 @@ test('send(file, options)', function (t) {
   t.plan(10)
 
   t.test('acceptRanges', function (t) {
-    t.plan(2)
+    t.plan(3)
 
     t.test('should support disabling accept-ranges', function (t) {
       t.plan(2)
@@ -36,6 +36,18 @@ test('send(file, options)', function (t) {
         .expect(shouldNotHaveHeader('Accept-Ranges', t))
         .expect(shouldNotHaveHeader('Content-Range', t))
         .expect(200, '123456789', err => t.error(err))
+    })
+
+    t.test('should chunk size should be limited', function (t) {
+      t.plan(4)
+
+      request(createServer({ acceptRanges: true, maxChunkSize: 1, root: fixtures }))
+        .get('/nums.txt')
+        .set('Range', 'bytes=0-2')
+        .expect(shouldHaveHeader('Accept-Ranges', t))
+        .expect(shouldHaveHeader('Content-Range', t))
+        .expect((res) => t.equal(res.headers['content-length'], '1', 'should content-length must be as same as maxChunkSize'))
+        .expect(206, '1', (err) => t.error(err))
     })
   })
 
