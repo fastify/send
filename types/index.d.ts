@@ -39,6 +39,11 @@ declare namespace send {
     acceptRanges?: boolean | undefined;
 
     /**
+     * Limit max response size when acceptRanges is true, defaults to the entire file size.
+     */
+    maxChunkSize?: number | undefined;
+
+    /**
      * Enable or disable setting Cache-Control response header, defaults to true.
      * Disabling this will ignore the maxAge option.
      */
