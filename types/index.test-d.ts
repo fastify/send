@@ -14,6 +14,8 @@ const req: any = {}
 
 {
   const result = await send(req, '/test.html', {
+    acceptRanges: true,
+    maxChunkSize: 10,
     immutable: true,
     maxAge: 0,
     root: __dirname + '/wwwroot'
