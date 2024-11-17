@@ -52,7 +52,7 @@ of the `Range` request header.
 ##### acceptRanges
 
 Specify maximum chunk size, defaults to send the entire file size.
-This will be used `acceptRanges` is true.
+This will be used when `acceptRanges` is true.
 
 ##### cacheControl
 
