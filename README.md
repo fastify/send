@@ -49,6 +49,11 @@ Enable or disable accepting ranged requests, defaults to true.
 Disabling this will not send `Accept-Ranges` and ignore the contents
 of the `Range` request header.
 
+##### acceptRanges
+
+Specify maximum chunk size, defaults to send the entire file size.
+This will be used `acceptRanges` is true.
+
 ##### cacheControl
 
 Enable or disable setting `Cache-Control` response header, defaults to
