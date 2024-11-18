@@ -16,6 +16,10 @@
     "type": "git",
     "url": "git+https://github.com/fastify/send.git"
   },
+  "bugs": {
+    "url": "https://github.com/fastify/send/issues"
+  },
+  "homepage": "https://github.com/fastify/send#readme",
   "keywords": [
     "static",
     "file",
