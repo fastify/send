@@ -259,12 +259,12 @@ test('send(file)', function (t) {
 
     request(app)
       .get('/name.txt')
-      .expect('Content-Type', 'text/plain; charset=UTF-8')
+      .expect('Content-Type', 'text/plain; charset=utf-8')
       .expect(200, function (err) {
         t.error(err)
         request(app)
           .get('/tobi.html')
-          .expect('Content-Type', 'text/html; charset=UTF-8')
+          .expect('Content-Type', 'text/html; charset=utf-8')
           .expect(200, err => t.error(err))
       })
   })
