@@ -33,7 +33,7 @@ test('send.mime', function (t) {
 
       request(createServer({ root: fixtures }))
         .get('/no_ext')
-        .expect('Content-Type', 'text/plain; charset=UTF-8')
+        .expect('Content-Type', 'text/plain; charset=utf-8')
         .expect(200, err => t.error(err))
     })
 

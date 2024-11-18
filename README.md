@@ -235,7 +235,7 @@ const server = http.createServer(async function onRequest (req, res) {
     // get directory list
     const list = await readdir(metadata.path)
     // render an index for the directory
-    res.writeHead(200, { 'Content-Type': 'text/plain; charset=UTF-8' })
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' })
     res.end(list.join('\n') + '\n')
   } else {
     res.writeHead(statusCode, headers)

@@ -79,7 +79,7 @@ test('send(file)', function (t) {
       const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
       if (type === 'directory') {
         const list = await readdir(metadata.path)
-        res.writeHead(200, { 'Content-Type': 'text/plain; charset=UTF-8' })
+        res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' })
         res.end(list.join('\n') + '\n')
       } else {
         res.writeHead(statusCode, headers)
@@ -89,7 +89,7 @@ test('send(file)', function (t) {
 
     request(app)
       .get('/pets')
-      .expect('Content-Type', 'text/plain; charset=UTF-8')
+      .expect('Content-Type', 'text/plain; charset=utf-8')
       .expect(200, '.hidden\nindex.html\n', err => t.error(err))
   })
 
