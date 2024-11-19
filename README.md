@@ -60,7 +60,7 @@ By default, this library uses the `mime` module to set the `Content-Type`
 of the response based on the file extension of the requested file.
 
 To disable this functionality, set `contentType` to `false`.
-The `Content-Type` header will need to be set manually in this case.
+The `Content-Type` header will need to be set manually if disabled.
 
 ##### dotfiles
 
