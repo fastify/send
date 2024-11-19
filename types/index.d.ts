@@ -45,6 +45,11 @@ declare namespace send {
     cacheControl?: boolean | undefined;
 
     /**
+     * Enable or disable setting Content-Type response header, defaults to true.
+     */
+    contentType?: boolean | undefined;
+
+    /**
      * Set how "dotfiles" are treated when encountered.
      * A dotfile is a file or directory that begins with a dot (".").
      * Note this check is done on the path itself without checking if the path actually exists on the disk.
