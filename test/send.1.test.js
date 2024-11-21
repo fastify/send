@@ -16,7 +16,7 @@ test('send(file, options)', function (t) {
   t.plan(10)
 
   t.test('acceptRanges', function (t) {
-    t.plan(5)
+    t.plan(6)
 
     t.test('should support disabling accept-ranges', function (t) {
       t.plan(2)
@@ -70,8 +70,20 @@ test('send(file, options)', function (t) {
         .set('Range', 'bytes=1-3')
         .expect(shouldHaveHeader('Accept-Ranges', t))
         .expect(shouldHaveHeader('Content-Range', t))
-        .expect((res) => t.equal(res.headers['content-length'], '2', 'should content-length must be as same as maxChunkSize'))
-        .expect(206, '23', (err) => t.error(err))
+        .expect((res) => t.equal(res.headers['content-length'], '1', 'should content-length must be as same as maxChunkSize'))
+        .expect(206, '2', (err) => t.error(err))
+    })
+
+    t.test('should limit chunk size /4', function (t) {
+      t.plan(4)
+
+      request(createServer({ acceptRanges: true, maxChunkSize: 4, root: fixtures }))
+        .get('/nums.txt')
+        .set('Range', 'bytes=1-2,3-5')
+        .expect(shouldHaveHeader('Content-Range', t))
+        .expect(shouldHaveHeader('Accept-Ranges', t))
+        .expect((res) => t.equal(res.headers['content-length'], '4', 'should content-length must be as same as maxChunkSize'))
+        .expect(206, '2345', (err) => t.error(err))
     })
   })
 
