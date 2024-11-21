@@ -38,7 +38,7 @@ test('send(file, options)', function (t) {
         .expect(200, '123456789', err => t.error(err))
     })
 
-    t.test('should chunk size should be limited', function (t) {
+    t.test('should limit chunk size', function (t) {
       t.plan(4)
 
       request(createServer({ acceptRanges: true, maxChunkSize: 1, root: fixtures }))

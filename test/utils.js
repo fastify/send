@@ -9,7 +9,7 @@ module.exports.shouldNotHaveHeader = function shouldNotHaveHeader (header, t) {
   }
 }
 
-module.exports.shouldHaveHeader = function shouldNotHaveHeader (header, t) {
+module.exports.shouldHaveHeader = function shouldHaveHeader (header, t) {
   return function (res) {
     t.ok((header.toLowerCase() in res.headers), 'should have header ' + header)
   }
