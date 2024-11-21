@@ -39,11 +39,6 @@ declare namespace send {
     acceptRanges?: boolean | undefined;
 
     /**
-     * Limit max response size when acceptRanges is true, defaults to the entire file size.
-     */
-    maxChunkSize?: number | undefined;
-
-    /**
      * Enable or disable setting Cache-Control response header, defaults to true.
      * Disabling this will ignore the maxAge option.
      */
@@ -104,6 +99,11 @@ declare namespace send {
      * This can also be a string accepted by the ms module.
      */
     maxAge?: string | number | undefined;
+
+    /**
+     * Limit max response size when acceptRanges is true, defaults to the entire file size.
+     */
+    maxChunkSize?: number | undefined;
 
     /**
      * Serve files relative to path.

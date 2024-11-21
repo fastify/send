@@ -49,11 +49,6 @@ Enable or disable accepting ranged requests, defaults to true.
 Disabling this will not send `Accept-Ranges` and ignore the contents
 of the `Range` request header.
 
-##### acceptRanges
-
-Specify maximum chunk size, defaults to send the entire file size.
-This will be used when `acceptRanges` is true.
-
 ##### cacheControl
 
 Enable or disable setting `Cache-Control` response header, defaults to
@@ -117,6 +112,11 @@ system's last modified value.
 Provide a max-age in milliseconds for HTTP caching, defaults to 0.
 This can also be a string accepted by the
 [ms](https://www.npmjs.org/package/ms#readme) module.
+
+##### maxChunkSize
+
+Specify maximum chunk size, defaults to send the entire file size.
+This will be used when `acceptRanges` is true.
 
 ##### root
 
