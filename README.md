@@ -90,7 +90,7 @@ This is skipped if the requested file already has an extension.
 
 ##### highWatermark
 
-Specify maximum response content size, defaults to send the entire file size.
+Specify maximum response content size, defaults to the entire file size.
 This will be used when `acceptRanges` is true.
 
 ##### immutable
