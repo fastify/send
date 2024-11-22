@@ -115,7 +115,7 @@ This can also be a string accepted by the
 
 ##### maxReturnSize
 
-Specify maximum response content size, defaults to the entire file size.
+Specify the maximum response content size, defaults to the entire file size.
 This will be used when `acceptRanges` is true.
 
 ##### root
