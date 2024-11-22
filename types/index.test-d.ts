@@ -26,7 +26,7 @@ const req: any = {}
 }
 
 {
-  const result = await send(req, '/test.html', { maxAge: 0, root: __dirname + '/wwwroot' })
+  const result = await send(req, '/test.html', { contentType: true, maxAge: 0, root: __dirname + '/wwwroot' })
 
   expectType<SendResult>(result)
   expectType<number>(result.statusCode)
@@ -34,6 +34,14 @@ const req: any = {}
   expectType<Readable>(result.stream)
 }
 
+{
+  const result = await send(req, '/test.html', { contentType: false, root: __dirname + '/wwwroot' })
+
+  expectType<SendResult>(result)
+  expectType<number>(result.statusCode)
+  expectType<Record<string, string>>(result.headers)
+  expectType<Readable>(result.stream)
+}
 
 const result = await send(req, '/test.html')
 switch (result.type) {

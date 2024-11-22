@@ -54,6 +54,14 @@ of the `Range` request header.
 Enable or disable setting `Cache-Control` response header, defaults to
 true. Disabling this will ignore the `immutable` and `maxAge` options.
 
+##### contentType
+
+By default, this library uses the `mime` module to set the `Content-Type`
+of the response based on the file extension of the requested file.
+
+To disable this functionality, set `contentType` to `false`.
+The `Content-Type` header will need to be set manually if disabled.
+
 ##### dotfiles
 
 Set how "dotfiles" are treated when encountered. A dotfile is a file

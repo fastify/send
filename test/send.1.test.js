@@ -13,7 +13,7 @@ const { shouldNotHaveHeader, createServer } = require('./utils')
 const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file, options)', function (t) {
-  t.plan(10)
+  t.plan(11)
 
   t.test('acceptRanges', function (t) {
     t.plan(2)
@@ -56,6 +56,19 @@ test('send(file, options)', function (t) {
       request(createServer({ cacheControl: false, maxAge: 1000, root: fixtures }))
         .get('/name.txt')
         .expect(shouldNotHaveHeader('Cache-Control', t))
+        .expect(200, err => t.error(err))
+    })
+  })
+
+  t.test('contentType', function (t) {
+    t.plan(1)
+
+    t.test('should support disabling content-type', function (t) {
+      t.plan(2)
+
+      request(createServer({ contentType: false, root: fixtures }))
+        .get('/name.txt')
+        .expect(shouldNotHaveHeader('Content-Type', t))
         .expect(200, err => t.error(err))
     })
   })
