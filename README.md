@@ -88,11 +88,6 @@ in the given order. By default, this is disabled (set to `false`). An
 example value that will serve extension-less HTML files: `['html', 'htm']`.
 This is skipped if the requested file already has an extension.
 
-##### highWatermark
-
-Specify maximum response content size, defaults to the entire file size.
-This will be used when `acceptRanges` is true.
-
 ##### immutable
 
 Enable or disable the `immutable` directive in the `Cache-Control` response
@@ -117,6 +112,11 @@ system's last modified value.
 Provide a max-age in milliseconds for HTTP caching, defaults to 0.
 This can also be a string accepted by the
 [ms](https://www.npmjs.org/package/ms#readme) module.
+
+##### maxReturnSize
+
+Specify maximum response content size, defaults to the entire file size.
+This will be used when `acceptRanges` is true.
 
 ##### root
 

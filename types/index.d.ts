@@ -76,11 +76,6 @@ declare namespace send {
     extensions?: string[] | string | boolean | undefined;
 
     /**
-     * Limit max response content size when acceptRanges is true, defaults to the entire file size.
-     */
-    highWatermark?: number | undefined;
-
-    /**
      * Enable or disable the immutable directive in the Cache-Control response header, defaults to false.
      * If set to true, the maxAge option should also be specified to enable caching.
      * The immutable directive will prevent supported clients from making conditional requests during the life of the maxAge option to check if the file has changed.
@@ -104,6 +99,11 @@ declare namespace send {
      * This can also be a string accepted by the ms module.
      */
     maxAge?: string | number | undefined;
+
+    /**
+     * Limit max response content size when acceptRanges is true, defaults to the entire file size.
+     */
+    maxReturnSize?: number | undefined;
 
     /**
      * Serve files relative to path.

@@ -38,51 +38,51 @@ test('send(file, options)', function (t) {
         .expect(200, '123456789', err => t.error(err))
     })
 
-    t.test('should limit high watermark size /1', function (t) {
+    t.test('should limit high return size /1', function (t) {
       t.plan(4)
 
-      request(createServer({ acceptRanges: true, highWatermark: 1, root: fixtures }))
+      request(createServer({ acceptRanges: true, maxReturnSize: 1, root: fixtures }))
         .get('/nums.txt')
         .set('Range', 'bytes=0-2')
         .expect((res) => t.equal(res.headers['accept-ranges'], 'bytes'))
         .expect((res) => t.equal(res.headers['content-range'], 'bytes 0-0/9'))
-        .expect((res) => t.equal(res.headers['content-length'], '1', 'should content-length must be as same as highWatermark'))
+        .expect((res) => t.equal(res.headers['content-length'], '1', 'should content-length must be as same as maxReturnSize'))
         .expect(206, '1', (err) => t.error(err))
     })
 
-    t.test('should limit high watermark size /2', function (t) {
+    t.test('should limit high return size /2', function (t) {
       t.plan(4)
 
-      request(createServer({ acceptRanges: true, highWatermark: 1, root: fixtures }))
+      request(createServer({ acceptRanges: true, maxReturnSize: 1, root: fixtures }))
         .get('/nums.txt')
         .set('Range', 'bytes=1-2')
         .expect((res) => t.equal(res.headers['accept-ranges'], 'bytes'))
         .expect((res) => t.equal(res.headers['content-range'], 'bytes 1-1/9'))
-        .expect((res) => t.equal(res.headers['content-length'], '1', 'should content-length must be as same as highWatermark'))
+        .expect((res) => t.equal(res.headers['content-length'], '1', 'should content-length must be as same as maxReturnSize'))
         .expect(206, '2', (err) => t.error(err))
     })
 
-    t.test('should limit high watermark size /3', function (t) {
+    t.test('should limit high return size /3', function (t) {
       t.plan(4)
 
-      request(createServer({ acceptRanges: true, highWatermark: 1, root: fixtures }))
+      request(createServer({ acceptRanges: true, maxReturnSize: 1, root: fixtures }))
         .get('/nums.txt')
         .set('Range', 'bytes=1-3')
         .expect((res) => t.equal(res.headers['accept-ranges'], 'bytes'))
         .expect((res) => t.equal(res.headers['content-range'], 'bytes 1-1/9'))
-        .expect((res) => t.equal(res.headers['content-length'], '1', 'should content-length must be as same as highWatermark'))
+        .expect((res) => t.equal(res.headers['content-length'], '1', 'should content-length must be as same as maxReturnSize'))
         .expect(206, '2', (err) => t.error(err))
     })
 
-    t.test('should limit high watermark size /4', function (t) {
+    t.test('should limit high return size /4', function (t) {
       t.plan(4)
 
-      request(createServer({ acceptRanges: true, highWatermark: 4, root: fixtures }))
+      request(createServer({ acceptRanges: true, maxReturnSize: 4, root: fixtures }))
         .get('/nums.txt')
         .set('Range', 'bytes=1-2,3-6')
         .expect((res) => t.equal(res.headers['accept-ranges'], 'bytes'))
         .expect((res) => t.equal(res.headers['content-range'], 'bytes 1-4/9'))
-        .expect((res) => t.equal(res.headers['content-length'], '4', 'should content-length must be as same as highWatermark'))
+        .expect((res) => t.equal(res.headers['content-length'], '4', 'should content-length must be as same as maxReturnSize'))
         .expect(206, '2345', (err) => t.error(err))
     })
   })
