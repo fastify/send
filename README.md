@@ -113,7 +113,7 @@ Provide a max-age in milliseconds for HTTP caching, defaults to 0.
 This can also be a string accepted by the
 [ms](https://www.npmjs.org/package/ms#readme) module.
 
-##### maxReturnSize
+##### maxContentRangeChunkSize
 
 Specify the maximum response content size, defaults to the entire file size.
 This will be used when `acceptRanges` is true.

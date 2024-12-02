@@ -103,7 +103,7 @@ declare namespace send {
     /**
      * Limit max response content size when acceptRanges is true, defaults to the entire file size.
      */
-    maxReturnSize?: number | undefined;
+    maxContentRangeChunkSize?: number | undefined;
 
     /**
      * Serve files relative to path.
