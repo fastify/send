@@ -9,6 +9,12 @@ module.exports.shouldNotHaveHeader = function shouldNotHaveHeader (header, t) {
   }
 }
 
+module.exports.shouldHaveHeader = function shouldHaveHeader (header, t) {
+  return function (res) {
+    t.ok((header.toLowerCase() in res.headers), 'should have header ' + header)
+  }
+}
+
 module.exports.createServer = function createServer (opts, fn) {
   return http.createServer(async function onRequest (req, res) {
     try {

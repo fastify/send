@@ -106,6 +106,11 @@ declare namespace send {
     maxAge?: string | number | undefined;
 
     /**
+     * Limit max response content size when acceptRanges is true, defaults to the entire file size.
+     */
+    maxContentRangeChunkSize?: number | undefined;
+
+    /**
      * Serve files relative to path.
      */
     root?: string | undefined;
