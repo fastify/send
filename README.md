@@ -1,6 +1,6 @@
 # @fastify/send
 
-![CI](https://github.com/fastify/send/workflows/CI/badge.svg)
+[![CI](https://github.com/fastify/send/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/fastify/send/actions/workflows/ci.yml)
 [![NPM version](https://img.shields.io/npm/v/@fastify/send.svg?style=flat)](https://www.npmjs.com/package/@fastify/send)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
 
