@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/fastify/send/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/fastify/send/actions/workflows/ci.yml)
 [![NPM version](https://img.shields.io/npm/v/@fastify/send.svg?style=flat)](https://www.npmjs.com/package/@fastify/send)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
+[![neostandard javascript style](https://img.shields.io/badge/code_style-neostandard-brightgreen?style=flat)](https://github.com/neostandard/neostandard)
 
 Send is a library for streaming files from the file system as an HTTP response
 supporting partial responses (Ranges), conditional-GET negotiation (If-Match,

@@ -4,23 +4,23 @@
 
 /// <reference types="node" />
 
-import { Dirent } from "fs";
-import * as stream from "stream";
+import { Dirent } from 'fs'
+import * as stream from 'stream'
 
 /**
  * Create a new SendStream for the given path to send to a res.
  * The req is the Node.js HTTP request and the path is a urlencoded path to send (urlencoded, not the actual file-system path).
  */
-declare function send(req: stream.Readable, path: string, options?: send.SendOptions): Promise<send.SendResult>;
+declare function send (req: stream.Readable, path: string, options?: send.SendOptions): Promise<send.SendResult>
 
-type Send = typeof send;
+type Send = typeof send
 
 declare class Mime {
-  constructor(typeMap: TypeMap, ...mimes: TypeMap[]);
+  constructor (typeMap: TypeMap, ...mimes: TypeMap[])
 
-  getType(path: string): string | null;
-  getExtension(mime: string): string | null;
-  define(typeMap: TypeMap, force?: boolean): void;
+  getType (path: string): string | null
+  getExtension (mime: string): string | null
+  define (typeMap: TypeMap, force?: boolean): void
 }
 
 interface TypeMap {
@@ -28,8 +28,8 @@ interface TypeMap {
 }
 
 declare namespace send {
-  export const mime: Mime;
-  export const isUtf8MimeType: (value: string) => boolean;
+  export const mime: Mime
+  export const isUtf8MimeType: (value: string) => boolean
 
   export interface SendOptions {
     /**
@@ -59,7 +59,7 @@ declare namespace send {
      * 'ignore' Pretend like the dotfile does not exist and 404.
      * The default value is similar to 'ignore', with the exception that this default will not ignore the files within a directory that begins with a dot, for backward-compatibility.
      */
-    dotfiles?: "allow" | "deny" | "ignore" | undefined;
+    dotfiles?: 'allow' | 'deny' | 'ignore' | undefined;
 
     /**
      * Byte offset at which the stream ends, defaults to the length of the file minus 1.
@@ -158,4 +158,4 @@ declare namespace send {
   export { send as default }
 }
 
-export = send;
+export = send
