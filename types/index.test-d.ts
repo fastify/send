@@ -1,11 +1,12 @@
-import { Dirent } from 'fs';
-import { Readable } from 'stream';
-import { expectType } from 'tsd';
-import send, { DirectorySendResult, ErrorSendResult, FileSendResult, SendResult } from '..';
+import { Dirent } from 'node:fs'
+import { resolve } from 'node:path'
+import { Readable } from 'node:stream'
+import { expectType } from 'tsd'
+import send, { DirectorySendResult, ErrorSendResult, FileSendResult, SendResult } from '..'
 
 send.mime.define({
   'application/x-my-type': ['x-mt', 'x-mtt']
-});
+})
 
 expectType<(value: string) => boolean>(send.isUtf8MimeType)
 expectType<boolean>(send.isUtf8MimeType('application/json'))
@@ -18,8 +19,8 @@ const req: any = {}
     maxContentRangeChunkSize: 10,
     immutable: true,
     maxAge: 0,
-    root: __dirname + '/wwwroot'
-  });
+    root: resolve(__dirname, '/wwwroot')
+  })
 
   expectType<SendResult>(result)
   expectType<number>(result.statusCode)
@@ -28,7 +29,7 @@ const req: any = {}
 }
 
 {
-  const result = await send(req, '/test.html', { contentType: true, maxAge: 0, root: __dirname + '/wwwroot' })
+  const result = await send(req, '/test.html', { contentType: true, maxAge: 0, root: resolve(__dirname, '/wwwroot') })
 
   expectType<SendResult>(result)
   expectType<number>(result.statusCode)
@@ -37,7 +38,7 @@ const req: any = {}
 }
 
 {
-  const result = await send(req, '/test.html', { contentType: false, root: __dirname + '/wwwroot' })
+  const result = await send(req, '/test.html', { contentType: false, root: resolve(__dirname, '/wwwroot') })
 
   expectType<SendResult>(result)
   expectType<number>(result.statusCode)
