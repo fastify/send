@@ -4,8 +4,8 @@
 
 /// <reference types="node" />
 
-import { Dirent } from 'fs'
-import * as stream from 'stream'
+import { Dirent } from 'node:fs'
+import * as stream from 'node:stream'
 
 /**
  * Create a new SendStream for the given path to send to a res.
