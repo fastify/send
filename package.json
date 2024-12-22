@@ -19,7 +19,7 @@
     {
       "name": "Aras Abbasi",
       "email": "aras.abbasi@gmail.com"
-    },
+    }
   ],
   "main": "index.js",
   "type": "commonjs",
