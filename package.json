@@ -6,7 +6,20 @@
   "contributors": [
     "Douglas Christopher Wilson <doug@somethingdoug.com>",
     "James Wyatt Cready <jcready@gmail.com>",
-    "Jesús Leganés Combarro <piranna@gmail.com>"
+    "Jesús Leganés Combarro <piranna@gmail.com>",
+    {
+      "name": "Matteo Collina",
+      "email": "hello@matteocollina.com"
+    },
+    {
+      "name": "Frazer Smith",
+      "email": "frazer.dev@icloud.com",
+      "url": "https://github.com/fdawgs"
+    },
+    {
+      "name": "Aras Abbasi",
+      "email": "aras.abbasi@gmail.com"
+    }
   ],
   "main": "index.js",
   "type": "commonjs",
@@ -20,6 +33,16 @@
     "url": "https://github.com/fastify/send/issues"
   },
   "homepage": "https://github.com/fastify/send#readme",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/fastify"
+    },
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/fastify"
+    }
+  ],
   "keywords": [
     "static",
     "file",
