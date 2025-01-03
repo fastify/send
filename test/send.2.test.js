@@ -354,7 +354,7 @@ test('send(file)', function (t) {
     t.test('should remove Content headers with 304', function (t) {
       t.plan(2)
 
-      const server = createServer({ root: fixtures }, function (req, res) {
+      const server = createServer({ root: fixtures }, function (_req, res) {
         res.setHeader('Content-Language', 'en-US')
         res.setHeader('Content-Location', 'http://localhost/name.txt')
         res.setHeader('Contents', 'foo')
@@ -376,7 +376,7 @@ test('send(file)', function (t) {
     t.test('should not remove all Content-* headers', function (t) {
       t.plan(2)
 
-      const server = createServer({ root: fixtures }, function (req, res) {
+      const server = createServer({ root: fixtures }, function (_req, res) {
         res.setHeader('Content-Location', 'http://localhost/name.txt')
         res.setHeader('Content-Security-Policy', 'default-src \'self\'')
       })
@@ -569,7 +569,7 @@ test('send(file)', function (t) {
 
         request(app)
           .get('/name.txt')
-          .expect(200, function (err, res) {
+          .expect(200, function (err) {
             t.error(err)
             request(app)
               .get('/name.txt')
@@ -589,7 +589,7 @@ test('send(file)', function (t) {
 
         request(app)
           .get('/name.txt')
-          .expect(200, function (err, res) {
+          .expect(200, function (err) {
             t.error(err)
             request(app)
               .get('/name.txt')
@@ -609,7 +609,7 @@ test('send(file)', function (t) {
 
         request(app)
           .get('/name.txt')
-          .expect(200, function (err, res) {
+          .expect(200, function (err) {
             t.error(err)
             request(app)
               .get('/name.txt')
