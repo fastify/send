@@ -37,7 +37,7 @@ const send = require('@fastify/send')
 
 ### send(req, path, [options])
 
-Provide `statusCode`, `headers` and `stream` for the given path to send to a
+Provide `statusCode`, `headers`, and `stream` for the given path to send to a
 `res`. The `req` is the Node.js HTTP request and the `path `is a urlencoded path
 to send (urlencoded, not the actual file-system path).
 
@@ -300,4 +300,4 @@ server.listen(3000)
 
 ## License
 
-[MIT](LICENSE)
+Licensed under [MIT](./LICENSE).
