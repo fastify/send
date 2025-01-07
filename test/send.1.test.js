@@ -315,14 +315,14 @@ test('send(file, options)', function (t) {
       t.test('should 403 for dotfile in directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
-          .get('/pets/.hidden')
+          .get('/pets/.hidden.txt')
           .expect(403, err => t.error(err))
       })
 
       t.test('should 403 for dotfile in dotfile directory', function (t) {
         t.plan(1)
         request(createServer({ dotfiles: 'deny', root: fixtures }))
-          .get('/.mine/.hidden')
+          .get('/.mine/.hidden.txt')
           .expect(403, err => t.error(err))
       })
 
