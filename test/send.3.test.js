@@ -90,7 +90,7 @@ test('send(file)', function (t) {
     request(app)
       .get('/pets')
       .expect('Content-Type', 'text/plain; charset=utf-8')
-      .expect(200, '.hidden\nindex.html\n', err => t.error(err))
+      .expect(200, '.hidden.txt\nindex.html\n', err => t.error(err))
   })
 
   t.test('serving from a root directory with custom error-handling', function (t) {
