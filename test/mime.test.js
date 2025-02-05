@@ -28,7 +28,6 @@ test('send.mime', async function (t) {
     })
 
     await t.test('should change the default type', async function (t) {
-      t.plan(0)
       send.mime.default_type = 'text/plain'
 
       await request(createServer({ root: fixtures }))
@@ -48,8 +47,6 @@ test('send.mime', async function (t) {
     })
 
     await t.test('should return Content-Type without charset', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/images/node-js.png')
         .expect('Content-Type', 'image/png')

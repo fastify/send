@@ -73,8 +73,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('custom directory index view', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
       if (type === 'directory') {
@@ -94,8 +92,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('serving from a root directory with custom error-handling', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
       switch (type) {

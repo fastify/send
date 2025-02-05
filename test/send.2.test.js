@@ -14,8 +14,6 @@ test('send(file)', async function (t) {
   t.plan(22)
 
   await t.test('should stream the file contents', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -29,8 +27,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should stream a zero-length file', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -44,8 +40,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should decode the given path as a URI', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -58,8 +52,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should serve files with dots in name', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -72,8 +64,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should treat a malformed URI as a bad request', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -86,8 +76,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should 400 on NULL bytes', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -100,8 +88,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should treat an ENAMETOOLONG as a 404', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -131,8 +117,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should add an ETag header field', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -145,8 +129,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should add a Date header field', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -159,8 +141,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should add a Last-Modified header field', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -173,8 +153,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should add a Accept-Ranges header field', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -187,8 +165,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should 404 if the file does not exist', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -201,8 +177,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should 404 if the filename is too long', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -217,8 +191,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should 404 if the requested resource is not a directory', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -231,8 +203,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should not override content-type', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, {
@@ -247,8 +217,6 @@ test('send(file)', async function (t) {
   })
 
   await t.test('should set Content-Type via mime map', async function (t) {
-    t.plan(0)
-
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
       res.writeHead(statusCode, headers)
@@ -270,8 +238,6 @@ test('send(file)', async function (t) {
     t.plan(5)
 
     await t.test('should redirect directories to trailing slash', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/pets')
         .expect('Location', '/pets/')
@@ -279,8 +245,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should respond with an HTML redirect', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/pets')
         .expect('Location', '/pets/')
@@ -289,8 +253,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should respond with default Content-Security-Policy', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/pets')
         .expect('Location', '/pets/')
@@ -299,8 +261,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should not redirect to protocol-relative locations', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('//pets')
         .expect('Location', '/pets/')
@@ -308,8 +268,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should respond with an HTML redirect', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url.replace('/snow', '/snow ☃'), { root: 'test/fixtures' })
         res.writeHead(statusCode, headers)
@@ -328,16 +286,12 @@ test('send(file)', async function (t) {
     t.plan(2)
 
     await t.test('should respond to errors directly', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/foobar')
         .expect(404, />Not Found</)
     })
 
     await t.test('should respond with default Content-Security-Policy', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/foobar')
         .expect('Content-Security-Policy', "default-src 'none'")
@@ -349,8 +303,6 @@ test('send(file)', async function (t) {
     t.plan(6)
 
     await t.test('should remove Content headers with 304', async function (t) {
-      t.plan(0)
-
       const server = createServer({ root: fixtures }, function (_req, res) {
         res.setHeader('Content-Language', 'en-US')
         res.setHeader('Content-Location', 'http://localhost/name.txt')
@@ -370,8 +322,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should not remove all Content-* headers', async function (t) {
-      t.plan(0)
-
       const server = createServer({ root: fixtures }, function (_req, res) {
         res.setHeader('Content-Location', 'http://localhost/name.txt')
         res.setHeader('Content-Security-Policy', 'default-src \'self\'')
@@ -393,8 +343,6 @@ test('send(file)', async function (t) {
       t.plan(4)
 
       await t.test('should respond with 200 when "*"', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -408,8 +356,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 412 when ETag unmatched', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -423,8 +369,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when ETag matched /1', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -442,8 +386,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when ETag matched /2', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -465,8 +407,6 @@ test('send(file)', async function (t) {
       t.plan(3)
 
       await t.test('should respond with 304 when unmodified', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -484,8 +424,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when modified', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -505,8 +443,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when modified', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -529,8 +465,6 @@ test('send(file)', async function (t) {
       t.plan(6)
 
       await t.test('should respond with 304 when ETag matched', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -548,8 +482,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when ETag unmatched', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -567,8 +499,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when ETag is not generated', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { etag: false, root: fixtures })
           res.writeHead(statusCode, headers)
@@ -586,8 +516,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 306 Not Modified when using wildcard * on existing file', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { etag: false, root: fixtures })
           res.writeHead(statusCode, headers)
@@ -605,8 +533,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 404 Not Found when using wildcard * on non-existing file', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { etag: false, root: fixtures })
           res.writeHead(statusCode, headers)
@@ -620,8 +546,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 cache-control is set to no-cache', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -644,8 +568,6 @@ test('send(file)', async function (t) {
       t.plan(3)
 
       await t.test('should respond with 200 when unmodified', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -663,8 +585,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 412 when modified', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -684,8 +604,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when invalid date', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -704,8 +622,6 @@ test('send(file)', async function (t) {
     t.plan(13)
 
     await t.test('should support byte ranges', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
         res.writeHead(statusCode, headers)
@@ -719,8 +635,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should ignore non-byte ranges', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
         res.writeHead(statusCode, headers)
@@ -734,8 +648,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should be inclusive', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
         res.writeHead(statusCode, headers)
@@ -749,8 +661,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should set Content-Range', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
         res.writeHead(statusCode, headers)
@@ -765,8 +675,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should support -n', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
         res.writeHead(statusCode, headers)
@@ -780,8 +688,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should support n-', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
         res.writeHead(statusCode, headers)
@@ -795,8 +701,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should respond with 206 "Partial Content"', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
         res.writeHead(statusCode, headers)
@@ -810,8 +714,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should set Content-Length to the # of octets transferred', async function (t) {
-      t.plan(0)
-
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
         res.writeHead(statusCode, headers)
@@ -829,8 +731,6 @@ test('send(file)', async function (t) {
       t.plan(2)
 
       await t.test('is taken to be equal to one less than the length', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -845,8 +745,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should adapt the Content-Length accordingly', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -865,8 +763,6 @@ test('send(file)', async function (t) {
       t.plan(2)
 
       await t.test('should respond with 416', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -881,8 +777,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should emit error 416 with content-range header', async function (t) {
-        t.plan(0)
-
         const server = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, {
@@ -904,8 +798,6 @@ test('send(file)', async function (t) {
       t.plan(1)
 
       await t.test('should respond with 200 and the entire contents', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -939,8 +831,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 206 is all ranges can be combined', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -959,8 +849,6 @@ test('send(file)', async function (t) {
       t.plan(5)
 
       await t.test('should respond with parts when etag unchanged', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -981,8 +869,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when etag changed', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -1003,8 +889,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with parts when modified unchanged', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -1025,8 +909,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when modified changed', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -1047,8 +929,6 @@ test('send(file)', async function (t) {
       })
 
       await t.test('should respond with 200 when invalid value', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -1068,24 +948,18 @@ test('send(file)', async function (t) {
     t.plan(4)
 
     await t.test('should support start/end', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, start: 3, end: 5 }))
         .get('/nums.txt')
         .expect(200, '456')
     })
 
     await t.test('should adjust too large end', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, start: 3, end: 90 }))
         .get('/nums.txt')
         .expect(200, '456789')
     })
 
     await t.test('should support start/end with Range request', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, start: 0, end: 2 }))
         .get('/nums.txt')
         .set('Range', 'bytes=-2')
@@ -1093,8 +967,6 @@ test('send(file)', async function (t) {
     })
 
     await t.test('should support start/end with unsatisfiable Range request', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, start: 0, end: 2 }))
         .get('/nums.txt')
         .set('Range', 'bytes=5-9')

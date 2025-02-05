@@ -138,72 +138,54 @@ test('send(file, options)', async function (t) {
     t.plan(9)
 
     await t.test('should reject numbers', async function (t) {
-      t.plan(0)
-
       await request(createServer({ extensions: 42, root: fixtures }))
         .get('/pets/')
         .expect(500, /TypeError: extensions option/)
     })
 
     await t.test('should reject true', async function (t) {
-      t.plan(0)
-
       await request(createServer({ extensions: true, root: fixtures }))
         .get('/pets/')
         .expect(500, /TypeError: extensions option/)
     })
 
     await t.test('should be not be enabled by default', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/tobi')
         .expect(404)
     })
 
     await t.test('should be configurable', async function (t) {
-      t.plan(0)
-
       await request(createServer({ extensions: 'txt', root: fixtures }))
         .get('/name')
         .expect(200, 'tobi')
     })
 
     await t.test('should support disabling extensions', async function (t) {
-      t.plan(0)
-
       await request(createServer({ extensions: false, root: fixtures }))
         .get('/name')
         .expect(404)
     })
 
     await t.test('should support fallbacks', async function (t) {
-      t.plan(0)
-
       await request(createServer({ extensions: ['htm', 'html', 'txt'], root: fixtures }))
         .get('/name')
         .expect(200, '<p>tobi</p>')
     })
 
     await t.test('should 404 if nothing found', async function (t) {
-      t.plan(0)
-
       await request(createServer({ extensions: ['htm', 'html', 'txt'], root: fixtures }))
         .get('/bob')
         .expect(404)
     })
 
     await t.test('should skip directories', async function (t) {
-      t.plan(0)
-
       await request(createServer({ extensions: ['file', 'dir'], root: fixtures }))
         .get('/name')
         .expect(404)
     })
 
     await t.test('should not search if file has extension', async function (t) {
-      t.plan(0)
-
       await request(createServer({ extensions: 'html', root: fixtures }))
         .get('/thing.html')
         .expect(404)
@@ -227,16 +209,12 @@ test('send(file, options)', async function (t) {
     t.plan(5)
 
     await t.test('should default to "ignore"', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/.hidden.txt')
         .expect(404)
     })
 
     await t.test('should reject bad value', async function (t) {
-      t.plan(0)
-
       await request(createServer({ dotfiles: 'bogus' }))
         .get('/name.txt')
         .expect(500, /dotfiles/)
@@ -246,21 +224,18 @@ test('send(file, options)', async function (t) {
       t.plan(3)
 
       await t.test('should send dotfile', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'allow', root: fixtures }))
           .get('/.hidden.txt')
           .expect(200, 'secret')
       })
 
       await t.test('should send within dotfile directory', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'allow', root: fixtures }))
           .get('/.mine/name.txt')
           .expect(200, /tobi/)
       })
 
       await t.test('should 404 for non-existent dotfile', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'allow', root: fixtures }))
           .get('/.nothere')
           .expect(404)
@@ -271,70 +246,60 @@ test('send(file, options)', async function (t) {
       t.plan(10)
 
       await t.test('should 403 for dotfile', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.hidden.txt')
           .expect(403)
       })
 
       await t.test('should 403 for dotfile directory', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.mine')
           .expect(403)
       })
 
       await t.test('should 403 for dotfile directory with trailing slash', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.mine/')
           .expect(403)
       })
 
       await t.test('should 403 for file within dotfile directory', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.mine/name.txt')
           .expect(403)
       })
 
       await t.test('should 403 for non-existent dotfile', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.nothere')
           .expect(403)
       })
 
       await t.test('should 403 for non-existent dotfile directory', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.what/name.txt')
           .expect(403)
       })
 
       await t.test('should 403 for dotfile in directory', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/pets/.hidden.txt')
           .expect(403)
       })
 
       await t.test('should 403 for dotfile in dotfile directory', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
           .get('/.mine/.hidden.txt')
           .expect(403)
       })
 
       await t.test('should send files in root dotfile directory', async function (t) {
-        t.plan(0)
         await request(createServer({ dotfiles: 'deny', root: path.join(fixtures, '.mine') }))
           .get('/name.txt')
           .expect(200, /tobi/)
       })
 
       await t.test('should 403 for dotfile without root', async function (t) {
-        t.plan(0)
         const server = http.createServer(async function onRequest (req, res) {
           const { statusCode, headers, stream } = await send(req, fixtures + '/.mine' + req.url, { dotfiles: 'deny' })
           res.writeHead(statusCode, headers)
@@ -351,64 +316,48 @@ test('send(file, options)', async function (t) {
       t.plan(8)
 
       await t.test('should 404 for dotfile', async function (t) {
-        t.plan(0)
-
         await request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.hidden.txt')
           .expect(404)
       })
 
       await t.test('should 404 for dotfile directory', async function (t) {
-        t.plan(0)
-
         await request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.mine')
           .expect(404)
       })
 
       await t.test('should 404 for dotfile directory with trailing slash', async function (t) {
-        t.plan(0)
-
         await request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.mine/')
           .expect(404)
       })
 
       await t.test('should 404 for file within dotfile directory', async function (t) {
-        t.plan(0)
-
         await request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.mine/name.txt')
           .expect(404)
       })
 
       await t.test('should 404 for non-existent dotfile', async function (t) {
-        t.plan(0)
-
         await request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.nothere')
           .expect(404)
       })
 
       await t.test('should 404 for non-existent dotfile directory', async function (t) {
-        t.plan(0)
-
         await request(createServer({ dotfiles: 'ignore', root: fixtures }))
           .get('/.what/name.txt')
           .expect(404)
       })
 
       await t.test('should send files in root dotfile directory', async function (t) {
-        t.plan(0)
-
         await request(createServer({ dotfiles: 'ignore', root: path.join(fixtures, '.mine') }))
           .get('/name.txt')
           .expect(200, /tobi/)
       })
 
       await t.test('should 404 for dotfile without root', async function (t) {
-        t.plan(0)
-
         const server = http.createServer(async function onRequest (req, res) {
           const { statusCode, headers, stream } = await send(req, fixtures + '/.mine' + req.url, { dotfiles: 'ignore' })
           res.writeHead(statusCode, headers)
@@ -426,16 +375,12 @@ test('send(file, options)', async function (t) {
     t.plan(2)
 
     await t.test('should default to false', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/name.txt')
         .expect('Cache-Control', 'public, max-age=0')
     })
 
     await t.test('should set immutable directive in Cache-Control', async function (t) {
-      t.plan(0)
-
       await request(createServer({ immutable: true, maxAge: '1h', root: fixtures }))
         .get('/name.txt')
         .expect('Cache-Control', 'public, max-age=3600, immutable')
@@ -446,28 +391,24 @@ test('send(file, options)', async function (t) {
     t.plan(4)
 
     await t.test('should default to 0', async function (t) {
-      t.plan(0)
       await request(createServer({ root: fixtures }))
         .get('/name.txt')
         .expect('Cache-Control', 'public, max-age=0')
     })
 
     await t.test('should floor to integer', async function (t) {
-      t.plan(0)
       await request(createServer({ maxAge: 123956, root: fixtures }))
         .get('/name.txt')
         .expect('Cache-Control', 'public, max-age=123')
     })
 
     await t.test('should accept string', async function (t) {
-      t.plan(0)
       await request(createServer({ maxAge: '30d', root: fixtures }))
         .get('/name.txt')
         .expect('Cache-Control', 'public, max-age=2592000')
     })
 
     await t.test('should max at 1 year', async function (t) {
-      t.plan(0)
       await request(createServer({ maxAge: '2y', root: fixtures }))
         .get('/name.txt')
         .expect('Cache-Control', 'public, max-age=31536000')
@@ -478,80 +419,60 @@ test('send(file, options)', async function (t) {
     t.plan(10)
 
     await t.test('should reject numbers', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, index: 42 }))
         .get('/pets/')
         .expect(500, /TypeError: index option/)
     })
 
     await t.test('should reject true', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, index: true }))
         .get('/pets/')
         .expect(500, /TypeError: index option/)
     })
 
     await t.test('should default to index.html', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures }))
         .get('/pets/')
         .expect(fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'))
     })
 
     await t.test('should be configurable', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, index: 'tobi.html' }))
         .get('/')
         .expect(200, '<p>tobi</p>')
     })
 
     await t.test('should support disabling', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, index: false }))
         .get('/pets/')
         .expect(403)
     })
 
     await t.test('should support fallbacks', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, index: ['default.htm', 'index.html'] }))
         .get('/pets/')
         .expect(200, fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'))
     })
 
     await t.test('should 404 if no index file found (file)', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, index: 'default.htm' }))
         .get('/pets/')
         .expect(404)
     })
 
     await t.test('should 404 if no index file found (dir)', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, index: 'pets' }))
         .get('/')
         .expect(404)
     })
 
     await t.test('should not follow directories', async function (t) {
-      t.plan(0)
-
       await request(createServer({ root: fixtures, index: ['pets', 'name.txt'] }))
         .get('/')
         .expect(200, 'tobi')
     })
 
     await t.test('should work without root', async function (t) {
-      t.plan(0)
-
       const server = http.createServer(async function (req, res) {
         const p = path.join(fixtures, 'pets').replace(/\\/g, '/') + '/'
         const { statusCode, headers, stream } = await send(req, p, { index: ['index.html'] })
@@ -572,15 +493,12 @@ test('send(file, options)', async function (t) {
       t.plan(8)
 
       await t.test('should join root', async function (t) {
-        t.plan(0)
         await request(createServer({ root: fixtures }))
           .get('/pets/../name.txt')
           .expect(200, 'tobi')
       })
 
       await t.test('should work with trailing slash', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures + '/' })
           res.writeHead(statusCode, headers)
@@ -593,8 +511,6 @@ test('send(file, options)', async function (t) {
       })
 
       await t.test('should work with empty path', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, '', { root: fixtures })
           res.writeHead(statusCode, headers)
@@ -613,8 +529,6 @@ test('send(file, options)', async function (t) {
       //       regressions around this use-case.
       //
       await t.test('should try as file with empty path', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, '', { root: path.join(fixtures, 'name.txt') })
           res.writeHead(statusCode, headers)
@@ -627,16 +541,12 @@ test('send(file, options)', async function (t) {
       })
 
       await t.test('should restrict paths to within root', async function (t) {
-        t.plan(0)
-
         await request(createServer({ root: fixtures }))
           .get('/pets/../../send.js')
           .expect(403)
       })
 
       await t.test('should allow .. in root', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures + '/../fixtures' })
           res.writeHead(statusCode, headers)
@@ -649,16 +559,12 @@ test('send(file, options)', async function (t) {
       })
 
       await t.test('should not allow root transversal', async function (t) {
-        t.plan(0)
-
         await request(createServer({ root: path.join(fixtures, 'name.d') }))
           .get('/../name.dir/name.txt')
           .expect(403)
       })
 
       await t.test('should not allow root path disclosure', async function (t) {
-        t.plan(0)
-
         await request(createServer({ root: fixtures }))
           .get('/pets/../../fixtures/name.txt')
           .expect(403)
@@ -669,8 +575,6 @@ test('send(file, options)', async function (t) {
       t.plan(2)
 
       await t.test('should consider .. malicious', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, fixtures + req.url)
           res.writeHead(statusCode, headers)
@@ -683,8 +587,6 @@ test('send(file, options)', async function (t) {
       })
 
       await t.test('should still serve files with dots in name', async function (t) {
-        t.plan(0)
-
         const app = http.createServer(async function (req, res) {
           const { statusCode, headers, stream } = await send(req, fixtures + req.url)
           res.writeHead(statusCode, headers)
