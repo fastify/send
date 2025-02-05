@@ -5,7 +5,7 @@ const fs = require('node:fs')
 const http = require('node:http')
 const path = require('node:path')
 const request = require('supertest')
-const send = require('..').send
+const { send } = require('..')
 const { shouldNotHaveHeader, createServer } = require('./utils')
 
 // test server
