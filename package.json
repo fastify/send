@@ -63,7 +63,6 @@
     "eslint": "^9.17.0",
     "neostandard": "^0.12.0",
     "supertest": "6.3.4",
-    "tap": "^21.0.0",
     "tsd": "^0.31.0"
   },
   "scripts": {
