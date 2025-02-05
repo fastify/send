@@ -333,7 +333,7 @@ test('send(file, options)', async function (t) {
           .expect(200, /tobi/)
       })
 
-      await t.test('should 403 for dotfile without root', function (t) {
+      await t.test('should 403 for dotfile without root', async function (t) {
         t.plan(0)
         const server = http.createServer(async function onRequest (req, res) {
           const { statusCode, headers, stream } = await send(req, fixtures + '/.mine' + req.url, { dotfiles: 'deny' })
@@ -341,7 +341,7 @@ test('send(file, options)', async function (t) {
           stream.pipe(res)
         })
 
-        request(server)
+        await request(server)
           .get('/name.txt')
           .expect(403)
       })
@@ -406,7 +406,7 @@ test('send(file, options)', async function (t) {
           .expect(200, /tobi/)
       })
 
-      await t.test('should 404 for dotfile without root', function (t) {
+      await t.test('should 404 for dotfile without root', async function (t) {
         t.plan(0)
 
         const server = http.createServer(async function onRequest (req, res) {
@@ -415,7 +415,7 @@ test('send(file, options)', async function (t) {
           stream.pipe(res)
         })
 
-        request(server)
+        await request(server)
           .get('/name.txt')
           .expect(404)
       })
@@ -549,7 +549,7 @@ test('send(file, options)', async function (t) {
         .expect(200, 'tobi')
     })
 
-    await t.test('should work without root', function (t) {
+    await t.test('should work without root', async function (t) {
       t.plan(0)
 
       const server = http.createServer(async function (req, res) {
@@ -559,7 +559,7 @@ test('send(file, options)', async function (t) {
         stream.pipe(res)
       })
 
-      request(server)
+      await request(server)
         .get('/')
         .expect(200, /tobi/)
     })
@@ -578,7 +578,7 @@ test('send(file, options)', async function (t) {
           .expect(200, 'tobi')
       })
 
-      await t.test('should work with trailing slash', function (t) {
+      await t.test('should work with trailing slash', async function (t) {
         t.plan(0)
 
         const app = http.createServer(async function (req, res) {
@@ -587,12 +587,12 @@ test('send(file, options)', async function (t) {
           stream.pipe(res)
         })
 
-        request(app)
+        await request(app)
           .get('/name.txt')
           .expect(200, 'tobi')
       })
 
-      await t.test('should work with empty path', function (t) {
+      await t.test('should work with empty path', async function (t) {
         t.plan(0)
 
         const app = http.createServer(async function (req, res) {
@@ -601,7 +601,7 @@ test('send(file, options)', async function (t) {
           stream.pipe(res)
         })
 
-        request(app)
+        await request(app)
           .get('/name.txt')
           .expect(301, /Redirecting to/)
       })
@@ -612,7 +612,7 @@ test('send(file, options)', async function (t) {
       //       are doing, so this will prevent unseen
       //       regressions around this use-case.
       //
-      await t.test('should try as file with empty path', function (t) {
+      await t.test('should try as file with empty path', async function (t) {
         t.plan(0)
 
         const app = http.createServer(async function (req, res) {
@@ -621,7 +621,7 @@ test('send(file, options)', async function (t) {
           stream.pipe(res)
         })
 
-        request(app)
+        await request(app)
           .get('/')
           .expect(200, 'tobi')
       })
@@ -634,7 +634,7 @@ test('send(file, options)', async function (t) {
           .expect(403)
       })
 
-      await t.test('should allow .. in root', function (t) {
+      await t.test('should allow .. in root', async function (t) {
         t.plan(0)
 
         const app = http.createServer(async function (req, res) {
@@ -643,7 +643,7 @@ test('send(file, options)', async function (t) {
           stream.pipe(res)
         })
 
-        request(app)
+        await request(app)
           .get('/pets/../../send.js')
           .expect(403)
       })
@@ -668,7 +668,7 @@ test('send(file, options)', async function (t) {
     await t.test('when missing', async function (t) {
       t.plan(2)
 
-      await t.test('should consider .. malicious', function (t) {
+      await t.test('should consider .. malicious', async function (t) {
         t.plan(0)
 
         const app = http.createServer(async function (req, res) {
@@ -677,12 +677,12 @@ test('send(file, options)', async function (t) {
           stream.pipe(res)
         })
 
-        request(app)
+        await request(app)
           .get('/../send.js')
           .expect(403)
       })
 
-      await t.test('should still serve files with dots in name', function (t) {
+      await t.test('should still serve files with dots in name', async function (t) {
         t.plan(0)
 
         const app = http.createServer(async function (req, res) {
@@ -691,7 +691,7 @@ test('send(file, options)', async function (t) {
           stream.pipe(res)
         })
 
-        request(app)
+        await request(app)
           .get('/do..ts.txt')
           .expect(200, '...')
       })
