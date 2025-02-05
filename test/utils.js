@@ -31,6 +31,6 @@ module.exports.createServer = function createServer (opts, fn) {
 
 module.exports.shouldNotHaveBody = function shouldNotHaveBody (t) {
   return function (res) {
-    t.ok(res.text === '' || res.text === undefined)
+    t.assert.ok(res.text === '' || res.text === undefined)
   }
 }
