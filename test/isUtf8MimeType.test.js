@@ -1,6 +1,6 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
 const { isUtf8MimeType } = require('../lib/isUtf8MimeType')
 
 test('isUtf8MimeType', function (t) {
@@ -16,7 +16,7 @@ test('isUtf8MimeType', function (t) {
   ]
   t.plan(testCases.length)
 
-  for (let i = 0; i < testCases.length; ++i) {
-    t.strictSame(isUtf8MimeType(testCases[i][0], 'test'), testCases[i][1])
+  for (const testCase of testCases) {
+    t.assert.deepStrictEqual(isUtf8MimeType(testCase[0], 'test'), testCase[1])
   }
 })
