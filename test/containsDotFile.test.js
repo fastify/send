@@ -12,7 +12,7 @@ test('containsDotFile', function (t) {
   ]
   t.plan(testCases.length)
 
-  for (const testCas of testCases) {
-    t.assert.deepStrictEqual(containsDotFile(testCas[0].split('/')), testCas[1], testCas[0])
+  for (const testCase of testCases) {
+    t.assert.deepStrictEqual(containsDotFile(testCase[0].split('/')), testCase[1], testCase[0])
   }
 })

@@ -16,7 +16,7 @@ test('collapseLeadingSlashes', function (t) {
   ]
   t.plan(testCases.length)
 
-  for (const testCas of testCases) {
-    t.assert.deepStrictEqual(collapseLeadingSlashes(testCas[0]), testCas[1])
+  for (const testCase of testCases) {
+    t.assert.deepStrictEqual(collapseLeadingSlashes(testCase[0]), testCase[1])
   }
 })
