@@ -5,20 +5,20 @@ const send = require('..')
 
 module.exports.shouldNotHaveHeader = function shouldNotHaveHeader (header, t) {
   return function (res) {
-    t.ok(!(header.toLowerCase() in res.headers), 'should not have header ' + header)
+    t.assert.ok(!(header.toLowerCase() in res.headers), 'should not have header ' + header)
   }
 }
 
 module.exports.shouldHaveHeader = function shouldHaveHeader (header, t) {
   return function (res) {
-    t.ok((header.toLowerCase() in res.headers), 'should have header ' + header)
+    t.assert.ok((header.toLowerCase() in res.headers), 'should have header ' + header)
   }
 }
 
 module.exports.createServer = function createServer (opts, fn) {
   return http.createServer(async function onRequest (req, res) {
     try {
-      fn && fn(req, res)
+      fn?.(req, res)
       const { statusCode, headers, stream } = await send(req, req.url, opts)
       res.writeHead(statusCode, headers)
       stream.pipe(res)
@@ -31,6 +31,6 @@ module.exports.createServer = function createServer (opts, fn) {
 
 module.exports.shouldNotHaveBody = function shouldNotHaveBody (t) {
   return function (res) {
-    t.ok(res.text === '' || res.text === undefined)
+    t.assert.ok(res.text === '' || res.text === undefined)
   }
 }

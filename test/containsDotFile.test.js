@@ -1,6 +1,6 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
 const { containsDotFile } = require('../lib/containsDotFile')
 
 test('containsDotFile', function (t) {
@@ -12,7 +12,7 @@ test('containsDotFile', function (t) {
   ]
   t.plan(testCases.length)
 
-  for (let i = 0; i < testCases.length; ++i) {
-    t.strictSame(containsDotFile(testCases[i][0].split('/')), testCases[i][1], testCases[i][0])
+  for (const testCase of testCases) {
+    t.assert.deepStrictEqual(containsDotFile(testCase[0].split('/')), testCase[1], testCase[0])
   }
 })

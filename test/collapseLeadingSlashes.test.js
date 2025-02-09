@@ -1,6 +1,6 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
 const { collapseLeadingSlashes } = require('../lib/collapseLeadingSlashes')
 
 test('collapseLeadingSlashes', function (t) {
@@ -16,7 +16,7 @@ test('collapseLeadingSlashes', function (t) {
   ]
   t.plan(testCases.length)
 
-  for (let i = 0; i < testCases.length; ++i) {
-    t.strictSame(collapseLeadingSlashes(testCases[i][0]), testCases[i][1])
+  for (const testCase of testCases) {
+    t.assert.deepStrictEqual(collapseLeadingSlashes(testCase[0]), testCase[1])
   }
 })

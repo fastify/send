@@ -1,6 +1,6 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
 const http = require('node:http')
 const path = require('node:path')
 const request = require('supertest')
@@ -9,72 +9,70 @@ const send = require('../lib/send').send
 
 const fixtures = path.join(__dirname, 'fixtures')
 
-test('send(file)', function (t) {
+test('send(file)', async function (t) {
   t.plan(5)
 
-  t.test('file type', function (t) {
-    t.plan(6)
+  await t.test('file type', async function (t) {
+    t.plan(5)
 
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
-      t.equal(type, 'file')
-      t.ok(metadata.path)
-      t.ok(metadata.stat)
-      t.notOk(metadata.error)
-      t.notOk(metadata.requestPath)
+      t.assert.deepStrictEqual(type, 'file')
+      t.assert.ok(metadata.path)
+      t.assert.ok(metadata.stat)
+      t.assert.ok(!metadata.error)
+      t.assert.ok(!metadata.requestPath)
       res.writeHead(statusCode, headers)
       stream.pipe(res)
     })
 
-    request(app)
+    await request(app)
       .get('/name.txt')
       .expect('Content-Length', '4')
-      .expect(200, 'tobi', err => t.error(err))
+      .expect(200, 'tobi')
   })
 
-  t.test('directory type', function (t) {
-    t.plan(6)
+  await t.test('directory type', async function (t) {
+    t.plan(5)
 
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
-      t.equal(type, 'directory')
-      t.ok(metadata.path)
-      t.notOk(metadata.stat)
-      t.notOk(metadata.error)
-      t.ok(metadata.requestPath)
+      t.assert.deepStrictEqual(type, 'directory')
+      t.assert.ok(metadata.path)
+      t.assert.ok(!metadata.stat)
+      t.assert.ok(!metadata.error)
+      t.assert.ok(metadata.requestPath)
       res.writeHead(statusCode, headers)
       stream.pipe(res)
     })
 
-    request(app)
+    await request(app)
       .get('/pets')
       .expect('Location', '/pets/')
-      .expect(301, err => t.error(err))
+      .expect(301)
   })
 
-  t.test('error type', function (t) {
-    t.plan(6)
+  await t.test('error type', async function (t) {
+    t.plan(5)
 
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
-      t.equal(type, 'error')
-      t.notOk(metadata.path)
-      t.notOk(metadata.stat)
-      t.ok(metadata.error)
-      t.notOk(metadata.requestPath)
+      t.assert.deepStrictEqual(type, 'error')
+      t.assert.ok(!metadata.path)
+      t.assert.ok(!metadata.stat)
+      t.assert.ok(metadata.error)
+      t.assert.ok(!metadata.requestPath)
       res.writeHead(statusCode, headers)
       stream.pipe(res)
     })
 
     const path = Array(100).join('foobar')
-    request(app)
+    await request(app)
       .get('/' + path)
-      .expect(404, err => t.error(err))
+      .expect(404)
   })
 
-  t.test('custom directory index view', function (t) {
-    t.plan(1)
-
+  await t.test('custom directory index view', async function (t) {
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
       if (type === 'directory') {
@@ -87,15 +85,13 @@ test('send(file)', function (t) {
       }
     })
 
-    request(app)
+    await request(app)
       .get('/pets')
       .expect('Content-Type', 'text/plain; charset=utf-8')
-      .expect(200, '.hidden.txt\nindex.html\n', err => t.error(err))
+      .expect(200, '.hidden.txt\nindex.html\n')
   })
 
-  t.test('serving from a root directory with custom error-handling', function (t) {
-    t.plan(3)
-
+  await t.test('serving from a root directory with custom error-handling', async function (t) {
     const app = http.createServer(async function (req, res) {
       const { statusCode, headers, stream, type, metadata } = await send(req, req.url, { root: fixtures })
       switch (type) {
@@ -120,18 +116,18 @@ test('send(file)', function (t) {
       }
     })
 
-    request(app)
+    await request(app)
       .get('/pets')
       .expect('Location', '/pets/')
-      .expect(301, err => t.error(err))
+      .expect(301)
 
-    request(app)
+    await request(app)
       .get('/not-exists')
-      .expect(404, err => t.error(err))
+      .expect(404)
 
-    request(app)
+    await request(app)
       .get('/pets/index.html')
       .expect('Content-Disposition', 'attachment')
-      .expect(200, err => t.error(err))
+      .expect(200)
   })
 })
