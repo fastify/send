@@ -13,7 +13,7 @@ const { shouldNotHaveHeader, createServer } = require('./utils')
 const fixtures = path.join(__dirname, 'fixtures')
 
 test('send(file, options)', async function (t) {
-  t.plan(11)
+  t.plan(12)
 
   await t.test('acceptRanges', async function (t) {
     t.plan(6)
@@ -597,6 +597,49 @@ test('send(file, options)', async function (t) {
           .get('/do..ts.txt')
           .expect(200, '...')
       })
+    })
+  })
+
+  await t.test('highWaterMark', async function (t) {
+    t.plan(3)
+
+    await t.test('should support highWaterMark', async function (t) {
+      t.plan(1)
+      const app = http.createServer(async function (req, res) {
+        const { statusCode, headers, stream } = await send(req, req.url, { highWaterMark: 512 * 1024, root: fixtures + '/' })
+        res.writeHead(statusCode, headers)
+        t.assert.deepStrictEqual(stream.readableHighWaterMark, 524288)
+        stream.pipe(res)
+      })
+      await request(app)
+        .get('/name.txt')
+        .expect(200, 'tobi')
+    })
+
+    await t.test('should use default value', async function (t) {
+      t.plan(1)
+      const app = http.createServer(async function (req, res) {
+        const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures + '/' })
+        res.writeHead(statusCode, headers)
+        t.assert.deepStrictEqual(stream.readableHighWaterMark, 65536)
+        stream.pipe(res)
+      })
+      await request(app)
+        .get('/name.txt')
+        .expect(200, 'tobi')
+    })
+
+    await t.test('should ignore negative number', async function (t) {
+      t.plan(1)
+      const app = http.createServer(async function (req, res) {
+        const { statusCode, headers, stream } = await send(req, req.url, { highWaterMark: -54, root: fixtures + '/' })
+        res.writeHead(statusCode, headers)
+        t.assert.deepStrictEqual(stream.readableHighWaterMark, 65536)
+        stream.pipe(res)
+      })
+      await request(app)
+        .get('/name.txt')
+        .expect(200, 'tobi')
     })
   })
 })
