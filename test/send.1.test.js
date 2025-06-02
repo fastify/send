@@ -622,7 +622,6 @@ test('send(file, options)', async function (t) {
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures + '/' })
         res.writeHead(statusCode, headers)
-        console.log(getDefaultHighWaterMark(false))
         t.assert.deepStrictEqual(stream.readableHighWaterMark, getDefaultHighWaterMark(false))
         stream.pipe(res)
       })
