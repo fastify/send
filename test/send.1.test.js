@@ -7,6 +7,7 @@ const path = require('node:path')
 const request = require('supertest')
 const { send } = require('..')
 const { shouldNotHaveHeader, createServer } = require('./utils')
+const { getDefaultHighWaterMark } = require('node:stream')
 
 // test server
 
@@ -621,7 +622,8 @@ test('send(file, options)', async function (t) {
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures + '/' })
         res.writeHead(statusCode, headers)
-        t.assert.deepStrictEqual(stream.readableHighWaterMark, 65536)
+        console.log(getDefaultHighWaterMark(false))
+        t.assert.deepStrictEqual(stream.readableHighWaterMark, getDefaultHighWaterMark(false))
         stream.pipe(res)
       })
       await request(app)
@@ -634,7 +636,7 @@ test('send(file, options)', async function (t) {
       const app = http.createServer(async function (req, res) {
         const { statusCode, headers, stream } = await send(req, req.url, { highWaterMark: -54, root: fixtures + '/' })
         res.writeHead(statusCode, headers)
-        t.assert.deepStrictEqual(stream.readableHighWaterMark, 65536)
+        t.assert.deepStrictEqual(stream.readableHighWaterMark, getDefaultHighWaterMark(false))
         stream.pipe(res)
       })
       await request(app)
