@@ -120,6 +120,12 @@ declare namespace send {
      * The start is inclusive, meaning start: 2 will include the 3rd byte in the stream.
      */
     start?: number | undefined;
+
+    /**
+     * Maximum number of bytes that the internal buffer will hold.
+     * If omitted, Node.js falls back to its built-in default.
+     */
+    highWaterMark?: number | undefined;
   }
 
   export interface BaseSendResult {
