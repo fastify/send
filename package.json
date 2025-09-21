@@ -56,7 +56,6 @@
     "mime": "^3"
   },
   "devDependencies": {
-    "@fastify/pre-commit": "^2.1.0",
     "@types/node": "^24.0.8",
     "after": "0.8.2",
     "benchmark": "^2.1.4",
@@ -73,9 +72,5 @@
     "test:coverage": "c8 --reporter html node --test",
     "test:typescript": "tsd",
     "test:unit": "c8 --100 node --test"
-  },
-  "pre-commit": [
-    "lint",
-    "test"
-  ]
+  }
 }
