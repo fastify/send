@@ -137,9 +137,9 @@ meaning `start: 2` will include the 3rd byte in the stream.
 
 ##### highWaterMark
 
-When provided, this option sets the maximum number of bytes that the internal 
+When provided, this option sets the maximum number of bytes that the internal
 buffer will hold before pausing reads from the underlying resource.
-If you omit this option (or pass undefined), Node.js falls back to 
+If you omit this option (or pass undefined), Node.js falls back to
 its built-in default for readable binary streams.
 
 ### .mime
