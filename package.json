@@ -63,14 +63,14 @@
     "eslint": "^9.17.0",
     "neostandard": "^0.12.0",
     "supertest": "6.3.4",
-    "tsd": "^0.33.0"
+    "tstyche": "^7.0.0"
   },
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "npm run test:unit && npm run test:typescript",
     "test:coverage": "c8 --reporter html node --test",
-    "test:typescript": "tsd",
+    "test:typescript": "tstyche",
     "test:unit": "c8 --100 node --test"
   }
 }
