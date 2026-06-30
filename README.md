@@ -14,7 +14,7 @@ application or framework.
 
 This is a [Node.js](https://nodejs.org/en/) module available through the
 [npm registry](https://www.npmjs.com/). Installation is done using the
-[`npm install` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
+[`npm install` command](https://docs.npmjs.com/downloading-and-installing-packages-locally):
 
 ```bash
 $ npm install @fastify/send
@@ -119,7 +119,7 @@ system's last modified value.
 
 Provide a max-age in milliseconds for HTTP caching, defaults to 0.
 This can also be a string accepted by the
-[ms](https://www.npmjs.org/package/ms#readme) module.
+[ms](https://www.npmjs.com/package/ms) module.
 
 ##### maxContentRangeChunkSize
 
