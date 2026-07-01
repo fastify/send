@@ -56,7 +56,7 @@
     "mime": "^3"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
+    "@types/node": "^26.0.0",
     "after": "0.8.2",
     "benchmark": "^2.1.4",
     "c8": "^11.0.0",
