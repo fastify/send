@@ -42,48 +42,112 @@ test('send(file, options)', async function (t) {
     await t.test('should limit high return size /1', async function (t) {
       t.plan(3)
 
-      await request(createServer({ acceptRanges: true, maxContentRangeChunkSize: 1, root: fixtures }))
+      await request(
+        createServer({
+          acceptRanges: true,
+          maxContentRangeChunkSize: 1,
+          root: fixtures
+        })
+      )
         .get('/nums.txt')
         .set('Range', 'bytes=0-2')
-        .expect((res) => t.assert.deepStrictEqual(res.headers['accept-ranges'], 'bytes'))
-        .expect((res) => t.assert.deepStrictEqual(res.headers['content-range'], 'bytes 0-0/9'))
-        .expect((res) => t.assert.deepStrictEqual(res.headers['content-length'], '1', 'should content-length must be as same as maxContentRangeChunkSize'))
+        .expect((res) =>
+          t.assert.deepStrictEqual(res.headers['accept-ranges'], 'bytes')
+        )
+        .expect((res) =>
+          t.assert.deepStrictEqual(res.headers['content-range'], 'bytes 0-0/9')
+        )
+        .expect((res) =>
+          t.assert.deepStrictEqual(
+            res.headers['content-length'],
+            '1',
+            'should content-length must be as same as maxContentRangeChunkSize'
+          )
+        )
         .expect(206, '1')
     })
 
     await t.test('should limit high return size /2', async function (t) {
       t.plan(3)
 
-      await request(createServer({ acceptRanges: true, maxContentRangeChunkSize: 1, root: fixtures }))
+      await request(
+        createServer({
+          acceptRanges: true,
+          maxContentRangeChunkSize: 1,
+          root: fixtures
+        })
+      )
         .get('/nums.txt')
         .set('Range', 'bytes=1-2')
-        .expect((res) => t.assert.deepStrictEqual(res.headers['accept-ranges'], 'bytes'))
-        .expect((res) => t.assert.deepStrictEqual(res.headers['content-range'], 'bytes 1-1/9'))
-        .expect((res) => t.assert.deepStrictEqual(res.headers['content-length'], '1', 'should content-length must be as same as maxContentRangeChunkSize'))
+        .expect((res) =>
+          t.assert.deepStrictEqual(res.headers['accept-ranges'], 'bytes')
+        )
+        .expect((res) =>
+          t.assert.deepStrictEqual(res.headers['content-range'], 'bytes 1-1/9')
+        )
+        .expect((res) =>
+          t.assert.deepStrictEqual(
+            res.headers['content-length'],
+            '1',
+            'should content-length must be as same as maxContentRangeChunkSize'
+          )
+        )
         .expect(206, '2')
     })
 
     await t.test('should limit high return size /3', async function (t) {
       t.plan(3)
 
-      await request(createServer({ acceptRanges: true, maxContentRangeChunkSize: 1, root: fixtures }))
+      await request(
+        createServer({
+          acceptRanges: true,
+          maxContentRangeChunkSize: 1,
+          root: fixtures
+        })
+      )
         .get('/nums.txt')
         .set('Range', 'bytes=1-3')
-        .expect((res) => t.assert.deepStrictEqual(res.headers['accept-ranges'], 'bytes'))
-        .expect((res) => t.assert.deepStrictEqual(res.headers['content-range'], 'bytes 1-1/9'))
-        .expect((res) => t.assert.deepStrictEqual(res.headers['content-length'], '1', 'should content-length must be as same as maxContentRangeChunkSize'))
+        .expect((res) =>
+          t.assert.deepStrictEqual(res.headers['accept-ranges'], 'bytes')
+        )
+        .expect((res) =>
+          t.assert.deepStrictEqual(res.headers['content-range'], 'bytes 1-1/9')
+        )
+        .expect((res) =>
+          t.assert.deepStrictEqual(
+            res.headers['content-length'],
+            '1',
+            'should content-length must be as same as maxContentRangeChunkSize'
+          )
+        )
         .expect(206, '2')
     })
 
     await t.test('should limit high return size /4', async function (t) {
       t.plan(3)
 
-      await request(createServer({ acceptRanges: true, maxContentRangeChunkSize: 4, root: fixtures }))
+      await request(
+        createServer({
+          acceptRanges: true,
+          maxContentRangeChunkSize: 4,
+          root: fixtures
+        })
+      )
         .get('/nums.txt')
         .set('Range', 'bytes=1-2,3-6')
-        .expect((res) => t.assert.deepStrictEqual(res.headers['accept-ranges'], 'bytes'))
-        .expect((res) => t.assert.deepStrictEqual(res.headers['content-range'], 'bytes 1-4/9'))
-        .expect((res) => t.assert.deepStrictEqual(res.headers['content-length'], '4', 'should content-length must be as same as maxContentRangeChunkSize'))
+        .expect((res) =>
+          t.assert.deepStrictEqual(res.headers['accept-ranges'], 'bytes')
+        )
+        .expect((res) =>
+          t.assert.deepStrictEqual(res.headers['content-range'], 'bytes 1-4/9')
+        )
+        .expect((res) =>
+          t.assert.deepStrictEqual(
+            res.headers['content-length'],
+            '4',
+            'should content-length must be as same as maxContentRangeChunkSize'
+          )
+        )
         .expect(206, '2345')
     })
   })
@@ -102,7 +166,9 @@ test('send(file, options)', async function (t) {
     await t.test('should ignore maxAge option', async function (t) {
       t.plan(1)
 
-      await request(createServer({ cacheControl: false, maxAge: 1000, root: fixtures }))
+      await request(
+        createServer({ cacheControl: false, maxAge: 1000, root: fixtures })
+      )
         .get('/name.txt')
         .expect(shouldNotHaveHeader('Cache-Control', t))
         .expect(200)
@@ -169,19 +235,25 @@ test('send(file, options)', async function (t) {
     })
 
     await t.test('should support fallbacks', async function (t) {
-      await request(createServer({ extensions: ['htm', 'html', 'txt'], root: fixtures }))
+      await request(
+        createServer({ extensions: ['htm', 'html', 'txt'], root: fixtures })
+      )
         .get('/name')
         .expect(200, '<p>tobi</p>')
     })
 
     await t.test('should 404 if nothing found', async function (t) {
-      await request(createServer({ extensions: ['htm', 'html', 'txt'], root: fixtures }))
+      await request(
+        createServer({ extensions: ['htm', 'html', 'txt'], root: fixtures })
+      )
         .get('/bob')
         .expect(404)
     })
 
     await t.test('should skip directories', async function (t) {
-      await request(createServer({ extensions: ['file', 'dir'], root: fixtures }))
+      await request(
+        createServer({ extensions: ['file', 'dir'], root: fixtures })
+      )
         .get('/name')
         .expect(404)
     })
@@ -258,17 +330,23 @@ test('send(file, options)', async function (t) {
           .expect(403)
       })
 
-      await t.test('should 403 for dotfile directory with trailing slash', async function (t) {
-        await request(createServer({ dotfiles: 'deny', root: fixtures }))
-          .get('/.mine/')
-          .expect(403)
-      })
+      await t.test(
+        'should 403 for dotfile directory with trailing slash',
+        async function (t) {
+          await request(createServer({ dotfiles: 'deny', root: fixtures }))
+            .get('/.mine/')
+            .expect(403)
+        }
+      )
 
-      await t.test('should 403 for file within dotfile directory', async function (t) {
-        await request(createServer({ dotfiles: 'deny', root: fixtures }))
-          .get('/.mine/name.txt')
-          .expect(403)
-      })
+      await t.test(
+        'should 403 for file within dotfile directory',
+        async function (t) {
+          await request(createServer({ dotfiles: 'deny', root: fixtures }))
+            .get('/.mine/name.txt')
+            .expect(403)
+        }
+      )
 
       await t.test('should 403 for non-existent dotfile', async function (t) {
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
@@ -276,11 +354,14 @@ test('send(file, options)', async function (t) {
           .expect(403)
       })
 
-      await t.test('should 403 for non-existent dotfile directory', async function (t) {
-        await request(createServer({ dotfiles: 'deny', root: fixtures }))
-          .get('/.what/name.txt')
-          .expect(403)
-      })
+      await t.test(
+        'should 403 for non-existent dotfile directory',
+        async function (t) {
+          await request(createServer({ dotfiles: 'deny', root: fixtures }))
+            .get('/.what/name.txt')
+            .expect(403)
+        }
+      )
 
       await t.test('should 403 for dotfile in directory', async function (t) {
         await request(createServer({ dotfiles: 'deny', root: fixtures }))
@@ -288,28 +369,41 @@ test('send(file, options)', async function (t) {
           .expect(403)
       })
 
-      await t.test('should 403 for dotfile in dotfile directory', async function (t) {
-        await request(createServer({ dotfiles: 'deny', root: fixtures }))
-          .get('/.mine/.hidden.txt')
-          .expect(403)
-      })
+      await t.test(
+        'should 403 for dotfile in dotfile directory',
+        async function (t) {
+          await request(createServer({ dotfiles: 'deny', root: fixtures }))
+            .get('/.mine/.hidden.txt')
+            .expect(403)
+        }
+      )
 
-      await t.test('should send files in root dotfile directory', async function (t) {
-        await request(createServer({ dotfiles: 'deny', root: path.join(fixtures, '.mine') }))
-          .get('/name.txt')
-          .expect(200, /tobi/)
-      })
+      await t.test(
+        'should send files in root dotfile directory',
+        async function (t) {
+          await request(
+            createServer({
+              dotfiles: 'deny',
+              root: path.join(fixtures, '.mine')
+            })
+          )
+            .get('/name.txt')
+            .expect(200, /tobi/)
+        }
+      )
 
       await t.test('should 403 for dotfile without root', async function (t) {
         const server = http.createServer(async function onRequest (req, res) {
-          const { statusCode, headers, stream } = await send(req, fixtures + '/.mine' + req.url, { dotfiles: 'deny' })
+          const { statusCode, headers, stream } = await send(
+            req,
+            fixtures + '/.mine' + req.url,
+            { dotfiles: 'deny' }
+          )
           res.writeHead(statusCode, headers)
           stream.pipe(res)
         })
 
-        await request(server)
-          .get('/name.txt')
-          .expect(403)
+        await request(server).get('/name.txt').expect(403)
       })
     })
 
@@ -328,17 +422,23 @@ test('send(file, options)', async function (t) {
           .expect(404)
       })
 
-      await t.test('should 404 for dotfile directory with trailing slash', async function (t) {
-        await request(createServer({ dotfiles: 'ignore', root: fixtures }))
-          .get('/.mine/')
-          .expect(404)
-      })
+      await t.test(
+        'should 404 for dotfile directory with trailing slash',
+        async function (t) {
+          await request(createServer({ dotfiles: 'ignore', root: fixtures }))
+            .get('/.mine/')
+            .expect(404)
+        }
+      )
 
-      await t.test('should 404 for file within dotfile directory', async function (t) {
-        await request(createServer({ dotfiles: 'ignore', root: fixtures }))
-          .get('/.mine/name.txt')
-          .expect(404)
-      })
+      await t.test(
+        'should 404 for file within dotfile directory',
+        async function (t) {
+          await request(createServer({ dotfiles: 'ignore', root: fixtures }))
+            .get('/.mine/name.txt')
+            .expect(404)
+        }
+      )
 
       await t.test('should 404 for non-existent dotfile', async function (t) {
         await request(createServer({ dotfiles: 'ignore', root: fixtures }))
@@ -346,28 +446,41 @@ test('send(file, options)', async function (t) {
           .expect(404)
       })
 
-      await t.test('should 404 for non-existent dotfile directory', async function (t) {
-        await request(createServer({ dotfiles: 'ignore', root: fixtures }))
-          .get('/.what/name.txt')
-          .expect(404)
-      })
+      await t.test(
+        'should 404 for non-existent dotfile directory',
+        async function (t) {
+          await request(createServer({ dotfiles: 'ignore', root: fixtures }))
+            .get('/.what/name.txt')
+            .expect(404)
+        }
+      )
 
-      await t.test('should send files in root dotfile directory', async function (t) {
-        await request(createServer({ dotfiles: 'ignore', root: path.join(fixtures, '.mine') }))
-          .get('/name.txt')
-          .expect(200, /tobi/)
-      })
+      await t.test(
+        'should send files in root dotfile directory',
+        async function (t) {
+          await request(
+            createServer({
+              dotfiles: 'ignore',
+              root: path.join(fixtures, '.mine')
+            })
+          )
+            .get('/name.txt')
+            .expect(200, /tobi/)
+        }
+      )
 
       await t.test('should 404 for dotfile without root', async function (t) {
         const server = http.createServer(async function onRequest (req, res) {
-          const { statusCode, headers, stream } = await send(req, fixtures + '/.mine' + req.url, { dotfiles: 'ignore' })
+          const { statusCode, headers, stream } = await send(
+            req,
+            fixtures + '/.mine' + req.url,
+            { dotfiles: 'ignore' }
+          )
           res.writeHead(statusCode, headers)
           stream.pipe(res)
         })
 
-        await request(server)
-          .get('/name.txt')
-          .expect(404)
+        await request(server).get('/name.txt').expect(404)
       })
     })
   })
@@ -381,11 +494,16 @@ test('send(file, options)', async function (t) {
         .expect('Cache-Control', 'public, max-age=0')
     })
 
-    await t.test('should set immutable directive in Cache-Control', async function (t) {
-      await request(createServer({ immutable: true, maxAge: '1h', root: fixtures }))
-        .get('/name.txt')
-        .expect('Cache-Control', 'public, max-age=3600, immutable')
-    })
+    await t.test(
+      'should set immutable directive in Cache-Control',
+      async function (t) {
+        await request(
+          createServer({ immutable: true, maxAge: '1h', root: fixtures })
+        )
+          .get('/name.txt')
+          .expect('Cache-Control', 'public, max-age=3600, immutable')
+      }
+    )
   })
 
   await t.test('maxAge', async function (t) {
@@ -434,7 +552,9 @@ test('send(file, options)', async function (t) {
     await t.test('should default to index.html', async function (t) {
       await request(createServer({ root: fixtures }))
         .get('/pets/')
-        .expect(fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'))
+        .expect(
+          fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8')
+        )
     })
 
     await t.test('should be configurable', async function (t) {
@@ -450,16 +570,24 @@ test('send(file, options)', async function (t) {
     })
 
     await t.test('should support fallbacks', async function (t) {
-      await request(createServer({ root: fixtures, index: ['default.htm', 'index.html'] }))
+      await request(
+        createServer({ root: fixtures, index: ['default.htm', 'index.html'] })
+      )
         .get('/pets/')
-        .expect(200, fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8'))
+        .expect(
+          200,
+          fs.readFileSync(path.join(fixtures, 'pets', 'index.html'), 'utf8')
+        )
     })
 
-    await t.test('should 404 if no index file found (file)', async function (t) {
-      await request(createServer({ root: fixtures, index: 'default.htm' }))
-        .get('/pets/')
-        .expect(404)
-    })
+    await t.test(
+      'should 404 if no index file found (file)',
+      async function (t) {
+        await request(createServer({ root: fixtures, index: 'default.htm' }))
+          .get('/pets/')
+          .expect(404)
+      }
+    )
 
     await t.test('should 404 if no index file found (dir)', async function (t) {
       await request(createServer({ root: fixtures, index: 'pets' }))
@@ -468,7 +596,9 @@ test('send(file, options)', async function (t) {
     })
 
     await t.test('should not follow directories', async function (t) {
-      await request(createServer({ root: fixtures, index: ['pets', 'name.txt'] }))
+      await request(
+        createServer({ root: fixtures, index: ['pets', 'name.txt'] })
+      )
         .get('/')
         .expect(200, 'tobi')
     })
@@ -476,14 +606,14 @@ test('send(file, options)', async function (t) {
     await t.test('should work without root', async function (t) {
       const server = http.createServer(async function (req, res) {
         const p = path.join(fixtures, 'pets').replace(/\\/g, '/') + '/'
-        const { statusCode, headers, stream } = await send(req, p, { index: ['index.html'] })
+        const { statusCode, headers, stream } = await send(req, p, {
+          index: ['index.html']
+        })
         res.writeHead(statusCode, headers)
         stream.pipe(res)
       })
 
-      await request(server)
-        .get('/')
-        .expect(200, /tobi/)
+      await request(server).get('/').expect(200, /tobi/)
     })
   })
 
@@ -501,19 +631,21 @@ test('send(file, options)', async function (t) {
 
       await t.test('should work with trailing slash', async function (t) {
         const app = http.createServer(async function (req, res) {
-          const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures + '/' })
+          const { statusCode, headers, stream } = await send(req, req.url, {
+            root: fixtures + '/'
+          })
           res.writeHead(statusCode, headers)
           stream.pipe(res)
         })
 
-        await request(app)
-          .get('/name.txt')
-          .expect(200, 'tobi')
+        await request(app).get('/name.txt').expect(200, 'tobi')
       })
 
       await t.test('should work with empty path', async function (t) {
         const app = http.createServer(async function (req, res) {
-          const { statusCode, headers, stream } = await send(req, '', { root: fixtures })
+          const { statusCode, headers, stream } = await send(req, '', {
+            root: fixtures
+          })
           res.writeHead(statusCode, headers)
           stream.pipe(res)
         })
@@ -531,44 +663,105 @@ test('send(file, options)', async function (t) {
       //
       await t.test('should try as file with empty path', async function (t) {
         const app = http.createServer(async function (req, res) {
-          const { statusCode, headers, stream } = await send(req, '', { root: path.join(fixtures, 'name.txt') })
+          const { statusCode, headers, stream } = await send(req, '', {
+            root: path.join(fixtures, 'name.txt')
+          })
           res.writeHead(statusCode, headers)
           stream.pipe(res)
         })
 
-        await request(app)
-          .get('/')
-          .expect(200, 'tobi')
+        await request(app).get('/').expect(200, 'tobi')
       })
 
       await t.test('should restrict paths to within root', async function (t) {
-        await request(createServer({ root: fixtures }))
-          .get('/pets/../../send.js')
-          .expect(403)
+        const server = createServer({ root: fixtures })
+        await new Promise((resolve, reject) => {
+          server.listen(0, function () {
+            const req = http.request(
+              {
+                port: server.address().port,
+                path: '/pets/%2e%2e/%2e%2e/send.js',
+                method: 'GET'
+              },
+              function (res) {
+                t.assert.strictEqual(res.statusCode, 403)
+                server.close(resolve)
+              }
+            )
+            req.on('error', reject)
+            req.end()
+          })
+        })
       })
 
       await t.test('should allow .. in root', async function (t) {
-        const app = http.createServer(async function (req, res) {
-          const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures + '/../fixtures' })
+        const server = http.createServer(async function (req, res) {
+          const { statusCode, headers, stream } = await send(req, req.url, {
+            root: fixtures + '/../fixtures'
+          })
           res.writeHead(statusCode, headers)
           stream.pipe(res)
         })
 
-        await request(app)
-          .get('/pets/../../send.js')
-          .expect(403)
+        await new Promise((resolve, reject) => {
+          server.listen(0, function () {
+            const req = http.request(
+              {
+                port: server.address().port,
+                path: '/pets/%2e%2e/%2e%2e/send.js',
+                method: 'GET'
+              },
+              function (res) {
+                t.assert.strictEqual(res.statusCode, 403)
+                server.close(resolve)
+              }
+            )
+            req.on('error', reject)
+            req.end()
+          })
+        })
       })
 
       await t.test('should not allow root transversal', async function (t) {
-        await request(createServer({ root: path.join(fixtures, 'name.d') }))
-          .get('/../name.dir/name.txt')
-          .expect(403)
+        const server = createServer({ root: path.join(fixtures, 'name.d') })
+        await new Promise((resolve, reject) => {
+          server.listen(0, function () {
+            const req = http.request(
+              {
+                port: server.address().port,
+                path: '/%2e%2e/name.dir/name.txt',
+                method: 'GET'
+              },
+              function (res) {
+                t.assert.strictEqual(res.statusCode, 403)
+                server.close(resolve)
+              }
+            )
+            req.on('error', reject)
+            req.end()
+          })
+        })
       })
 
       await t.test('should not allow root path disclosure', async function (t) {
-        await request(createServer({ root: fixtures }))
-          .get('/pets/../../fixtures/name.txt')
-          .expect(403)
+        const server = createServer({ root: fixtures })
+        await new Promise((resolve, reject) => {
+          server.listen(0, function () {
+            const req = http.request(
+              {
+                port: server.address().port,
+                path: '/pets/%2e%2e/%2e%2e/fixtures/name.txt',
+                method: 'GET'
+              },
+              function (res) {
+                t.assert.strictEqual(res.statusCode, 403)
+                server.close(resolve)
+              }
+            )
+            req.on('error', reject)
+            req.end()
+          })
+        })
       })
     })
 
@@ -576,28 +769,49 @@ test('send(file, options)', async function (t) {
       t.plan(2)
 
       await t.test('should consider .. malicious', async function (t) {
-        const app = http.createServer(async function (req, res) {
-          const { statusCode, headers, stream } = await send(req, fixtures + req.url)
+        const server = http.createServer(async function onRequest (req, res) {
+          const { statusCode, headers, stream } = await send(
+            req,
+            fixtures + req.url
+          )
           res.writeHead(statusCode, headers)
           stream.pipe(res)
         })
 
-        await request(app)
-          .get('/../send.js')
-          .expect(403)
-      })
-
-      await t.test('should still serve files with dots in name', async function (t) {
-        const app = http.createServer(async function (req, res) {
-          const { statusCode, headers, stream } = await send(req, fixtures + req.url)
-          res.writeHead(statusCode, headers)
-          stream.pipe(res)
+        await new Promise((resolve, reject) => {
+          server.listen(0, function () {
+            const req = http.request(
+              {
+                port: server.address().port,
+                path: '/%2e%2e/send.js',
+                method: 'GET'
+              },
+              function (res) {
+                t.assert.strictEqual(res.statusCode, 403)
+                server.close(resolve)
+              }
+            )
+            req.on('error', reject)
+            req.end()
+          })
         })
-
-        await request(app)
-          .get('/do..ts.txt')
-          .expect(200, '...')
       })
+
+      await t.test(
+        'should still serve files with dots in name',
+        async function (t) {
+          const app = http.createServer(async function (req, res) {
+            const { statusCode, headers, stream } = await send(
+              req,
+              fixtures + req.url
+            )
+            res.writeHead(statusCode, headers)
+            stream.pipe(res)
+          })
+
+          await request(app).get('/do..ts.txt').expect(200, '...')
+        }
+      )
     })
   })
 
@@ -607,40 +821,48 @@ test('send(file, options)', async function (t) {
     await t.test('should support highWaterMark', async function (t) {
       t.plan(1)
       const app = http.createServer(async function (req, res) {
-        const { statusCode, headers, stream } = await send(req, req.url, { highWaterMark: 512 * 1024, root: fixtures + '/' })
+        const { statusCode, headers, stream } = await send(req, req.url, {
+          highWaterMark: 512 * 1024,
+          root: fixtures + '/'
+        })
         res.writeHead(statusCode, headers)
         t.assert.deepStrictEqual(stream.readableHighWaterMark, 524288)
         stream.pipe(res)
       })
-      await request(app)
-        .get('/name.txt')
-        .expect(200, 'tobi')
+      await request(app).get('/name.txt').expect(200, 'tobi')
     })
 
     await t.test('should use default value', async function (t) {
       t.plan(1)
       const app = http.createServer(async function (req, res) {
-        const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures + '/' })
+        const { statusCode, headers, stream } = await send(req, req.url, {
+          root: fixtures + '/'
+        })
         res.writeHead(statusCode, headers)
-        t.assert.deepStrictEqual(stream.readableHighWaterMark, getDefaultHighWaterMark(false))
+        t.assert.deepStrictEqual(
+          stream.readableHighWaterMark,
+          getDefaultHighWaterMark(false)
+        )
         stream.pipe(res)
       })
-      await request(app)
-        .get('/name.txt')
-        .expect(200, 'tobi')
+      await request(app).get('/name.txt').expect(200, 'tobi')
     })
 
     await t.test('should ignore negative number', async function (t) {
       t.plan(1)
       const app = http.createServer(async function (req, res) {
-        const { statusCode, headers, stream } = await send(req, req.url, { highWaterMark: -54, root: fixtures + '/' })
+        const { statusCode, headers, stream } = await send(req, req.url, {
+          highWaterMark: -54,
+          root: fixtures + '/'
+        })
         res.writeHead(statusCode, headers)
-        t.assert.deepStrictEqual(stream.readableHighWaterMark, getDefaultHighWaterMark(false))
+        t.assert.deepStrictEqual(
+          stream.readableHighWaterMark,
+          getDefaultHighWaterMark(false)
+        )
         stream.pipe(res)
       })
-      await request(app)
-        .get('/name.txt')
-        .expect(200, 'tobi')
+      await request(app).get('/name.txt').expect(200, 'tobi')
     })
   })
 })
