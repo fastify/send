@@ -126,6 +126,14 @@ This can also be a string accepted by the
 Specify the maximum response content size, defaults to the entire file size.
 This will be used when `acceptRanges` is true.
 
+##### onFile
+
+Called with the final selected file's absolute path and file system statistics
+after file resolution, but before response processing and file stream creation.
+The callback may be synchronous or return a promise. If it returns a promise,
+`send` waits for it to settle. If the callback throws or its returned promise
+rejects, the operation is aborted and `send()` rejects.
+
 ##### root
 
 Serve files relative to `path`.

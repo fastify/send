@@ -4,7 +4,7 @@
 
 /// <reference types="node" />
 
-import { Dirent } from 'node:fs'
+import { Stats } from 'node:fs'
 import * as stream from 'node:stream'
 
 /**
@@ -111,6 +111,12 @@ declare namespace send {
     maxContentRangeChunkSize?: number | undefined;
 
     /**
+     * Called with the selected file's absolute path and file system statistics before response processing and stream creation.
+     * The callback may return a promise, which will be awaited.
+     */
+    onFile?: ((path: string, stat: Stats) => void | Promise<void>) | undefined;
+
+    /**
      * Serve files relative to path.
      */
     root?: string | undefined;
@@ -138,7 +144,7 @@ declare namespace send {
     type: 'file'
     metadata: {
       path: string
-      stat: Dirent
+      stat: Stats
     }
   }
 
