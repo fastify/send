@@ -1,4 +1,4 @@
-import { Dirent } from 'node:fs'
+import { Stats } from 'node:fs'
 import { resolve } from 'node:path'
 import { Readable } from 'node:stream'
 import { expect } from 'tstyche'
@@ -6,6 +6,7 @@ import send, {
   DirectorySendResult,
   ErrorSendResult,
   FileSendResult,
+  SendOptions,
   SendResult
 } from '..'
 
@@ -15,6 +16,9 @@ send.mime.define({
 
 expect(send.isUtf8MimeType).type.toBe<(value: string) => boolean>()
 expect(send.isUtf8MimeType('application/json')).type.toBe<boolean>()
+expect<SendOptions['onFile']>().type.toBe<
+  ((path: string, stat: Stats) => void | Promise<void>) | undefined
+>()
 
 const req: any = {};
 
@@ -53,7 +57,7 @@ const req: any = {};
     case 'file': {
       expect(result).type.toBe<FileSendResult>()
       expect(result.metadata.path).type.toBe<string>()
-      expect(result.metadata.stat).type.toBe<Dirent>()
+      expect(result.metadata.stat).type.toBe<Stats>()
       break
     }
     case 'directory': {
