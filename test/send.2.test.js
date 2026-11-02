@@ -404,7 +404,7 @@ test('send(file)', async function (t) {
     })
 
     await t.test('where "If-Modified-Since" is set', async function (t) {
-      t.plan(3)
+      t.plan(4)
 
       await t.test('should respond with 304 when unmodified', async function (t) {
         const app = http.createServer(async function (req, res) {
@@ -457,6 +457,20 @@ test('send(file)', async function (t) {
           .get('/name.txt')
           .set('If-Modified-Since', res.headers['last-modified'])
           .set('cache-control', 'no-cache')
+          .expect(200, 'tobi')
+      })
+
+      await t.test('should respond with 200 when Last-Modified is disabled', async function (t) {
+        const app = http.createServer(async function (req, res) {
+          const { statusCode, headers, stream } = await send(req, req.url, { root: fixtures, lastModified: false })
+          res.writeHead(statusCode, headers)
+          stream.pipe(res)
+        })
+
+        await request(app)
+          .get('/name.txt')
+          .set('If-Modified-Since', new Date(0).toUTCString())
+          .expect(shouldNotHaveHeader('Last-Modified', t))
           .expect(200, 'tobi')
       })
     })
